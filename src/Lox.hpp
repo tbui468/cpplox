@@ -3,16 +3,24 @@
 
 #include <string>
 
-//how are headers vs cpp files different again?
+#include "ResultCode.hpp"
+
+namespace lox
+{
 
 class Lox
 {
-  public:
+  private:
+    bool m_hadError = false;
   public:
     Lox() {}
     void run(std::string source);
-    void run_file(std::string script);
-    void run_prompt();
+    ResultCode run_file(std::string script);
+    ResultCode run_prompt();
+    void error(int line, std::string message);
+    void report(int line, std::string where, std::string message);
 };
+
+}
 
 #endif

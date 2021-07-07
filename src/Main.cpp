@@ -1,25 +1,38 @@
 #include <iostream>
+
 #include "Lox.hpp"
+#include "ResultCode.hpp"
 
 
 int main(int argc, char** argv)
 {
 
-  Lox lox;
+  lox::Lox cpplox;
+
+  lox::ResultCode result = lox::ResultCode::success;
 
   if(argc > 2)
   {
     std::cout << "Usage: lox [script]" << std::endl;
-    return 1;
+    result = lox::ResultCode::failed;
   }
   else if(argc == 2)
   {
-    lox.run_file(argv[1]);
+    result = cpplox.run_file(argv[1]);
   }
   else
   {
-    lox.run_prompt();
+    result = cpplox.run_prompt();
   }
-  return 0;
+
+
+  if(result == lox::ResultCode::success)
+  {
+    return 0;
+  }
+  else
+  {
+    return 1;
+  }
 
 }

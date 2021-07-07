@@ -4,6 +4,7 @@ set(Sources
 
 set(Headers
     Lox.hpp
+    ResultCode.hpp
     )
 
 add_executable(
