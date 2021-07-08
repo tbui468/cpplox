@@ -5,7 +5,7 @@
 namespace lox
 {
 
-void Lox::run(std::string source)
+void Lox::run(std::string source) const
 {
   std::cout << source << std::endl;
   /*
@@ -17,7 +17,7 @@ void Lox::run(std::string source)
   }*/
 }
 
-ResultCode Lox::run_file(std::string script)
+ResultCode Lox::run_file(std::string script) const
 {
   run(script);
 
