@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "Lox.hpp"
+#include "Scanner.hpp"
 
 namespace lox
 {
@@ -8,13 +9,12 @@ namespace lox
 void Lox::run(std::string source) const
 {
   std::cout << source << std::endl;
-  /*
-  Scanner scanner = Scanner();
+  Scanner scanner = Scanner(source);
   std::vector<Token> tokens = scanner.scan_tokens();
   for(int i = 0; i < tokens.size(); i++) 
   {
-    std::cout << token << '\n';
-  }*/
+    std::cout << tokens.at(i).to_string() << '\n';
+  }
 }
 
 ResultCode Lox::run_file(std::string script) const

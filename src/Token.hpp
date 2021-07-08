@@ -11,7 +11,7 @@ class Token {
   private:
     TokenType m_type;
     std::string m_lexeme;
-    std::string m_literal; //convert to double if necessary (going to be slow though)
+    std::string m_literal; //convert to double if necessary (going to be slow though) based on m_type
     int m_line;
   public:
     Token(TokenType type, std::string lexeme, std::string literal, int line): 
