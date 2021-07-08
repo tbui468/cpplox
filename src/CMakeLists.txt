@@ -1,10 +1,13 @@
 set(Sources
     Main.cpp
-    Lox.cpp)
+    Lox.cpp
+    Token.cpp)
 
 set(Headers
     Lox.hpp
     ResultCode.hpp
+    TokenType.hpp
+    Token.hpp
     )
 
 add_executable(
