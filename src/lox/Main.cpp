@@ -3,7 +3,9 @@
 #include "Lox.hpp"
 #include "ResultCode.hpp"
 
-//4.2 Lexemes and Tokens
+//5. Representing Code
+  //5.1 Context-Free Grammars
+  //5.2 Implementing Syntax Trees
 
 int main(int argc, char** argv)
 {
