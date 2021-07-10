@@ -2,6 +2,7 @@
 
 #include "Lox.hpp"
 #include "ResultCode.hpp"
+#include "Expr.hpp"
 
 //5. Representing Code
   //5.1 Context-Free Grammars

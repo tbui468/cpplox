@@ -11,6 +11,7 @@ set(Headers
     TokenType.hpp
     Token.hpp
     Scanner.hpp
+    Expr.hpp
     )
 
 add_executable(
