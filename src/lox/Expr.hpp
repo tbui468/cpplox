@@ -67,21 +67,6 @@ struct Unary: public Expr {
     Expr right;
 };
 
-//implement version of this where T is std::string
-struct VisitorString: public VisitorInterface<std::string> {
-  std::string visit(Binary& e) override {
-    return "I'm the binary";
-  }
-  std::string visit(Grouping& e) override {
-    return "I'm the grouping";
-  }
-  std::string visit(Literal& e) override {
-    return "I'm the literal";
-  }
-  std::string visit(Unary& e) override {
-    return "I'm the unary";
-  }
-};
 
 }
 

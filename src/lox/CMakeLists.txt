@@ -3,6 +3,7 @@ set(Sources
     Lox.cpp
     Token.cpp
     Scanner.cpp
+    AstPrinter.cpp
     )
 
 set(Headers
@@ -12,6 +13,7 @@ set(Headers
     Token.hpp
     Scanner.hpp
     Expr.hpp
+    AstPrinter.hpp
     )
 
 add_executable(
