@@ -5,7 +5,7 @@
 
 //5. Representing Code
   //5.1 Context-Free Grammars
-  //5.2 Implementing Syntax Trees
+  //5.2 Implementing Syntax Trees (continue generating Abstract Syntax Tree types)
 
 int main(int argc, char** argv)
 {

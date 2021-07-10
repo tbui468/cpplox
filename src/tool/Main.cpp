@@ -6,13 +6,14 @@
 
 namespace genast {
 
+  //could probably make this class static since we'll never need more than a single instance
   class GenAST {
     public:
-    public:
-      void define_ast(std::string out_dir, std::string base_name, std::array<std::string, 4> types) {
+      void define_ast(const std::string& out_dir, const std::string& base_name, const std::array<std::string, 4>& types) {
         std::ofstream outfile(out_dir + "/" + base_name + ".hpp");
         std::string upper_name = base_name;
-        std::transform(upper_name.begin(), upper_name.end(), upper_name.begin(), ::toupper);
+        std::transform(upper_name.begin(), upper_name.end(), upper_name.begin(), 
+                        [](char c) -> char { return char(std::toupper(int(c))); });
        
         //create base class 
         {
@@ -26,7 +27,36 @@ namespace genast {
           outfile << "#endif " << "//" << upper_name << "_H" << std::endl;
         }
 
+        //create subclasses
+        {
+          for (std::string type: types)
+          {
+            split(type);   
+            //get class name
+            //get field list
+            //define_type(outfile , base_name, class_name, field_list);
+          }
+          /*
+          "Binary : Expr left, Token operator, Expr right",
+          "Grouping : Expr expression",
+          "Literal : std::string value",
+          "Unary : Token operator, Expr right",*/
+          //for each string in type
+            //use first word as subclass name (be sure to extend Expr)
+            //split words on right side of : by ', ' and set them to member fields
+
+        }
+
         outfile.close();
+      }
+    private:
+      //void define_type(const std::ofstream& out, const std::string& base_name, const std::string& class_name, const std::string& field_list) {
+
+      //}
+
+      //std::vector<std::string> split(const std::string& text) {
+      void split(const std::string& text) {
+        std::cout << text.find(":") << std::endl;
       }
   };
 
