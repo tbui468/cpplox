@@ -17,7 +17,7 @@ enum TokenType
   GREATER, GREATER_EQUAL,
   LESS, LESS_EQUAL,
 
-  //literals (8)
+  //literals (3)
   IDENTIFIER, STRING, NUMBER,
 
   //keywords (16)

@@ -1,19 +1,21 @@
 #ifndef AST_PRINTER_H
 #define AST_PRINTER_H
 
+#include <vector>
 #include "Expr.hpp"
 
 namespace lox 
 {
 
-  class AstPrinter: public VisitorInterface<std::string> {
+  class AstPrinter: public VisitorInterfaceString {
     public:
-      std::string visit(Binary& e) override;
-      std::string visit(Grouping& e) override;
-      std::string visit(Literal& e) override;
-      std::string visit(Unary& e) override;
+      std::string print(Expr& expr);
+      std::string visit(Binary& expr) override;
+      std::string visit(Grouping& expr) override;
+      std::string visit(Literal& expr) override;
+      std::string visit(Unary& expr) override;
     private:
-      std::string parenthesize(const std::string& name, std::vector<Expr> exprs);
+      std::string parenthesize(const std::string& name, std::vector<Expr*> exprs);
   };
 
 

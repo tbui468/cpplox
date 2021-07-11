@@ -8,10 +8,10 @@ namespace lox
 {
 
 class Token {
-  private:
+  public:
     TokenType m_type;
     std::string m_lexeme;
-    std::string m_literal; //convert to double if necessary (going to be slow though) based on m_type
+    std::string m_literal; //saving Numbers as strings. Convert to double/int if TokenType is 'Number'
     int m_line;
   public:
     Token(TokenType type, std::string lexeme, std::string literal, int line): 

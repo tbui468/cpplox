@@ -2,27 +2,40 @@
 
 namespace lox
 {
+  std::string AstPrinter::print(Expr& expr) 
+  {
+    return expr.accept(*this);
+  }
 
-  std::string AstPrinter::visit(Binary& e)
+  std::string AstPrinter::visit(Binary& expr)
   {
-    return "binary";
+    std::vector<Expr*> exprs = {expr.left, expr.right};
+    return parenthesize(expr.oprtr->m_lexeme, exprs);
   }
-  std::string AstPrinter::visit(Grouping& e)
+  std::string AstPrinter::visit(Grouping& expr)
   {
-    return "grouping";
+    std::vector<Expr*> exprs = {expr.expr};
+    return parenthesize("Grouping", exprs);
   }
-  std::string AstPrinter::visit(Literal& e)
+  std::string AstPrinter::visit(Literal& expr)
   {
-    if (e.value == "") return "nil";
-    else return e.value;
+    if (expr.value == "") return "nil";
+    else return expr.value; //don't need to convert to Number since AstPrinter wants a string to print
   }
-  std::string AstPrinter::visit(Unary& e)
+  std::string AstPrinter::visit(Unary& expr)
   {
-    return "unary";
+    std::vector<Expr*> exprs = {expr.right};
+    return parenthesize(expr.oprtr->m_lexeme, exprs);
   }
-  std::string AstPrinter::parenthesize(const std::string& name, std::vector<Expr> exprs)
+  std::string AstPrinter::parenthesize(const std::string& name, std::vector<Expr*> exprs)
   {
-    //what is name???  exprs is a list of expressions.  Name is "group" or the lexeme (what are the possible lexemes?)
+    std::string out = "(" + name;
+    for (Expr* e: exprs) {
+      out += " ";
+      out += e->accept(*this);
+    }
+    out += ")";
+    return out;
   }
 
 }

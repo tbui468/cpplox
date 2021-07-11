@@ -10,25 +10,20 @@
   //5.2 Implementing Syntax Trees (continue generating Abstract Syntax Tree types)
   //5.3 Working with Trees
   //5.4 AstPrinter (finish the parenthesizer function)
+    //write out how the visitor pattern (with accept/visit and template classes with return type) is working here
 
-int main(int argc, char** argv)
-{
+int main(int argc, char** argv) {
 
   lox::Lox cpplox;
 
   lox::ResultCode result = lox::ResultCode::success;
 
-  if(argc > 2)
-  {
+  if(argc > 2) {
     std::cout << "Usage: lox [script]" << std::endl;
     result = lox::ResultCode::failed;
-  }
-  else if(argc == 2)
-  {
+  } else if(argc == 2) {
     result = cpplox.run_file(argv[1]);
-  }
-  else
-  {
+  } else {
     result = cpplox.run_prompt();
   }
 
@@ -44,12 +39,9 @@ int main(int argc, char** argv)
   std::cout << astprinter.visit(l2) << std::endl;
 
 
-  if(result == lox::ResultCode::success)
-  {
+  if(result == lox::ResultCode::success) {
     return 0;
-  }
-  else
-  {
+  } else {
     return 1;
   }
 
