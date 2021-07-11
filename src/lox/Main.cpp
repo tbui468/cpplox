@@ -29,14 +29,17 @@ int main(int argc, char** argv) {
 
   //testing AstPrinter
   lox::AstPrinter astprinter;
-  //make some test Expressions (Binary, Unary, Literal and Grouping)
-  //shove them into astprinter and see if it works
-  //literal only takes a string (or number as a string - int or double if decimal point is there)
-  lox::Literal l = lox::Literal("dog");
-  std::cout << astprinter.visit(l) << std::endl;
+  lox::Literal l = lox::Literal("123");
+  lox::Literal r = lox::Literal("45.67");
+  
+  lox::Token star_token = lox::Token(lox::TokenType::STAR, "*", "", 1);
+  lox::Token minus_token = lox::Token(lox::TokenType::MINUS, "-", "", 1);
 
-  lox::Literal l2 = lox::Literal("");
-  std::cout << astprinter.visit(l2) << std::endl;
+  lox::Unary u = lox::Unary(&minus_token, &l);
+  lox::Grouping g = lox::Grouping(&r);
+  
+  lox::Binary b = lox::Binary(&u, &star_token, &g);
+  std::cout << astprinter.print(b) << std::endl;
 
 
   if(result == lox::ResultCode::success) {

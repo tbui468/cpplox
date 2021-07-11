@@ -37,9 +37,9 @@ struct Binary: public Expr {
   public:
     Binary(Expr* left, Token* oprtr, Expr* right): left(left), oprtr(oprtr), right(right) {}
     ~Binary() {
-      delete left;
-      delete oprtr;
-      delete right;
+      if(!left) delete left;
+      if(!oprtr) delete oprtr;
+      if(!right) delete right;
     }
     std::string accept(VisitorInterfaceString& v) { return v.visit(*this); }
     int accept(VisitorInterfaceInt& v) { return v.visit(*this); }
@@ -53,7 +53,7 @@ struct Grouping: public Expr {
   public:
     Grouping(Expr* expr): expr(expr) {}
     ~Grouping() {
-      delete expr;
+      if(!expr) delete expr;
     }
     std::string accept(VisitorInterfaceString& v) { return v.visit(*this); }
     int accept(VisitorInterfaceInt& v) { return v.visit(*this); }
@@ -74,8 +74,8 @@ struct Unary: public Expr {
   public:
     Unary(Token* oprtr, Expr* right): oprtr(oprtr), right(right) {}
     ~Unary() {
-      delete oprtr;
-      delete right;
+      if(!oprtr) delete oprtr;
+      if(!right) delete right;
     }
     std::string accept(VisitorInterfaceString& v) { return v.visit(*this); }
     int accept(VisitorInterfaceInt& v) { return v.visit(*this); }

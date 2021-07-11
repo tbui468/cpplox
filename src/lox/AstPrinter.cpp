@@ -15,7 +15,7 @@ namespace lox
   std::string AstPrinter::visit(Grouping& expr)
   {
     std::vector<Expr*> exprs = {expr.expr};
-    return parenthesize("Grouping", exprs);
+    return parenthesize("group", exprs);
   }
   std::string AstPrinter::visit(Literal& expr)
   {
