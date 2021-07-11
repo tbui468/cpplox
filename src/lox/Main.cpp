@@ -5,12 +5,10 @@
 #include "Expr.hpp"
 #include "AstPrinter.hpp"
 
-//5. Representing Code
-  //5.1 Context-Free Grammars
-  //5.2 Implementing Syntax Trees (continue generating Abstract Syntax Tree types)
-  //5.3 Working with Trees
-  //5.4 AstPrinter (finish the parenthesizer function)
-    //write out how the visitor pattern (with accept/visit and template classes with return type) is working here
+//6. Parsing Expressions
+//  6.1 Ambiguity and the Parsing Game
+//  6.2 Recursive Descent Parsing 
+//    finish implementing expression grammar for Parser
 
 int main(int argc, char** argv) {
 

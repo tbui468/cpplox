@@ -4,6 +4,7 @@ set(Sources
     Token.cpp
     Scanner.cpp
     AstPrinter.cpp
+    Parser.cpp
     )
 
 set(Headers
@@ -14,6 +15,7 @@ set(Headers
     Scanner.hpp
     Expr.hpp
     AstPrinter.hpp
+    Parser.hpp
     )
 
 add_executable(
