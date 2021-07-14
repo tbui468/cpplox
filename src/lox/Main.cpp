@@ -9,6 +9,7 @@
 //  6.1 Ambiguity and the Parsing Game
 //  6.2 Recursive Descent Parsing 
 //    finish implementing expression grammar for Parser
+//    currently unique ptr is not working in AstPrinter since trying to make a copy (but copy constructor is deleted for unqiue_ptr)
 
 int main(int argc, char** argv) {
 
@@ -26,18 +27,17 @@ int main(int argc, char** argv) {
   }
 
   //testing AstPrinter
+  /*
   lox::AstPrinter astprinter;
-  lox::Literal l = lox::Literal("123");
-  lox::Literal r = lox::Literal("45.67");
   
   lox::Token star_token = lox::Token(lox::TokenType::STAR, "*", "", 1);
   lox::Token minus_token = lox::Token(lox::TokenType::MINUS, "-", "", 1);
 
-  lox::Unary u = lox::Unary(&minus_token, &l);
-  lox::Grouping g = lox::Grouping(&r);
+  std::unique_ptr<lox::Expr> u = std::make_unique<lox::Unary>(minus_token, std::make_unique<lox::Literal>("123"));
+  std::unique_ptr<lox::Expr> g = std::make_unique<lox::Grouping>(std::make_unique<lox::Literal>("45.67"));
   
-  lox::Binary b = lox::Binary(&u, &star_token, &g);
-  std::cout << astprinter.print(b) << std::endl;
+  lox::Binary b = lox::Binary(star_token, std::move(u), std::move(g));
+  std::cout << astprinter.print(b) << std::endl;*/
 
 
   if(result == lox::ResultCode::success) {
