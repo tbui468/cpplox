@@ -1,14 +1,8 @@
 #include "Parser.hpp"
 #include "Expr.hpp"
 #include "Lox.hpp"
+#include "Object.h"
 
-/*
-  LEFT_PAREN = 0, RIGHT_PAREN, LEFT_BRACE, RIGHT_BRACE,
-  COMMA, DOT, MINUS, PLUS, SEMICOLON, SLASH, STAR,
-  BANG, BANG_EQUAL,
-  EQUAL, EQUAL_EQUAL,
-  GREATER, GREATER_EQUAL,
-  LESS, LESS_EQUAL,*/
 
 namespace lox {
 
@@ -76,13 +70,13 @@ namespace lox {
 
   //Not implemented - temp code to test if everything compiles
   std::unique_ptr<Expr> Parser::primary(){
-    if (match(TokenType::FALSE)) return std::make_unique<Literal>("false");
-    if (match(TokenType::TRUE)) return std::make_unique<Literal>("true");
-    if (match(TokenType::NIL)) return std::make_unique<Literal>("nullptr");
+    if (match(TokenType::FALSE)) return std::make_unique<Literal>(Object(previous().m_type, "false"));
+    if (match(TokenType::TRUE)) return std::make_unique<Literal>(Object(previous().m_type, "true"));
+    if (match(TokenType::NIL)) return std::make_unique<Literal>(Object(previous().m_type, "nullptr"));
 
     if (match(TokenType::NUMBER) || match(TokenType::STRING)) {
       Token token = previous();
-      return std::make_unique<Literal>(token.m_literal);
+      return std::make_unique<Literal>(Object(token.m_type, token.m_literal));
     }
 
     if(match(TokenType::LEFT_PAREN)) {

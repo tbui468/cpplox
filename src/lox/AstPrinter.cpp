@@ -15,8 +15,8 @@ namespace lox
   }
 
   std::string AstPrinter::visit(Literal& expr) {
-    if (expr.value == "") return "nil";
-    else return expr.value; //don't need to convert to Number since AstPrinter wants a string to print
+    if (expr.value.m_literal == "nullptr") return "nil";
+    else return expr.value.m_literal;
   }
 
   std::string AstPrinter::visit(Unary& expr) {

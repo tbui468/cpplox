@@ -5,11 +5,9 @@
 #include "Expr.hpp"
 #include "AstPrinter.hpp"
 
-//6. Parsing Expressions
-//  6.1 Ambiguity and the Parsing Game
-//  6.2 Recursive Descent Parsing 
-//  6.3 Syntax errors
-//    synchronize function in parser
+//7. Evaluating Expressions
+//  7.1 Representing Values
+//    may need to write custom Object class that allows it to be number or string (rather than having them all be strings like right now)
 
 int main(int argc, char** argv) {
 

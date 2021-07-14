@@ -3,6 +3,7 @@
 
 #include <memory>
 #include "Token.hpp"
+#include "Object.h"
 
 namespace lox {
 
@@ -48,10 +49,10 @@ struct Grouping: public Expr {
 
 struct Literal: public Expr {
   public:
-    Literal(const std::string& value): value(value) {}
+    Literal(Object value): value(value) {}
     std::string accept(VisitorInterfaceString& v) { return v.visit(*this); }
   public:
-    std::string value;
+    Object value;
 };
 
 struct Unary: public Expr {

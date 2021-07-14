@@ -16,6 +16,7 @@ set(Headers
     Expr.hpp
     AstPrinter.hpp
     Parser.hpp
+    Object.h
     )
 
 add_executable(

@@ -22,11 +22,6 @@ void Lox::run(std::string source) const {
   if (m_had_error) return;
 
   std::cout << AstPrinter().print(*expr) << std::endl;
-  /*
-  for(int i = 0; i < tokens.size(); i++) 
-  {
-    std::cout << tokens.at(i).to_string() << '\n';
-  }*/
 }
 
 ResultCode Lox::run_file(std::string script) const {
