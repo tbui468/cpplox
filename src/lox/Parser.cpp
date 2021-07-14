@@ -1,5 +1,6 @@
 #include "Parser.hpp"
 #include "Expr.hpp"
+#include "Lox.hpp"
 
 /*
   LEFT_PAREN = 0, RIGHT_PAREN, LEFT_BRACE, RIGHT_BRACE,
@@ -10,6 +11,14 @@
   LESS, LESS_EQUAL,*/
 
 namespace lox {
+
+  std::unique_ptr<Expr> Parser::parse() {
+    try {
+      return std::move(expression());
+    } catch (ParseError error) {
+      return nullptr;
+    }
+  }
   
   std::unique_ptr<Expr> Parser::expression(){
     return std::move(equality());
@@ -78,11 +87,11 @@ namespace lox {
 
     if(match(TokenType::LEFT_PAREN)) {
       std::unique_ptr<Expr> expr = expression();
-      match(TokenType::RIGHT_PAREN); //expect ')' at some point
+      consume(TokenType::RIGHT_PAREN, "Expect ')'");
       return std::move(expr);
     }
 
-    //syntax error otherwise
+    throw error(peek(), "Expected expression.");
   }
 
 
@@ -94,6 +103,17 @@ namespace lox {
     }else{
       return false;
     }
+  }
+
+  Token Parser::consume(TokenType type, std::string message) {
+    if(check(type)) return advance();
+
+    throw error(peek(), message);
+  }
+
+  Parser::ParseError Parser::error(Token token, std::string message) {
+    Lox::error(token, message);
+    return Parser::ParseError();
   }
 
   Token Parser::advance() {
@@ -116,5 +136,28 @@ namespace lox {
 
   Token Parser::previous() const {
     return m_tokens.at(m_current - 1);
+  }
+
+  //discard tokens until the next statement is reached
+  void Parser::synchronize() {
+    advance();
+    while (!is_at_end()) {
+      if (previous().m_type == TokenType::SEMICOLON) {
+        return;
+      } else {
+        switch(peek().m_type) {
+          case TokenType::CLASS:
+          case TokenType::FUN:
+          case TokenType::VAR:
+          case TokenType::FOR:
+          case TokenType::IF:
+          case TokenType::WHILE:
+          case TokenType::PRINT:
+          case TokenType::RETURN:
+            return;
+        }
+        advance();
+      }
+    }
   }
 }

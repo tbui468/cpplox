@@ -10,12 +10,15 @@ namespace lox {
 
   class Parser {
     private:
+      class ParseError {};
+    private:
       std::vector<Token> m_tokens;
       int m_current = 0;
     public:
       Parser(const std::vector<Token>& tokens): m_tokens(tokens) {}
+      std::unique_ptr<Expr> parse();
     private:
-      //expression grammar rules
+      ParseError error(Token token, std::string message);
       std::unique_ptr<Expr> expression();
       std::unique_ptr<Expr> equality();
       std::unique_ptr<Expr> comparison();
@@ -29,6 +32,8 @@ namespace lox {
       Token peek() const;
       bool is_at_end() const;
       Token advance();
+      Token consume(TokenType type, std::string messsage);
+      void synchronize();
   };
 
 }

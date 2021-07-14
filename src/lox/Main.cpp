@@ -8,8 +8,8 @@
 //6. Parsing Expressions
 //  6.1 Ambiguity and the Parsing Game
 //  6.2 Recursive Descent Parsing 
-//    finish implementing expression grammar for Parser
-//    currently unique ptr is not working in AstPrinter since trying to make a copy (but copy constructor is deleted for unqiue_ptr)
+//  6.3 Syntax errors
+//    synchronize function in parser
 
 int main(int argc, char** argv) {
 

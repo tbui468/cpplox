@@ -4,6 +4,7 @@
 #include <string>
 
 #include "ResultCode.hpp"
+#include "Token.hpp"
 
 namespace lox
 {
@@ -11,7 +12,7 @@ namespace lox
 class Lox
 {
   private:
-    inline static bool m_hadError = false;
+    inline static bool m_had_error = false;
   public:
     Lox() {}
     void run(std::string source) const;
@@ -19,6 +20,7 @@ class Lox
     ResultCode run_prompt();
     static void error(int line, std::string message);
     static void report(int line, std::string where, std::string message);
+    static void error(Token token, std::string message);
 };
 
 }
