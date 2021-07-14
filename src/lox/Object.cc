@@ -1,5 +1,4 @@
 
-#include <assert.h>
 #include "Object.h"
 
 namespace lox {
@@ -48,18 +47,14 @@ namespace lox {
   }
 
   double Object::get_number() const {
-    assert(m_type == Type::Number);
     return m_number;
   }
 
   std::string Object::get_string() const {
-    assert(m_type == Type::String);
     return m_string;
   }
 
   bool Object::get_bool() const {
-    assert(m_type == Type::False || m_type == Type::True);
-
     if (m_type == Type::False) {
       return false;
     }

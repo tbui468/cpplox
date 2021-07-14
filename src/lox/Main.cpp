@@ -8,12 +8,10 @@
 
 //7. Evaluating Expressions
 //  7.1 Representing Values
-//    may need to write custom Object class that allows it to be number or string (rather than having them all be strings like right now)
-//    Look at example Value class in c++ implementation of Lox.  
-//      had private enum class for type
-//      had a member variable for each of the types
-//      has isNumber(), isString(), etc
-//      has multiple constructor overloads for each of the types
+//  7.2 Evaluating expressions
+//  7.3 Runtime errors
+//  TODO: make Interpretor.cc file and move definitions into there
+//  74. Hooking Up the Interpreter
 
 int main(int argc, char** argv) {
 

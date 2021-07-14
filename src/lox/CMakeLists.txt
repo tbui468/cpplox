@@ -19,6 +19,7 @@ set(Headers
     Parser.hpp
     Object.h
     Interpreter.h
+    RuntimeError.h
     )
 
 add_executable(

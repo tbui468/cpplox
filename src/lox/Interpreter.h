@@ -3,6 +3,7 @@
 
 #include "Object.h"
 #include "Expr.hpp"
+#include "RuntimeError.h"
 
 namespace lox {
 
@@ -24,6 +25,7 @@ namespace lox {
             if (right.is_true()) return Object(false);
             else return Object(true);
           case TokenType::MINUS:
+            check_number_operand(expr.oprtr, right);
             right.set_number(-right.get_number());
             return right;
         }
@@ -38,10 +40,13 @@ namespace lox {
 
         switch(expr.oprtr.m_type) {
           case TokenType::MINUS:
+            check_number_operand(expr.oprtr, left, right);
             return Object(left.get_number() - right.get_number());
           case TokenType::STAR:
+            check_number_operand(expr.oprtr, left, right);
             return Object(left.get_number() * right.get_number());
           case TokenType::SLASH:
+            check_number_operand(expr.oprtr, left, right);
             return Object(left.get_number() / right.get_number());
           case TokenType::PLUS:
             if (left.is_string() && right.is_string()) {
@@ -49,33 +54,23 @@ namespace lox {
             }else if(left.is_number() && right.is_number()) {
               return Object(left.get_number() + right.get_number());
             }
-            break;
+            throw RuntimeError(expr.oprtr, "Operands must be two numbers or two strings");
           case TokenType::GREATER:
-            if (left.is_number() && right.is_number()) {
-              return Object(left.get_number() > right.get_number());
-            }
-            break;
+            check_number_operand(expr.oprtr, left, right);
+            return Object(left.get_number() > right.get_number());
           case TokenType::GREATER_EQUAL:
-            if (left.is_number() && right.is_number()) {
-              return Object(left.get_number() >= right.get_number());
-            }
-            break;
+            check_number_operand(expr.oprtr, left, right);
+            return Object(left.get_number() >= right.get_number());
           case TokenType::LESS:
-            if (left.is_number() && right.is_number()) {
-              return Object(left.get_number() < right.get_number());
-            }
-            break;
+            check_number_operand(expr.oprtr, left, right);
+            return Object(left.get_number() < right.get_number());
           case TokenType::LESS_EQUAL:
-            if (left.is_number() && right.is_number()) {
-              return Object(left.get_number() <= right.get_number());
-            }
-            break;
+            check_number_operand(expr.oprtr, left, right);
+            return Object(left.get_number() <= right.get_number());
           case TokenType::BANG_EQUAL:
             return Object(!is_equal(left, right));
-            break;
           case TokenType::EQUAL_EQUAL:
             return Object(is_equal(left, right));
-            break;
         }        
 
         //here be dragons
@@ -93,6 +88,17 @@ namespace lox {
           return a.get_bool() == b.get_bool();
         }
       }
+
+      void check_number_operand(Token op, Object operand) {
+        if (operand.is_number()) return;
+        throw RuntimeError(op, "Operand must be a number.");
+      }
+
+      void check_number_operand(Token op, Object left, Object right) {
+        if (left.is_number() && right.is_number()) return;
+        throw RuntimeError(op, "Operands must be numbers."); 
+      }
+
   };
 
 }

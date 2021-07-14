@@ -2,6 +2,7 @@
 #define PARSER_H
 
 #include <vector>
+#include <exception>
 #include "Token.hpp"
 #include "TokenType.hpp"
 #include "Expr.hpp"
@@ -10,7 +11,7 @@ namespace lox {
 
   class Parser {
     private:
-      class ParseError {};
+      class ParseError: public std::exception {};
     private:
       std::vector<Token> m_tokens;
       int m_current = 0;
