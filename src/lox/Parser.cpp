@@ -68,15 +68,19 @@ namespace lox {
     }
   }
 
-  //Not implemented - temp code to test if everything compiles
   std::unique_ptr<Expr> Parser::primary(){
-    if (match(TokenType::FALSE)) return std::make_unique<Literal>(Object(previous().m_type, "false"));
-    if (match(TokenType::TRUE)) return std::make_unique<Literal>(Object(previous().m_type, "true"));
-    if (match(TokenType::NIL)) return std::make_unique<Literal>(Object(previous().m_type, "nullptr"));
+    if (match(TokenType::FALSE)) return std::make_unique<Literal>(Object(false));
+    if (match(TokenType::TRUE)) return std::make_unique<Literal>(Object(true));
+    if (match(TokenType::NIL)) return std::make_unique<Literal>(Object());
 
-    if (match(TokenType::NUMBER) || match(TokenType::STRING)) {
+    if (match(TokenType::STRING)) {
       Token token = previous();
-      return std::make_unique<Literal>(Object(token.m_type, token.m_literal));
+      return std::make_unique<Literal>(Object(token.m_literal));
+    }
+
+    if (match(TokenType::NUMBER)) {
+      Token token = previous();
+      return std::make_unique<Literal>(Object(std::stod(token.m_literal)));
     }
 
     if(match(TokenType::LEFT_PAREN)) {

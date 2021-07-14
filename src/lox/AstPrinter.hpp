@@ -8,7 +8,7 @@
 namespace lox 
 {
 
-  class AstPrinter: public VisitorInterfaceString {
+  class AstPrinter: public VisitorString {
     public:
       std::string print(Expr& expr);
       std::string visit(Binary& expr) override;

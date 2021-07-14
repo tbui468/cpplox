@@ -4,10 +4,16 @@
 #include "ResultCode.hpp"
 #include "Expr.hpp"
 #include "AstPrinter.hpp"
+#include "Interpreter.h"
 
 //7. Evaluating Expressions
 //  7.1 Representing Values
 //    may need to write custom Object class that allows it to be number or string (rather than having them all be strings like right now)
+//    Look at example Value class in c++ implementation of Lox.  
+//      had private enum class for type
+//      had a member variable for each of the types
+//      has isNumber(), isString(), etc
+//      has multiple constructor overloads for each of the types
 
 int main(int argc, char** argv) {
 

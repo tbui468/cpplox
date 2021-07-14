@@ -15,8 +15,13 @@ namespace lox
   }
 
   std::string AstPrinter::visit(Literal& expr) {
-    if (expr.value.m_literal == "nullptr") return "nil";
-    else return expr.value.m_literal;
+    if (expr.value.is_number()) return std::to_string(expr.value.get_number());
+    if (expr.value.is_string()) return expr.value.get_string();
+    if (expr.value.is_nil()) return "nil";
+    if (expr.value.is_bool()) {
+      if (expr.value.is_true()) return "true";
+      else return "false";  
+    }
   }
 
   std::string AstPrinter::visit(Unary& expr) {

@@ -5,6 +5,7 @@ set(Sources
     Scanner.cpp
     AstPrinter.cpp
     Parser.cpp
+    Object.cc
     )
 
 set(Headers
@@ -17,6 +18,7 @@ set(Headers
     AstPrinter.hpp
     Parser.hpp
     Object.h
+    Interpreter.h
     )
 
 add_executable(
