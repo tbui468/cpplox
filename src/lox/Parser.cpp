@@ -88,12 +88,30 @@ namespace lox {
 
   bool Parser::match(TokenType type) {
     Token token = m_tokens.at(m_current);
-    if(token.m_type == type) {
-      m_current++;
+    if(check(type)) {
+      advance();
       return true;
     }else{
       return false;
     }
+  }
+
+  Token Parser::advance() {
+    if (!is_at_end()) m_current++;
+    return previous();
+  }
+
+  bool Parser::check(TokenType type) {
+    if (is_at_end()) return false;
+    return peek().m_type == type;
+  }
+
+  Token Parser::peek() const {
+    return m_tokens.at(m_current);
+  }
+
+  bool Parser::is_at_end() const {
+    return m_current >= m_tokens.size();
   }
 
   Token Parser::previous() const {

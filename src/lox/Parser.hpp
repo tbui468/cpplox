@@ -25,6 +25,10 @@ namespace lox {
       std::unique_ptr<Expr> primary();
       bool match(TokenType type);
       Token previous() const;
+      bool check(TokenType type);
+      Token peek() const;
+      bool is_at_end() const;
+      Token advance();
   };
 
 }
