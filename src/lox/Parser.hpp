@@ -15,15 +15,14 @@ namespace lox {
     public:
       Parser(const std::vector<Token>& tokens): m_tokens(tokens) {}
     private:
-      
       //expression grammar rules
-      Expr* expression();
-      Expr* equality();
-      Expr* comparision();
-      Expr* term();
-      Expr* factor();
-      Expr* unary();
-      Expr* primary();
+      std::unique_ptr<Expr> expression();
+      std::unique_ptr<Expr> equality();
+      std::unique_ptr<Expr> comparison();
+      std::unique_ptr<Expr> term();
+      std::unique_ptr<Expr> factor();
+      std::unique_ptr<Expr> unary();
+      std::unique_ptr<Expr> primary();
       bool match(TokenType type);
       Token previous() const;
   };

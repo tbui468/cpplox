@@ -24,8 +24,8 @@ enum TokenType
   AND, CLASS, ELSE, FALSE, FUN, FOR, IF, NIL, OR,
   PRINT, RETURN, SUPER, THIS, TRUE, VAR, WHILE,
 
-  //(1) EOF is already c++ keyword
-  EOFILE
+  //(1) EOF is already c++ keyword - wait, I think using EOF is okay if it's part of an enum?? should try it
+  EOFILE 
 };
 
 }
