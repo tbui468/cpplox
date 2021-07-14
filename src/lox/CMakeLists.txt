@@ -6,6 +6,7 @@ set(Sources
     AstPrinter.cpp
     Parser.cpp
     Object.cc
+    Interpreter.cc
     )
 
 set(Headers
