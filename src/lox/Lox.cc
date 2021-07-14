@@ -1,9 +1,9 @@
 #include <iostream>
 
-#include "Lox.hpp"
-#include "Scanner.hpp"
-#include "Parser.hpp"
-#include "AstPrinter.hpp"
+#include "Lox.h"
+#include "Scanner.h"
+#include "Parser.h"
+#include "AstPrinter.h"
 
 namespace lox
 {

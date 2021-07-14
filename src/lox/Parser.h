@@ -3,9 +3,9 @@
 
 #include <vector>
 #include <exception>
-#include "Token.hpp"
-#include "TokenType.hpp"
-#include "Expr.hpp"
+#include "Token.h"
+#include "TokenType.h"
+#include "Expr.h"
 
 namespace lox {
 

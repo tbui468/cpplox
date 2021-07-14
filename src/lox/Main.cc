@@ -1,17 +1,14 @@
 #include <iostream>
 
-#include "Lox.hpp"
-#include "ResultCode.hpp"
-#include "Expr.hpp"
-#include "AstPrinter.hpp"
+#include "Lox.h"
+#include "ResultCode.h"
+#include "Expr.h"
+#include "AstPrinter.h"
 #include "Interpreter.h"
 
-//7. Evaluating Expressions
-//  7.1 Representing Values
-//  7.2 Evaluating expressions
-//  7.3 Runtime errors
-//  TODO: make Interpretor.cc file and move definitions into there
-//  74. Hooking Up the Interpreter
+//8. Statements and State
+//  change all headers to .h, and all .cpp to .cc to fit google standards
+//  8.1 Statements
 
 int main(int argc, char** argv) {
 

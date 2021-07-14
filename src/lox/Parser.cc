@@ -1,6 +1,6 @@
-#include "Parser.hpp"
-#include "Expr.hpp"
-#include "Lox.hpp"
+#include "Parser.h"
+#include "Expr.h"
+#include "Lox.h"
 #include "Object.h"
 
 

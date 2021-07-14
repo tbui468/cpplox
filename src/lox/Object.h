@@ -1,7 +1,7 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
-#include "TokenType.hpp"
+#include "TokenType.h"
 #include <string>
 
 namespace lox {

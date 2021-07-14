@@ -1,5 +1,5 @@
-#include "Scanner.hpp"
-#include "Lox.hpp"
+#include "Scanner.h"
+#include "Lox.h"
 #include <iostream>
 
 namespace lox

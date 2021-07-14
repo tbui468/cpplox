@@ -3,7 +3,7 @@
 
 #include <exception>
 #include <string>
-#include "Token.hpp"
+#include "Token.h"
 
 namespace lox {
 

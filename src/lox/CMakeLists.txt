@@ -1,23 +1,23 @@
 set(Sources
-    Main.cpp
-    Lox.cpp
-    Token.cpp
-    Scanner.cpp
-    AstPrinter.cpp
-    Parser.cpp
+    Main.cc
+    Lox.cc
+    Token.cc
+    Scanner.cc
+    AstPrinter.cc
+    Parser.cc
     Object.cc
     Interpreter.cc
     )
 
 set(Headers
-    Lox.hpp
-    ResultCode.hpp
-    TokenType.hpp
-    Token.hpp
-    Scanner.hpp
-    Expr.hpp
-    AstPrinter.hpp
-    Parser.hpp
+    Lox.h
+    ResultCode.h
+    TokenType.h
+    Token.h
+    Scanner.h
+    Expr.h
+    AstPrinter.h
+    Parser.h
     Object.h
     Interpreter.h
     RuntimeError.h

@@ -2,7 +2,7 @@
 #define TOKEN_H
 
 #include <string>
-#include "TokenType.hpp"
+#include "TokenType.h"
 
 namespace lox
 {

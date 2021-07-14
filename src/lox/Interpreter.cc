@@ -1,6 +1,6 @@
 #include <iostream>
 #include "Interpreter.h"
-#include "Lox.hpp"
+#include "Lox.h"
 
 
 namespace lox {

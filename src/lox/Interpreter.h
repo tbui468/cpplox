@@ -2,7 +2,7 @@
 #define INTERPRETER_H
 
 #include "Object.h"
-#include "Expr.hpp"
+#include "Expr.h"
 #include "RuntimeError.h"
 
 namespace lox {

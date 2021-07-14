@@ -2,7 +2,7 @@
 #define EXPR_H
 
 #include <memory>
-#include "Token.hpp"
+#include "Token.h"
 #include "Object.h"
 
 namespace lox {

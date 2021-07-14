@@ -3,8 +3,8 @@
 
 #include <string>
 
-#include "ResultCode.hpp"
-#include "Token.hpp"
+#include "ResultCode.h"
+#include "Token.h"
 #include "RuntimeError.h"
 #include "Interpreter.h"
 

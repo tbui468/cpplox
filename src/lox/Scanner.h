@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
-#include "Token.hpp"
-#include "TokenType.hpp"
+#include "Token.h"
+#include "TokenType.h"
 
 namespace lox
 {
