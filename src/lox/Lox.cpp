@@ -8,6 +8,9 @@
 namespace lox
 {
 
+
+Interpreter Lox::m_interpreter = Interpreter();
+
 //if an error is thrown by parser,
 //Lox::error is called which sets m_had_error to true
 //and parser returns a nullptr
@@ -21,13 +24,15 @@ void Lox::run(std::string source) const {
 
   if (m_had_error) return;
 
-  std::cout << AstPrinter().print(*expr) << std::endl;
+  Lox::m_interpreter.interpret(*expr);
+
+  //std::cout << AstPrinter().print(*expr) << std::endl;
 }
 
 ResultCode Lox::run_file(std::string script) const {
   run(script);
 
-  if(m_had_error)
+  if(m_had_error || m_had_runtime_error)
   {
     return ResultCode::failed;
   }else{
@@ -65,6 +70,11 @@ void Lox::error(Token token, std::string message) {
   } else {
     report(token.m_line, " at '" + token.m_lexeme + "'", message);
   }
+}
+
+void Lox::runtime_error(RuntimeError error) {
+  std::cout << error.get_message() << "\n[line " << std::to_string(error.get_token().m_line) << "]" << std::endl;
+  m_had_runtime_error = true;  
 }
 
 void Lox::report(int line, std::string where, std::string message) {

@@ -10,7 +10,12 @@ namespace lox {
   class RuntimeError: public std::exception {
     public:
       RuntimeError(Token token, std::string message): m_message(message), m_token(token) {}
-      //need a get message function
+      inline std::string get_message() const {
+        return m_message;
+      }
+      inline Token get_token() const {
+        return m_token;
+      }
     private:
       Token m_token;
       std::string m_message;

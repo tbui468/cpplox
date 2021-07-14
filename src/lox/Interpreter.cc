@@ -1,6 +1,41 @@
+#include <iostream>
 #include "Interpreter.h"
+#include "Lox.hpp"
+
 
 namespace lox {
+
+  void Interpreter::interpret(Expr& expr) {
+    try {
+      Object value = evaluate(expr);
+      std::cout << stringify(value) << std::endl;
+    } catch (RuntimeError& error) {
+      Lox::runtime_error(error);
+    }
+  }
+
+  //if first digit after decimal is 0, treat the return string as an integer
+  //eg, chop off the decimal point and all digits after that
+  std::string Interpreter::stringify(const Object& obj) {
+    if (obj.is_nil()) return "nil";
+
+    if (obj.is_number()) {
+      std::string num = std::to_string(obj.get_number());
+      size_t pos = num.find(".");
+      if (pos != std::string::npos && num.at(pos + 1) == '0') {
+        return num.substr(0, pos);
+      }
+      return num;
+    }
+
+    if (obj.is_bool()) {
+      if (obj.is_true()) return "true";
+      else return "false";
+    }
+
+    //otherwise it's a string
+    return obj.get_string();
+  }
 
   Object Interpreter::evaluate(Expr& expr) {
     return expr.accept(*this);

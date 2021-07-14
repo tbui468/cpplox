@@ -9,6 +9,9 @@ namespace lox {
 
   class Interpreter: public VisitorObject {
     public:
+      void interpret(Expr& expr);
+    private:
+      std::string stringify(const Object& obj);
       Object evaluate(Expr& expr);
       Object visit(Literal& expr) override;
       Object visit(Grouping& expr) override;

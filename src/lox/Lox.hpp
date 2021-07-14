@@ -5,6 +5,8 @@
 
 #include "ResultCode.hpp"
 #include "Token.hpp"
+#include "RuntimeError.h"
+#include "Interpreter.h"
 
 namespace lox
 {
@@ -13,6 +15,8 @@ class Lox
 {
   private:
     inline static bool m_had_error = false;
+    inline static bool m_had_runtime_error = false;
+    static Interpreter m_interpreter;
   public:
     Lox() {}
     void run(std::string source) const;
@@ -21,6 +25,7 @@ class Lox
     static void error(int line, std::string message);
     static void report(int line, std::string where, std::string message);
     static void error(Token token, std::string message);
+    static void runtime_error(RuntimeError error);
 };
 
 }
