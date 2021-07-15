@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 
 #include "Lox.h"
 #include "Scanner.h"
@@ -28,8 +29,16 @@ void Lox::run(std::string source) const {
   //std::cout << AstPrinter().print(*expr) << std::endl;
 }
 
-ResultCode Lox::run_file(std::string script) const {
-  run(script);
+ResultCode Lox::run_file(std::string file_path) const {
+  std::string line;
+  std::ifstream my_file(file_path);
+
+  if(my_file.is_open()) {
+    while (getline(my_file, line)) {
+      run(line);
+    }
+    my_file.close();
+  }
 
   if(m_had_error || m_had_runtime_error)
   {
