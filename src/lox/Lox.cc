@@ -20,11 +20,11 @@ void Lox::run(std::string source) const {
   std::vector<Token> tokens = scanner.scan_tokens();
 
   Parser parser = Parser(tokens);
-  std::unique_ptr<Expr> expr = parser.parse();
+  std::vector<std::unique_ptr<Stmt>> statements = parser.parse();
 
   if (m_had_error) return;
 
-  Lox::m_interpreter.interpret(*expr);
+  Lox::m_interpreter.interpret(statements);
 
   //std::cout << AstPrinter().print(*expr) << std::endl;
 }

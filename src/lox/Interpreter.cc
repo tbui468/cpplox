@@ -5,10 +5,11 @@
 
 namespace lox {
 
-  void Interpreter::interpret(Expr& expr) {
+  void Interpreter::interpret(const std::vector<std::unique_ptr<Stmt>>& statements) {
     try {
-      Object value = evaluate(expr);
-      std::cout << stringify(value) << std::endl;
+      for (const std::unique_ptr<Stmt>& statement: statements) {
+        execute(*statement);
+      }
     } catch (RuntimeError& error) {
       Lox::runtime_error(error);
     }
@@ -40,6 +41,11 @@ namespace lox {
   Object Interpreter::evaluate(Expr& expr) {
     return expr.accept(*this);
   }
+
+  void Interpreter::execute(Stmt& stmt) {
+    stmt.accept(*this);
+  }
+
   Object Interpreter::visit(Literal& expr) {
     return expr.value;
   }
@@ -104,6 +110,15 @@ namespace lox {
 
     //here be dragons
     throw RuntimeError(expr.oprtr, "Error in binary expression.");
+  }
+
+  void Interpreter::visit(Expression& stmt) {
+    evaluate(*(stmt.expr)); //toss out result
+  }
+
+  void Interpreter::visit(Print& stmt) {
+    Object value = evaluate(*(stmt.expr));
+    std::cout << stringify(value) << std::endl;
   }
 
   bool Interpreter::is_equal(Object a, Object b) {

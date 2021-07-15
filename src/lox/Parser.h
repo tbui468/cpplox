@@ -6,6 +6,7 @@
 #include "Token.h"
 #include "TokenType.h"
 #include "Expr.h"
+#include "Stmt.h"
 
 namespace lox {
 
@@ -17,8 +18,11 @@ namespace lox {
       int m_current = 0;
     public:
       Parser(const std::vector<Token>& tokens): m_tokens(tokens) {}
-      std::unique_ptr<Expr> parse();
+      std::vector<std::unique_ptr<Stmt>> parse();
     private:
+      std::unique_ptr<Stmt> statement();
+      std::unique_ptr<Stmt> print_statement();
+      std::unique_ptr<Stmt> expression_statement();
       ParseError error(Token token, std::string message);
       std::unique_ptr<Expr> expression();
       std::unique_ptr<Expr> equality();

@@ -8,6 +8,7 @@
 
 //8. Statements and State
 //  8.1 Statements
+//    bug with parser - throwing "Expected expression" error at end of primary()
 //
 
 int main(int argc, char** argv) {

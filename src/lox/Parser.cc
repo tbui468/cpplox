@@ -1,17 +1,33 @@
 #include "Parser.h"
-#include "Expr.h"
 #include "Lox.h"
 #include "Object.h"
 
 
 namespace lox {
 
-  std::unique_ptr<Expr> Parser::parse() {
-    try {
-      return std::move(expression());
-    } catch (ParseError error) {
-      return nullptr;
+  std::vector<std::unique_ptr<Stmt>> Parser::parse() {
+    std::vector<std::unique_ptr<Stmt>> statements;
+    while (!is_at_end()) {
+      statements.push_back(statement());
     }
+    return statements;
+  }
+
+  std::unique_ptr<Stmt> Parser::statement() {
+    if (match(TokenType::PRINT)) return print_statement();
+    return expression_statement();
+  }
+
+  std::unique_ptr<Stmt> Parser::print_statement() {
+    std::unique_ptr<Expr> value = expression();
+    consume(TokenType::SEMICOLON, "Expect ';' after value.");
+    return std::make_unique<Print>(std::move(value));
+  }
+
+  std::unique_ptr<Stmt> Parser::expression_statement() {
+    std::unique_ptr<Expr> expr = expression();
+    consume(TokenType::SEMICOLON, "Expect ';' after value.");
+    return std::make_unique<Expression>(std::move(expr));
   }
   
   std::unique_ptr<Expr> Parser::expression(){
@@ -129,7 +145,8 @@ namespace lox {
   }
 
   bool Parser::is_at_end() const {
-    return m_current >= m_tokens.size();
+    return peek().m_type == TokenType::EOFILE;
+    //return m_current >= m_tokens.size();
   }
 
   Token Parser::previous() const {
