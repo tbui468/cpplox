@@ -8,13 +8,31 @@ namespace lox {
   std::vector<std::unique_ptr<Stmt>> Parser::parse() {
     std::vector<std::unique_ptr<Stmt>> statements;
     while (!is_at_end()) {
-      try {
-        statements.push_back(statement());
-      } catch (Parser::ParseError& e) {
-        //what is the point of ParseError???
-      }
+      statements.push_back(declaration());
     } 
     return statements;
+  }
+
+  std::unique_ptr<Stmt> Parser::declaration() {
+    try {
+      if (match(TokenType::VAR)) return var_declaration();
+      return statement();
+    } catch (ParseError& error) {
+      synchronize();
+      return nullptr;
+    }
+  }
+
+  std::unique_ptr<Stmt> Parser::var_declaration() {
+    Token identifier = consume(TokenType::IDENTIFIER, "Expect a variable name.");
+
+    std::unique_ptr<Expr> expr = nullptr;
+    if (match(TokenType::EQUAL)) {
+      expr = expression();
+    }
+      
+    consume(TokenType::SEMICOLON, "Expect ';' after variable declaration");
+    return std::make_unique<Var>(identifier, std::move(expr));
   }
 
   std::unique_ptr<Stmt> Parser::statement() {
@@ -101,6 +119,10 @@ namespace lox {
     if (match(TokenType::NUMBER)) {
       Token token = previous();
       return std::make_unique<Literal>(Object(std::stod(token.m_literal)));
+    }
+
+    if (match(TokenType::IDENTIFIER)) {
+      return std::make_unique<Variable>(previous());
     }
 
     if(match(TokenType::LEFT_PAREN)) {

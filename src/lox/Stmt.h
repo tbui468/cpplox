@@ -14,15 +14,18 @@ struct Stmt {
 
 struct Expression;
 struct Print;
+struct Var;
 
 struct StmtVisitorString {
   virtual std::string visit(Expression& stmt) = 0;
   virtual std::string visit(Print& stmt) = 0;
+  virtual std::string visit(Var& stmt) = 0;
 };
 
 struct StmtVisitorVoid {
   virtual void visit(Expression& stmt) = 0;
   virtual void visit(Print& stmt) = 0;
+  virtual void visit(Var& stmt) = 0;
 };
 
 struct Expression: public Stmt {
@@ -43,6 +46,17 @@ struct Print: public Stmt {
     void accept(StmtVisitorVoid& v) { return v.visit(*this); }
   public:
     std::unique_ptr<Expr> expr;
+};
+
+struct Var: public Stmt {
+  public:
+    Var(Token token, std::unique_ptr<Expr> expr): name(token), initializer(std::move(expr)) {}
+    ~Var() {}
+    std::string accept(StmtVisitorString& v) { return v.visit(*this); }
+    void accept(StmtVisitorVoid& v) { return v.visit(*this); }
+  public:
+    Token name;
+    std::unique_ptr<Expr> initializer;
 };
 
 }

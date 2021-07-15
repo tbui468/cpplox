@@ -112,6 +112,10 @@ namespace lox {
     throw RuntimeError(expr.oprtr, "Error in binary expression.");
   }
 
+  Object Interpreter::visit(Variable& expr) {
+    return m_environment.get(expr.name);
+  }
+
   void Interpreter::visit(Expression& stmt) {
     evaluate(*(stmt.expr)); //toss out result
   }
@@ -119,6 +123,15 @@ namespace lox {
   void Interpreter::visit(Print& stmt) {
     Object value = evaluate(*(stmt.expr));
     std::cout << stringify(value) << std::endl;
+  }
+
+  void Interpreter::visit(Var& stmt) {
+    Object value = Object(); //nil
+    if (stmt.initializer != nullptr) {
+      value = evaluate(*(stmt.initializer));
+    }
+
+    m_environment.define(stmt.name.m_lexeme, value);
   }
 
   bool Interpreter::is_equal(Object a, Object b) {

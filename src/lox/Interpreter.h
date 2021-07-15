@@ -6,6 +6,7 @@
 #include "Expr.h"
 #include "Stmt.h"
 #include "RuntimeError.h"
+#include "Environment.h"
 
 namespace lox {
 
@@ -20,11 +21,15 @@ namespace lox {
       Object visit(Grouping& expr) override;
       Object visit(Unary& expr) override;
       Object visit(Binary& expr) override;
+      Object visit(Variable& expr) override;
       void visit(Expression& stmt) override;
       void visit(Print& stmt) override;
+      void visit(Var& stmt) override;
       bool is_equal(Object a, Object b);
       void check_number_operand(Token op, Object operand);
       void check_number_operand(Token op, Object left, Object right);
+    private:
+      Environment m_environment;
   };
 
 }

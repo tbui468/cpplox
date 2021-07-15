@@ -8,7 +8,7 @@
 
 //8. Statements and State
 //  8.1 Statements
-//    bug with parser - throwing "Expected expression" error at end of primary()
+//  8.2 Global variables
 //
 
 int main(int argc, char** argv) {

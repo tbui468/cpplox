@@ -20,12 +20,14 @@ struct Binary;
 struct Grouping;
 struct Literal;
 struct Unary;
+struct Variable;
 
 struct VisitorString {
   virtual std::string visit(Binary& e) = 0;
   virtual std::string visit(Grouping& e) = 0;
   virtual std::string visit(Literal& e) = 0;
   virtual std::string visit(Unary& e) = 0;
+  virtual std::string visit(Variable& e) = 0;
 };
 
 struct VisitorObject {
@@ -33,6 +35,7 @@ struct VisitorObject {
   virtual Object visit(Grouping& e) = 0;
   virtual Object visit(Literal& e) = 0;
   virtual Object visit(Unary& e) = 0;
+  virtual Object visit(Variable& e) = 0;
 };
 
 struct Binary: public Expr {
@@ -78,6 +81,15 @@ struct Unary: public Expr {
     std::unique_ptr<Expr> right;
 };
 
+struct Variable: public Expr {
+  public:
+    Variable(Token name): name(name) {}
+    ~Variable() {}
+    std::string accept(VisitorString& v) { return v.visit(*this); }
+    Object accept(VisitorObject& v) { return v.visit(*this); }
+  public:
+    Token name;
+};
 
 }
 

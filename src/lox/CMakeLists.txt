@@ -7,6 +7,7 @@ set(Sources
     Parser.cc
     Object.cc
     Interpreter.cc
+    Environment.cc
     )
 
 set(Headers
@@ -22,6 +23,7 @@ set(Headers
     Object.h
     Interpreter.h
     RuntimeError.h
+    Environment.h
     )
 
 add_executable(

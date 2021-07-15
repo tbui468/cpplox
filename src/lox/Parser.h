@@ -20,6 +20,8 @@ namespace lox {
       Parser(const std::vector<Token>& tokens): m_tokens(tokens) {}
       std::vector<std::unique_ptr<Stmt>> parse();
     private:
+      std::unique_ptr<Stmt> declaration();
+      std::unique_ptr<Stmt> var_declaration();
       std::unique_ptr<Stmt> statement();
       std::unique_ptr<Stmt> print_statement();
       std::unique_ptr<Stmt> expression_statement();
