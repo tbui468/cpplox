@@ -8,8 +8,12 @@ namespace lox {
   std::vector<std::unique_ptr<Stmt>> Parser::parse() {
     std::vector<std::unique_ptr<Stmt>> statements;
     while (!is_at_end()) {
-      statements.push_back(statement());
-    }
+      try {
+        statements.push_back(statement());
+      } catch (Parser::ParseError& e) {
+        //what is the point of ParseError???
+      }
+    } 
     return statements;
   }
 
@@ -146,7 +150,6 @@ namespace lox {
 
   bool Parser::is_at_end() const {
     return peek().m_type == TokenType::EOFILE;
-    //return m_current >= m_tokens.size();
   }
 
   Token Parser::previous() const {

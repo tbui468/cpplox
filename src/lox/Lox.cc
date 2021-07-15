@@ -15,11 +15,10 @@ Interpreter Lox::m_interpreter = Interpreter();
 //Lox::error is called which sets m_had_error to true
 //and parser returns a nullptr
 void Lox::run(std::string source) const {
-  std::cout << source << std::endl;
   Scanner scanner = Scanner(source);
   std::vector<Token> tokens = scanner.scan_tokens();
 
-  Parser parser = Parser(tokens);
+  Parser parser = Parser(tokens); //THIS IS THE PROBLEM
   std::vector<std::unique_ptr<Stmt>> statements = parser.parse();
 
   if (m_had_error) return;
