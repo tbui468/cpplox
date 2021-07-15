@@ -7,8 +7,8 @@
 #include "Interpreter.h"
 
 //8. Statements and State
-//  change all headers to .h, and all .cpp to .cc to fit google standards
 //  8.1 Statements
+//
 
 int main(int argc, char** argv) {
 

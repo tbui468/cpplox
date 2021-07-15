@@ -16,6 +16,7 @@ set(Headers
     Token.h
     Scanner.h
     Expr.h
+    Stmt.h
     AstPrinter.h
     Parser.h
     Object.h

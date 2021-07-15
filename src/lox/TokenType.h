@@ -25,7 +25,7 @@ enum TokenType
   PRINT, RETURN, SUPER, THIS, TRUE, VAR, WHILE,
 
   //(1) EOF is already c++ keyword - wait, I think using EOF is okay if it's part of an enum?? should try it
-  EOFILE 
+  EOFILE
 };
 
 }
