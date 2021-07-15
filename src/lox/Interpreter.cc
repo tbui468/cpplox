@@ -46,6 +46,13 @@ namespace lox {
     stmt.accept(*this);
   }
 
+
+  Object Interpreter::visit(Assign& expr) {
+    Object value = evaluate(*(expr.value));
+    m_environment.assign(expr.name, value);
+    return value;
+  }
+
   Object Interpreter::visit(Literal& expr) {
     return expr.value;
   }

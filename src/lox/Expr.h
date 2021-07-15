@@ -16,6 +16,7 @@ struct Expr {
   virtual Object accept(VisitorObject& v) = 0;
 };
 
+struct Assign;
 struct Binary;
 struct Grouping;
 struct Literal;
@@ -23,6 +24,7 @@ struct Unary;
 struct Variable;
 
 struct VisitorString {
+  virtual std::string visit(Assign& e) = 0;
   virtual std::string visit(Binary& e) = 0;
   virtual std::string visit(Grouping& e) = 0;
   virtual std::string visit(Literal& e) = 0;
@@ -31,11 +33,24 @@ struct VisitorString {
 };
 
 struct VisitorObject {
+  virtual Object visit(Assign& e) = 0;
   virtual Object visit(Binary& e) = 0;
   virtual Object visit(Grouping& e) = 0;
   virtual Object visit(Literal& e) = 0;
   virtual Object visit(Unary& e) = 0;
   virtual Object visit(Variable& e) = 0;
+};
+
+
+struct Assign: public Expr {
+  public:
+    Assign(Token name, std::unique_ptr<Expr> value): name(name), value(std::move(value)) {}
+    ~Assign() {}
+    std::string accept(VisitorString& v) { return v.visit(*this); }
+    Object accept(VisitorObject& v) { return v.visit(*this); }
+  public:
+    Token name;
+    std::unique_ptr<Expr> value;
 };
 
 struct Binary: public Expr {

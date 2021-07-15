@@ -17,6 +17,7 @@ namespace lox {
       std::string stringify(const Object& obj);
       Object evaluate(Expr& expr);
       void execute(Stmt& stmt);
+      Object visit(Assign& expr) override;
       Object visit(Literal& expr) override;
       Object visit(Grouping& expr) override;
       Object visit(Unary& expr) override;

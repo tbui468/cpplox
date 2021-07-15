@@ -9,7 +9,11 @@
 //8. Statements and State
 //  8.1 Statements
 //  8.2 Global variables
+//  8.3 Assign variables
+//  8.4 Scope
 //
+//When all done, write comprehensive tests using GoogleTest, 
+//and then refactor (use GoogleTest as a style guide)
 
 int main(int argc, char** argv) {
 

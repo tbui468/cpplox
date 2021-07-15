@@ -35,6 +35,7 @@ namespace lox {
     return std::make_unique<Var>(identifier, std::move(expr));
   }
 
+  //recursive descent for statements
   std::unique_ptr<Stmt> Parser::statement() {
     if (match(TokenType::PRINT)) return print_statement();
     return expression_statement();
@@ -51,9 +52,28 @@ namespace lox {
     consume(TokenType::SEMICOLON, "Expect ';' after value.");
     return std::make_unique<Expression>(std::move(expr));
   }
-  
-  std::unique_ptr<Expr> Parser::expression(){
-    return std::move(equality());
+ 
+  //recursive descent for expressions 
+  std::unique_ptr<Expr> Parser::expression() { 
+    return std::move(assignment());
+  }
+
+  std::unique_ptr<Expr> Parser::assignment() {
+    std::unique_ptr<Expr> expr = equality();
+
+    if (match(TokenType::EQUAL)) {
+      Token equals = previous();
+      std::unique_ptr<Expr> value = assignment(); //not equality() since it could be followed by more assignments
+
+      if (dynamic_cast<Variable*>(expr.get())) {
+        Token name = dynamic_cast<Variable*>(expr.get())->name;
+        return std::make_unique<Assign>(name, std::move(value));  
+      }
+
+      error(equals, "Invalid assignment target.");
+    }
+
+    return std::move(expr);
   }
 
   std::unique_ptr<Expr> Parser::equality(){
