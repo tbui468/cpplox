@@ -33,12 +33,16 @@ ResultCode Lox::run_file(std::string file_path) const {
   std::string line;
   std::ifstream my_file(file_path);
 
+  std::string all = "";
+
   if(my_file.is_open()) {
     while (getline(my_file, line)) {
-      run(line);
+      all += line;
     }
     my_file.close();
   }
+
+  run(all);
 
   if(m_had_error || m_had_runtime_error)
   {

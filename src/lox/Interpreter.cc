@@ -46,6 +46,19 @@ namespace lox {
     stmt.accept(*this);
   }
 
+  void Interpreter::execute_block(const std::vector<std::unique_ptr<Stmt>>& statements, Environment& env) {
+    Environment previous = m_environment;
+    m_environment = env;
+    try {
+      for (const std::unique_ptr<Stmt>& stmt: statements) {
+        execute(*stmt);
+      }
+    } catch (RuntimeError& error) {
+
+    }
+    m_environment = previous;
+  }
+
 
   Object Interpreter::visit(Assign& expr) {
     Object value = evaluate(*(expr.value));
@@ -123,6 +136,7 @@ namespace lox {
     return m_environment.get(expr.name);
   }
 
+  //statements
   void Interpreter::visit(Expression& stmt) {
     evaluate(*(stmt.expr)); //toss out result
   }
@@ -139,6 +153,10 @@ namespace lox {
     }
 
     m_environment.define(stmt.name.m_lexeme, value);
+  }
+  
+  void Interpreter::visit(Block& stmt) {
+    execute_block(stmt.statements, m_environment);
   }
 
   bool Interpreter::is_equal(Object a, Object b) {

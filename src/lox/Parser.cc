@@ -38,6 +38,7 @@ namespace lox {
   //recursive descent for statements
   std::unique_ptr<Stmt> Parser::statement() {
     if (match(TokenType::PRINT)) return print_statement();
+    if (match(TokenType::LEFT_BRACE)) return std::make_unique<Block>(block());
     return expression_statement();
   }
 
@@ -51,6 +52,18 @@ namespace lox {
     std::unique_ptr<Expr> expr = expression();
     consume(TokenType::SEMICOLON, "Expect ';' after value.");
     return std::make_unique<Expression>(std::move(expr));
+  }
+
+  
+  std::vector<std::unique_ptr<Stmt>> Parser::block() {
+    std::vector<std::unique_ptr<Stmt>> statements;
+
+    while (!check(TokenType::RIGHT_BRACE) && !is_at_end()) {
+      statements.push_back(std::move(declaration()));
+    }
+
+    consume(TokenType::RIGHT_BRACE, "Expect '}' after block.");
+    return statements;
   }
  
   //recursive descent for expressions 

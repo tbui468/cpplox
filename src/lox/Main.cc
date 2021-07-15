@@ -11,9 +11,8 @@
 //  8.2 Global variables
 //  8.3 Assign variables
 //  8.4 Scope
-//
-//When all done, write comprehensive tests using GoogleTest, 
-//and then refactor (use GoogleTest as a style guide)
+//      the copying of Environment is causing trouble
+//      not following the rule of 5 seems to be the main problem
 
 int main(int argc, char** argv) {
 

@@ -17,6 +17,7 @@ namespace lox {
       std::string stringify(const Object& obj);
       Object evaluate(Expr& expr);
       void execute(Stmt& stmt);
+      void execute_block(const std::vector<std::unique_ptr<Stmt>>& statements, Environment& env);
       Object visit(Assign& expr) override;
       Object visit(Literal& expr) override;
       Object visit(Grouping& expr) override;
@@ -26,6 +27,7 @@ namespace lox {
       void visit(Expression& stmt) override;
       void visit(Print& stmt) override;
       void visit(Var& stmt) override;
+      void visit(Block& stmt) override;
       bool is_equal(Object a, Object b);
       void check_number_operand(Token op, Object operand);
       void check_number_operand(Token op, Object left, Object right);
