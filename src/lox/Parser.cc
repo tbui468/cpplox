@@ -49,11 +49,13 @@ namespace lox {
     consume(TokenType::LEFT_PAREN, "Expect '(' after 'if'.");
     std::unique_ptr<Expr> condition = expression();
     consume(TokenType::RIGHT_PAREN, "Expect ')' after if condition.");
-    std::unique_ptr<Stmt> then_stmt = statement();   
+    consume(TokenType::LEFT_BRACE, "Expect '{' after if statement.");
+    std::unique_ptr<Stmt> then_stmt = std::make_unique<Block>(block());
 
     std::unique_ptr<Stmt> else_stmt = nullptr;
     if (match(TokenType::ELSE)) {
-      else_stmt = statement();
+      consume(TokenType::LEFT_BRACE, "Expect '{' after else statement.");
+      else_stmt = std::make_unique<Block>(block());
     }
 
     return std::make_unique<If>(std::move(condition), std::move(then_stmt), std::move(else_stmt));
