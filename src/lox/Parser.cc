@@ -95,7 +95,7 @@ namespace lox {
     }
 
     std::unique_ptr<Expr> condition;
-    if (check(TokenType::SEMICOLON)) {
+    if (match(TokenType::SEMICOLON)) {
       condition = nullptr;
     } else {
       condition = expression();
@@ -103,17 +103,16 @@ namespace lox {
     }
 
     std::unique_ptr<Expr> increment;
-    if (check(TokenType::SEMICOLON)) {
+    if (match(TokenType::RIGHT_PAREN)) {
       increment = nullptr;
     } else {
       increment = expression();
+      consume(TokenType::RIGHT_PAREN, "Expect ')' after for-loop clause.");
     }
-
-    consume(TokenType::RIGHT_PAREN, "Expect ')' after for-loop clause.");
 
     std::unique_ptr<Stmt> body = std::make_unique<Block>(block());
 
-    if (!increment) {
+    if (increment) {
       std::vector<std::unique_ptr<Stmt>> statements;
       statements.push_back(std::move(body));
       statements.push_back(std::make_unique<Expression>(std::move(increment)));
@@ -123,16 +122,14 @@ namespace lox {
     if (!condition) {
       condition = std::make_unique<Literal>(Object(true));
     }
-
     body = std::make_unique<While>(std::move(condition), std::move(body));
 
-    if (!initializer) {
+    if (initializer) {
       std::vector<std::unique_ptr<Stmt>> statements;
       statements.push_back(std::move(initializer));
       statements.push_back(std::move(body));
       body = std::make_unique<Block>(std::move(statements));
     }
-
 
     return body;
   }
@@ -143,7 +140,6 @@ namespace lox {
     consume(TokenType::LEFT_BRACE, "Expect '{' to start new block.");
 
     while (!check(TokenType::RIGHT_BRACE) && !is_at_end()) {
-      //statements.push_back(std::move(declaration()));
       statements.push_back(declaration());
     }
 
