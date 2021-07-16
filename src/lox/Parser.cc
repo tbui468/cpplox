@@ -42,6 +42,7 @@ namespace lox {
     if (match(TokenType::IF)) return if_statement();
     if (match(TokenType::PRINT)) return print_statement();
     if (match(TokenType::WHILE)) return while_statement();
+    if (match(TokenType::FOR)) return for_statement();
     if (check(TokenType::LEFT_BRACE)) return std::make_unique<Block>(block()); //doing left and right paren check inside block()
     return expression_statement();
   }
@@ -80,6 +81,61 @@ namespace lox {
     
     return std::make_unique<While>(std::move(condition), std::move(body));
   }
+
+  std::unique_ptr<Stmt> Parser::for_statement() {
+    consume(TokenType::LEFT_PAREN, "Expect '(' after 'for'.");
+
+    std::unique_ptr<Stmt> initializer;
+    if (match(TokenType::SEMICOLON)) {
+      initializer = nullptr;
+    } else if (match(TokenType::VAR)) {
+      initializer = var_declaration();
+    } else {
+      initializer = expression_statement();
+    }
+
+    std::unique_ptr<Expr> condition;
+    if (check(TokenType::SEMICOLON)) {
+      condition = nullptr;
+    } else {
+      condition = expression();
+      consume(TokenType::SEMICOLON, "Expect ';' after for-loop condition.");
+    }
+
+    std::unique_ptr<Expr> increment;
+    if (check(TokenType::SEMICOLON)) {
+      increment = nullptr;
+    } else {
+      increment = expression();
+    }
+
+    consume(TokenType::RIGHT_PAREN, "Expect ')' after for-loop clause.");
+
+    std::unique_ptr<Stmt> body = std::make_unique<Block>(block());
+
+    if (!increment) {
+      std::vector<std::unique_ptr<Stmt>> statements;
+      statements.push_back(std::move(body));
+      statements.push_back(std::make_unique<Expression>(std::move(increment)));
+      body = std::make_unique<Block>(std::move(statements));
+    }
+
+    if (!condition) {
+      condition = std::make_unique<Literal>(Object(true));
+    }
+
+    body = std::make_unique<While>(std::move(condition), std::move(body));
+
+    if (!initializer) {
+      std::vector<std::unique_ptr<Stmt>> statements;
+      statements.push_back(std::move(initializer));
+      statements.push_back(std::move(body));
+      body = std::make_unique<Block>(std::move(statements));
+    }
+
+
+    return body;
+  }
   
   std::vector<std::unique_ptr<Stmt>> Parser::block() {
     std::vector<std::unique_ptr<Stmt>> statements;
@@ -87,7 +143,8 @@ namespace lox {
     consume(TokenType::LEFT_BRACE, "Expect '{' to start new block.");
 
     while (!check(TokenType::RIGHT_BRACE) && !is_at_end()) {
-      statements.push_back(std::move(declaration()));
+      //statements.push_back(std::move(declaration()));
+      statements.push_back(declaration());
     }
 
     consume(TokenType::RIGHT_BRACE, "Expect '}' to end block.");
@@ -97,7 +154,7 @@ namespace lox {
  
   //recursive descent for expressions 
   std::unique_ptr<Expr> Parser::expression() { 
-    return std::move(assignment());
+    return assignment();
   }
 
   std::unique_ptr<Expr> Parser::assignment() {
@@ -188,7 +245,7 @@ namespace lox {
       std::unique_ptr<Expr> right = unary();
       return std::make_unique<Unary>(token, std::move(right));
     } else {
-      return std::move(primary());
+      return primary();
     }
   }
 

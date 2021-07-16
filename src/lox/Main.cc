@@ -7,9 +7,9 @@
 #include "Interpreter.h"
 
 //9. Control Flow
-//  blocks (with {}) are not working
-//  declaring a var inside a block and then trying to print it gets it stuck in an infinite loop
-//    declaring a variable inside a block is fine, but getting it causes the block to exit???
+//  9.4 For loops
+//
+//  seems like clang compiler does the std::move when returning unique pointers, so don't need to explicity call it
 
 int main(int argc, char** argv) {
 

@@ -27,6 +27,7 @@ namespace lox {
       std::unique_ptr<Stmt> print_statement();
       std::unique_ptr<Stmt> expression_statement();
       std::unique_ptr<Stmt> while_statement();
+      std::unique_ptr<Stmt> for_statement();
       std::vector<std::unique_ptr<Stmt>> block();
       ParseError error(Token token, std::string message);
       std::unique_ptr<Expr> expression();
