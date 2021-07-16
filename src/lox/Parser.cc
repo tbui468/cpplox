@@ -42,7 +42,7 @@ namespace lox {
     if (match(TokenType::IF)) return if_statement();
     if (match(TokenType::PRINT)) return print_statement();
     if (match(TokenType::WHILE)) return while_statement();
-//    if (match(TokenType::FOR)) return for_statement();
+    if (match(TokenType::FOR)) return for_statement();
     if (check(TokenType::LEFT_BRACE)) return std::make_unique<Block>(block()); //doing left and right paren check inside block()
     return expression_statement();
   }

@@ -11,6 +11,11 @@
 //  
 //  disabled for_statement for now until bug below is solved
 //  Code below should throw error, but it just skips tempsss variable (which is undefined)
+//
+//  Found the problem.  A Runtime exeption is thrown but nothing catches it
+//  so the stack goes back up one scope and continues.
+//
+//  Why isn't the exception thrown in the Environment propagating up to the 
 /*
 var temp = 0;
 

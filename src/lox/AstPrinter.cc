@@ -28,6 +28,16 @@ namespace lox
   std::string AstPrinter::visit(Unary& expr) {
     return parenthesize(expr.oprtr.m_lexeme, expr.right->accept(*this));
   }
+  std::string AstPrinter::visit(Assign& expr) {
+    return "Assign";
+  }
+  std::string AstPrinter::visit(Variable& expr) {
+    return expr.name.m_lexeme;
+  }
+  std::string AstPrinter::visit(Logical& expr) {
+    return "Logical";
+  }
+
 
   std::string AstPrinter::parenthesize(const std::string& name, const std::string& expr_string) {
     std::string out = "(" + name;

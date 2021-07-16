@@ -6,8 +6,39 @@
 #include "Parser.h"
 #include "AstPrinter.h"
 
-namespace lox
-{
+namespace lox {
+
+class StmtPrinter: public StmtVisitorString {
+  public:
+    std::string print(Stmt& stmt) {
+      return stmt.accept(*this);
+    }
+
+  private:
+    std::string visit(Expression& stmt) {
+      return "Expression";
+    }
+    std::string visit(Print& stmt) {
+      return "Print: " + AstPrinter().print(*(stmt.expr));
+    }
+    std::string visit(Var& stmt) {
+      return "Var";
+    }
+    std::string visit(Block& stmt) {
+      std::string out = ""; 
+      for (const std::unique_ptr<Stmt>& stmt: stmt.statements) {
+        out += StmtPrinter().print(*stmt) + "\n";
+      }
+      return out;
+    }
+    std::string visit(If& stmt) {
+      return "If";
+    }
+    std::string visit(While& stmt) {
+      return "While";
+    }
+
+};
 
 
 Interpreter Lox::m_interpreter = Interpreter();
@@ -22,11 +53,17 @@ void Lox::run(std::string source) const {
   Parser parser = Parser(tokens);
   std::vector<std::unique_ptr<Stmt>> statements = parser.parse();
 
+  /*
+  for (const std::unique_ptr<Stmt>& stmt: statements) {
+    std::cout << StmtPrinter().print(*stmt) << std::endl;
+  }*/
+
+  
+
   if (m_had_error) return;
 
   Lox::m_interpreter.interpret(statements);
 
-  //std::cout << AstPrinter().print(*expr) << std::endl;
 }
 
 ResultCode Lox::run_file(std::string file_path) const {

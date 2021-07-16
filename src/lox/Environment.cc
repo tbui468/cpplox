@@ -1,7 +1,6 @@
 #include "Environment.h"
 #include "RuntimeError.h"
 
-
 namespace lox {
   void Environment::define(std::string name, Object value) {
     m_values[name] = value;
@@ -29,6 +28,7 @@ namespace lox {
     if (m_enclosing) {
       return m_enclosing->get(name);
     }
+
 
     throw RuntimeError(name, "Undefined variable '" + name.m_lexeme + "'.");
   }

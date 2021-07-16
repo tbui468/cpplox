@@ -54,13 +54,14 @@ namespace lox {
     std::shared_ptr<Environment> previous = m_environment; //need to save current m_environment state
     m_environment = env; //set m_environment to new state
     
-    try {
+    //try {
       for (const std::unique_ptr<Stmt>& stmt: statements) {
-        execute(*stmt);
+          execute(*stmt);
       }
+      /*
     } catch (RuntimeError& error) {
 
-    }
+    }*/
     m_environment = previous; //throw out environment and reset back to old one
   }
 
@@ -159,7 +160,7 @@ namespace lox {
   }
 
   void Interpreter::visit(Print& stmt) {
-    Object value = evaluate(*(stmt.expr));
+    Object value = evaluate(*(stmt.expr)); //<- this line is fucking up when the variable in undefined
     std::cout << stringify(value) << std::endl;
   }
 
