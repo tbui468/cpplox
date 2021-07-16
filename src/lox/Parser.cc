@@ -41,6 +41,7 @@ namespace lox {
   std::unique_ptr<Stmt> Parser::statement() {
     if (match(TokenType::IF)) return if_statement();
     if (match(TokenType::PRINT)) return print_statement();
+    if (match(TokenType::WHILE)) return while_statement();
     if (match(TokenType::LEFT_BRACE)) return std::make_unique<Block>(block());
     return expression_statement();
   }
@@ -49,12 +50,10 @@ namespace lox {
     consume(TokenType::LEFT_PAREN, "Expect '(' after 'if'.");
     std::unique_ptr<Expr> condition = expression();
     consume(TokenType::RIGHT_PAREN, "Expect ')' after if condition.");
-    consume(TokenType::LEFT_BRACE, "Expect '{' after if statement.");
     std::unique_ptr<Stmt> then_stmt = std::make_unique<Block>(block());
 
     std::unique_ptr<Stmt> else_stmt = nullptr;
     if (match(TokenType::ELSE)) {
-      consume(TokenType::LEFT_BRACE, "Expect '{' after else statement.");
       else_stmt = std::make_unique<Block>(block());
     }
 
@@ -73,15 +72,26 @@ namespace lox {
     return std::make_unique<Expression>(std::move(expr));
   }
 
+  std::unique_ptr<Stmt> Parser::while_statement() {
+    consume(TokenType::LEFT_PAREN, "Expect '(' after 'while'.");
+    std::unique_ptr<Expr> condition = expression();
+    consume(TokenType::RIGHT_PAREN, "Expect ')' after condition.");
+    consume(TokenType::LEFT_BRACE, "Expect '{' to start new block.");
+    std::unique_ptr<Stmt> body = std::make_unique<Block>(block());
+    
+    return std::make_unique<While>(std::move(condition), std::move(body));
+  }
   
   std::vector<std::unique_ptr<Stmt>> Parser::block() {
     std::vector<std::unique_ptr<Stmt>> statements;
+
 
     while (!check(TokenType::RIGHT_BRACE) && !is_at_end()) {
       statements.push_back(std::move(declaration()));
     }
 
-    consume(TokenType::RIGHT_BRACE, "Expect '}' after block.");
+    consume(TokenType::RIGHT_BRACE, "Expect '}' to end block.");
+
     return statements;
   }
  

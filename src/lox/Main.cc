@@ -6,13 +6,10 @@
 #include "AstPrinter.h"
 #include "Interpreter.h"
 
-//8. Statements and State
-//  8.1 Statements
-//  8.2 Global variables
-//  8.3 Assign variables
-//  8.4 Scope
-//      the copying of Environment is causing trouble
-//      not following the rule of 5 seems to be the main problem
+//9. Control Flow
+//  blocks (with {}) are not working
+//  declaring a var inside a block and then trying to print it gets it stuck in an infinite loop
+//    declaring a variable inside a block is fine, but getting it causes the block to exit???
 
 int main(int argc, char** argv) {
 

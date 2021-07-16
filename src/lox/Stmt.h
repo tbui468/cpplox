@@ -17,6 +17,7 @@ struct Print;
 struct Var;
 struct Block;
 struct If;
+struct While;
 
 struct StmtVisitorString {
   virtual std::string visit(Expression& stmt) = 0;
@@ -24,6 +25,7 @@ struct StmtVisitorString {
   virtual std::string visit(Var& stmt) = 0;
   virtual std::string visit(Block& stmt) = 0;
   virtual std::string visit(If& stmt) = 0;
+  virtual std::string visit(While& stmt) = 0;
 };
 
 struct StmtVisitorVoid {
@@ -32,6 +34,7 @@ struct StmtVisitorVoid {
   virtual void visit(Var& stmt) = 0;
   virtual void visit(Block& stmt) = 0;
   virtual void visit(If& stmt) = 0;
+  virtual void visit(While& stmt) = 0;
 };
 
 struct Expression: public Stmt {
@@ -87,6 +90,18 @@ struct If: public Stmt {
      std::unique_ptr<Expr> condition;
      std::unique_ptr<Stmt> then_branch;
      std::unique_ptr<Stmt> else_branch;
+};
+
+struct While: public Stmt {
+  public:
+    While(std::unique_ptr<Expr> condition, std::unique_ptr<Stmt> body):
+      condition(std::move(condition)), body(std::move(body)) {}
+    ~While() {}
+    std::string accept(StmtVisitorString& visitor) { return visitor.visit(*this); }
+    void accept(StmtVisitorVoid& visitor) { visitor.visit(*this); }
+  public:
+    std::unique_ptr<Expr> condition;
+    std::unique_ptr<Stmt> body;
 };
 
 }

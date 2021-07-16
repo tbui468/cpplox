@@ -5,6 +5,10 @@
 
 namespace lox {
 
+  Interpreter::Interpreter() {
+    m_environment = std::make_shared<Environment>();
+  }
+
   void Interpreter::interpret(const std::vector<std::unique_ptr<Stmt>>& statements) {
     try {
       for (const std::unique_ptr<Stmt>& statement: statements) {
@@ -46,9 +50,10 @@ namespace lox {
     stmt.accept(*this);
   }
 
-  void Interpreter::execute_block(const std::vector<std::unique_ptr<Stmt>>& statements, Environment& env) {
-    Environment previous = m_environment;
-    m_environment = env;
+  void Interpreter::execute_block(const std::vector<std::unique_ptr<Stmt>>& statements, std::shared_ptr<Environment> env) {
+    std::shared_ptr<Environment> previous = m_environment; //need to save current m_environment state
+    m_environment = env; //set m_environment to new state
+    
     try {
       for (const std::unique_ptr<Stmt>& stmt: statements) {
         execute(*stmt);
@@ -56,13 +61,13 @@ namespace lox {
     } catch (RuntimeError& error) {
 
     }
-    m_environment = previous;
+    m_environment = previous; //throw out environment and reset back to old one
   }
 
 
   Object Interpreter::visit(Assign& expr) {
     Object value = evaluate(*(expr.value));
-    m_environment.assign(expr.name, value);
+    m_environment->assign(expr.name, value);
     return value;
   }
 
@@ -133,7 +138,7 @@ namespace lox {
   }
 
   Object Interpreter::visit(Variable& expr) {
-    return m_environment.get(expr.name);
+    return m_environment->get(expr.name);
   }
 
   Object Interpreter::visit(Logical& expr) {
@@ -164,11 +169,12 @@ namespace lox {
       value = evaluate(*(stmt.initializer));
     }
 
-    m_environment.define(stmt.name.m_lexeme, value);
+    m_environment->define(stmt.name.m_lexeme, value);
   }
   
   void Interpreter::visit(Block& stmt) {
-    execute_block(stmt.statements, m_environment);
+    std::shared_ptr<Environment> env = std::make_shared<Environment>(m_environment);
+    execute_block(stmt.statements, env);
   }
 
   void Interpreter::visit(If& stmt) {
@@ -177,6 +183,12 @@ namespace lox {
       execute(*(stmt.then_branch));      
     } else if(stmt.else_branch) {
       execute(*(stmt.else_branch));
+    }
+  }
+
+  void Interpreter::visit(While& stmt) {
+    while(evaluate(*stmt.condition).is_true()) {
+      execute(*(stmt.body));
     }
   }
 

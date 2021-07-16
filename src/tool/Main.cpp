@@ -8,8 +8,8 @@
 
 
 namespace genast {
+/*
 
-  //could probably make this class static since we'll never need more than a single instance
   class GenAST {
     public:
       void define_ast(const std::string& out_dir, const std::string& base_name, const std::array<std::string, 4>& types) {
@@ -49,13 +49,13 @@ namespace genast {
         outfile.close();
       }
     private:
-/*
+
 struct Binary: public Expr {
   Binary(Expr left, Token perator, Expr right): left(left), perator(perator), right(right) {} //add this!!!
   Expr left;
   Token perator;
   Expr right;
-};*/
+};
       void define_type(std::ofstream& outfile, const std::string& base_name, const std::string& class_name, const std::string& fields_string) {
         std::vector<std::string> fields = split(fields_string, ",");
         std::vector<std::string> classes;
@@ -129,11 +129,13 @@ struct Binary: public Expr {
         return out;
       }
   };
-
+*/
 
   }
 
-  int main(int argc, char** argv) {
+  //int main(int argc, char** argv) {
+  int main() {
+    /*
     if (argc == 2)
     {
       std::string out_dir = argv[1];
@@ -150,7 +152,7 @@ struct Binary: public Expr {
     {
       std::cout << "Usage: genast <output directory>" << std::endl;
       return 1;
-    }
+    }*/
 
     return 0; 
   }

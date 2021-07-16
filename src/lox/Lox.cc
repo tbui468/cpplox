@@ -19,7 +19,7 @@ void Lox::run(std::string source) const {
   Scanner scanner = Scanner(source);
   std::vector<Token> tokens = scanner.scan_tokens();
 
-  Parser parser = Parser(tokens); //THIS IS THE PROBLEM
+  Parser parser = Parser(tokens);
   std::vector<std::unique_ptr<Stmt>> statements = parser.parse();
 
   if (m_had_error) return;
