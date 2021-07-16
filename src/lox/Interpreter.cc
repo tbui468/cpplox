@@ -163,7 +163,7 @@ namespace lox {
     Object condition = evaluate(*(stmt.condition));
     if (condition.is_true()) {
       execute(*(stmt.then_branch));      
-    } else {
+    } else if(stmt.else_branch) {
       execute(*(stmt.else_branch));
     }
   }
