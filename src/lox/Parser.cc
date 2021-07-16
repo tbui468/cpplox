@@ -42,7 +42,7 @@ namespace lox {
     if (match(TokenType::IF)) return if_statement();
     if (match(TokenType::PRINT)) return print_statement();
     if (match(TokenType::WHILE)) return while_statement();
-    if (match(TokenType::LEFT_BRACE)) return std::make_unique<Block>(block());
+    if (check(TokenType::LEFT_BRACE)) return std::make_unique<Block>(block()); //doing left and right paren check inside block()
     return expression_statement();
   }
 
@@ -76,7 +76,6 @@ namespace lox {
     consume(TokenType::LEFT_PAREN, "Expect '(' after 'while'.");
     std::unique_ptr<Expr> condition = expression();
     consume(TokenType::RIGHT_PAREN, "Expect ')' after condition.");
-    consume(TokenType::LEFT_BRACE, "Expect '{' to start new block.");
     std::unique_ptr<Stmt> body = std::make_unique<Block>(block());
     
     return std::make_unique<While>(std::move(condition), std::move(body));
@@ -85,6 +84,7 @@ namespace lox {
   std::vector<std::unique_ptr<Stmt>> Parser::block() {
     std::vector<std::unique_ptr<Stmt>> statements;
 
+    consume(TokenType::LEFT_BRACE, "Expect '{' to start new block.");
 
     while (!check(TokenType::RIGHT_BRACE) && !is_at_end()) {
       statements.push_back(std::move(declaration()));
