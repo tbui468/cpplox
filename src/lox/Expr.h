@@ -22,6 +22,7 @@ struct Grouping;
 struct Literal;
 struct Unary;
 struct Variable;
+struct Logical;
 
 struct VisitorString {
   virtual std::string visit(Assign& e) = 0;
@@ -30,6 +31,7 @@ struct VisitorString {
   virtual std::string visit(Literal& e) = 0;
   virtual std::string visit(Unary& e) = 0;
   virtual std::string visit(Variable& e) = 0;
+  virtual std::string visit(Logical& e) = 0;
 };
 
 struct VisitorObject {
@@ -39,6 +41,7 @@ struct VisitorObject {
   virtual Object visit(Literal& e) = 0;
   virtual Object visit(Unary& e) = 0;
   virtual Object visit(Variable& e) = 0;
+  virtual Object visit(Logical& e) = 0;
 };
 
 
@@ -92,7 +95,7 @@ struct Unary: public Expr {
     std::string accept(VisitorString& v) { return v.visit(*this); }
     Object accept(VisitorObject& v) { return v.visit(*this); }
   public:
-    Token oprtr; //note: Token has a type, lexeme, literal (optional) and line 
+    Token oprtr;
     std::unique_ptr<Expr> right;
 };
 
@@ -104,6 +107,19 @@ struct Variable: public Expr {
     Object accept(VisitorObject& v) { return v.visit(*this); }
   public:
     Token name;
+};
+
+struct Logical: public Expr {
+  public:
+    Logical(Token oprtr, std::unique_ptr<Expr> left, std::unique_ptr<Expr> right):
+      oprtr(oprtr), left(std::move(left)), right(std::move(right)) {}
+    ~Logical() {}
+    std::string accept(VisitorString& visitor) { return visitor.visit(*this); }
+    Object accept(VisitorObject& visitor) { return visitor.visit(*this); }
+  public:
+    Token oprtr;
+    std::unique_ptr<Expr> left;
+    std::unique_ptr<Expr> right;
 };
 
 }

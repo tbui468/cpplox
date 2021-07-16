@@ -24,6 +24,7 @@ namespace lox {
       Object visit(Unary& expr) override;
       Object visit(Binary& expr) override;
       Object visit(Variable& expr) override;
+      Object visit(Logical& expr) override;
       void visit(Expression& stmt) override;
       void visit(Print& stmt) override;
       void visit(Var& stmt) override;

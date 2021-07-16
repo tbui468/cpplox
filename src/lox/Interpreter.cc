@@ -136,6 +136,18 @@ namespace lox {
     return m_environment.get(expr.name);
   }
 
+  Object Interpreter::visit(Logical& expr) {
+    Object left = Object(evaluate(*(expr.left)));
+
+    if (expr.oprtr.m_type == TokenType::OR) {
+      if (left.is_true()) return left;
+    } else {
+      if (!left.is_true()) return left;
+    }
+
+    return Object(evaluate(*(expr.right)));
+  }
+
   //statements
   void Interpreter::visit(Expression& stmt) {
     evaluate(*(stmt.expr)); //toss out result

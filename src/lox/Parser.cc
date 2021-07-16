@@ -91,7 +91,7 @@ namespace lox {
   }
 
   std::unique_ptr<Expr> Parser::assignment() {
-    std::unique_ptr<Expr> expr = equality();
+    std::unique_ptr<Expr> expr = logic_or();
 
     if (match(TokenType::EQUAL)) {
       Token equals = previous();
@@ -106,6 +106,30 @@ namespace lox {
     }
 
     return std::move(expr);
+  }
+
+  std::unique_ptr<Expr> Parser::logic_or() {
+    std::unique_ptr<Expr> left = logic_and();
+    
+    if (match(TokenType::OR)) {
+      Token token = previous();
+      std::unique_ptr<Expr> right = logic_and();
+      return std::make_unique<Logical>(token, std::move(left), std::move(right));
+    }
+
+    return std::move(left);
+  }
+  
+  std::unique_ptr<Expr> Parser::logic_and() {
+    std::unique_ptr<Expr> left = equality();
+
+    if (match(TokenType::AND)) {
+      Token token = previous();
+      std::unique_ptr<Expr> right = equality();
+      return std::make_unique<Logical>(token, std::move(left), std::move(right));
+    }
+
+    return std::move(left);
   }
 
   std::unique_ptr<Expr> Parser::equality(){
