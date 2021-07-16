@@ -8,8 +8,20 @@
 
 //9. Control Flow
 //  9.4 For loops
-//
-//  seems like clang compiler does the std::move when returning unique pointers, so don't need to explicity call it
+//  
+//  disabled for_statement for now until bug below is solved
+//  Code below should throw error, but it just skips tempsss variable (which is undefined)
+/*
+var temp = 0;
+
+while (temp < 10) {
+  temp = temp + 1;
+  print tempsss;
+}
+
+print temp;
+
+*/
 
 int main(int argc, char** argv) {
 

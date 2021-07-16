@@ -37,7 +37,7 @@ ResultCode Lox::run_file(std::string file_path) const {
 
   if(my_file.is_open()) {
     while (getline(my_file, line)) {
-      all += line;
+      all += line + "\n";
     }
     my_file.close();
   }
