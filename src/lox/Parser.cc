@@ -13,6 +13,8 @@ namespace lox {
     return statements;
   }
 
+  //I don't like how statements and declarations are split up (is it necessary)
+  //three types: declarations, statements and expressions
   std::unique_ptr<Stmt> Parser::declaration() {
     try {
       if (match(TokenType::VAR)) return var_declaration();
@@ -37,9 +39,24 @@ namespace lox {
 
   //recursive descent for statements
   std::unique_ptr<Stmt> Parser::statement() {
+    if (match(TokenType::IF)) return if_statement();
     if (match(TokenType::PRINT)) return print_statement();
     if (match(TokenType::LEFT_BRACE)) return std::make_unique<Block>(block());
     return expression_statement();
+  }
+
+  std::unique_ptr<Stmt> Parser::if_statement() {
+    consume(TokenType::LEFT_PAREN, "Expect '(' after 'if'.");
+    std::unique_ptr<Expr> condition = expression();
+    consume(TokenType::RIGHT_PAREN, "Expect ')' after if condition.");
+    std::unique_ptr<Stmt> then_stmt = statement();   
+
+    std::unique_ptr<Stmt> else_stmt = nullptr;
+    if (match(TokenType::ELSE)) {
+      else_stmt = statement();
+    }
+
+    return std::make_unique<If>(std::move(condition), std::move(then_stmt), std::move(else_stmt));
   }
 
   std::unique_ptr<Stmt> Parser::print_statement() {

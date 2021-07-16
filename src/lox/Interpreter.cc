@@ -159,6 +159,15 @@ namespace lox {
     execute_block(stmt.statements, m_environment);
   }
 
+  void Interpreter::visit(If& stmt) {
+    Object condition = evaluate(*(stmt.condition));
+    if (condition.is_true()) {
+      execute(*(stmt.then_branch));      
+    } else {
+      execute(*(stmt.else_branch));
+    }
+  }
+
   bool Interpreter::is_equal(Object a, Object b) {
     if (a.is_nil() && b.is_nil()) return true;
     if (a.is_nil()) return false;

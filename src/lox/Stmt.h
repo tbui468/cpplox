@@ -16,12 +16,14 @@ struct Expression;
 struct Print;
 struct Var;
 struct Block;
+struct If;
 
 struct StmtVisitorString {
   virtual std::string visit(Expression& stmt) = 0;
   virtual std::string visit(Print& stmt) = 0;
   virtual std::string visit(Var& stmt) = 0;
   virtual std::string visit(Block& stmt) = 0;
+  virtual std::string visit(If& stmt) = 0;
 };
 
 struct StmtVisitorVoid {
@@ -29,6 +31,7 @@ struct StmtVisitorVoid {
   virtual void visit(Print& stmt) = 0;
   virtual void visit(Var& stmt) = 0;
   virtual void visit(Block& stmt) = 0;
+  virtual void visit(If& stmt) = 0;
 };
 
 struct Expression: public Stmt {
@@ -71,6 +74,19 @@ struct Block: public Stmt {
     void accept(StmtVisitorVoid& v) { return v.visit(*this); }
   public:
     std::vector<std::unique_ptr<Stmt>> statements;
+};
+
+struct If: public Stmt {
+   public:
+     If(std::unique_ptr<Expr> condition, std::unique_ptr<Stmt> then_branch, std::unique_ptr<Stmt> else_branch):
+       condition(std::move(condition)), then_branch(std::move(then_branch)), else_branch(std::move(else_branch)) {}
+     ~If() {}
+     std::string accept(StmtVisitorString& visitor) { return visitor.visit(*this); }
+     void accept(StmtVisitorVoid& visitor) { return visitor.visit(*this); }
+   public:
+     std::unique_ptr<Expr> condition;
+     std::unique_ptr<Stmt> then_branch;
+     std::unique_ptr<Stmt> else_branch;
 };
 
 }

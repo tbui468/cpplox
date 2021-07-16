@@ -28,6 +28,7 @@ namespace lox {
       void visit(Print& stmt) override;
       void visit(Var& stmt) override;
       void visit(Block& stmt) override;
+      void visit(If& stmt) override;
       bool is_equal(Object a, Object b);
       void check_number_operand(Token op, Object operand);
       void check_number_operand(Token op, Object left, Object right);
