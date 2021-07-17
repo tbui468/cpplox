@@ -107,7 +107,6 @@ struct While: public Stmt {
     std::unique_ptr<Stmt> body;
 };
 
-
 struct Function: public Stmt {
   public:
     Function(Token name, std::vector<Token> params, std::vector<std::unique_ptr<Stmt>> body): 
@@ -120,6 +119,7 @@ struct Function: public Stmt {
     std::vector<Token> params;
     std::vector<std::unique_ptr<Stmt>> body;
 };
+
 
 }
 

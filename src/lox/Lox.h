@@ -3,7 +3,6 @@
 
 #include <string>
 
-#include "ResultCode.h"
 #include "Token.h"
 #include "RuntimeError.h"
 #include "Interpreter.h"
@@ -20,8 +19,8 @@ class Lox
   public:
     Lox() {}
     void run(std::string source) const;
-    ResultCode run_file(std::string script) const;
-    ResultCode run_prompt();
+    void run_file(std::string script) const;
+    void run_prompt();
     static void error(int line, std::string message);
     static void report(int line, std::string where, std::string message);
     static void error(Token token, std::string message);

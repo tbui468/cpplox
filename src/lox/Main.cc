@@ -1,7 +1,6 @@
 #include <iostream>
 
 #include "Lox.h"
-#include "ResultCode.h"
 #include "Expr.h"
 #include "AstPrinter.h"
 #include "Interpreter.h"
@@ -9,6 +8,22 @@
 //10. Functions
 //  todo:
 //    10.4 Function Objects (functions should work now, except they can't retunr yet)
+//      Problem with LoxFunction object requiring a reference to Function
+//      but we need a pointer since the unique_ptrs needs change ownership to LoxFunction
+//      getting error involving deleted constructor for unique_ptrs
+//      Interpreter is visiting Function stmt, which then instantiates LoxFunction(stmt)
+//      LoxFunction needs to keep a copy of stmt to call later, BUT the unique_ptrs
+//      in stmt can't be copied over since
+//
+//      option 1: change ALL unique_ptrs to shared_ptrs: this will take a while but should solve all problems
+//      option 2: could Function body be change to shared_ptr only?  So keep other unique_ptrs
+//            when Function node is created in Parser, the vector of unique_ptr<Stmt> is created by calling block()
+//            Instead of calling block(), could run the same code but have it produce a vector of shared_ptr<Stmt> instead
+//            can this be used to init Function?  Or will the unique_ptrs further down the tree still prevent this?
+//            could try this on Godbolt's compiler explorer to check if unique_ptrs closer to the leaves will 
+//            prevent use of shared_ptrs closer to the root
+//
+//  TODO:
 //    native function clock() is not implemented yet (since we can't use return values of functions yet)
 //    Function stmt and Function object have clashing names!!!
 //    consume a { outside of block() allows a more specific error message (eg, "Expect '{' before function body")
@@ -19,35 +34,14 @@ int main(int argc, char** argv) {
 
   lox::Lox cpplox;
 
-  lox::ResultCode result = lox::ResultCode::success;
-
   if(argc > 2) {
     std::cout << "Usage: lox [script]" << std::endl;
-    result = lox::ResultCode::failed;
   } else if(argc == 2) {
-    result = cpplox.run_file(argv[1]);
+    cpplox.run_file(argv[1]);
   } else {
-    result = cpplox.run_prompt();
+    cpplox.run_prompt();
   }
 
-  //testing AstPrinter
-  /*
-  lox::AstPrinter astprinter;
-  
-  lox::Token star_token = lox::Token(lox::TokenType::STAR, "*", "", 1);
-  lox::Token minus_token = lox::Token(lox::TokenType::MINUS, "-", "", 1);
-
-  std::unique_ptr<lox::Expr> u = std::make_unique<lox::Unary>(minus_token, std::make_unique<lox::Literal>("123"));
-  std::unique_ptr<lox::Expr> g = std::make_unique<lox::Grouping>(std::make_unique<lox::Literal>("45.67"));
-  
-  lox::Binary b = lox::Binary(star_token, std::move(u), std::move(g));
-  std::cout << astprinter.print(b) << std::endl;*/
-
-
-  if(result == lox::ResultCode::success) {
-    return 0;
-  } else {
-    return 1;
-  }
+  return 0;
 
 }

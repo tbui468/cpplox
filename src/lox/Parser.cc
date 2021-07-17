@@ -75,6 +75,7 @@ namespace lox {
   }
 
   std::unique_ptr<Stmt> Parser::func(const std::string& kind) {
+    
     Token name = consume(TokenType::IDENTIFIER, "Expect " + kind + " name.");
 
     consume(TokenType::LEFT_PAREN, "Expect '(' after " + kind + " name.");

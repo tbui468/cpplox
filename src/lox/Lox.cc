@@ -37,6 +37,7 @@ class StmtPrinter: public StmtVisitorString {
     std::string visit(While& stmt) {
       return "While";
     }
+    
     std::string visit(Function& stmt) {
       return "Function";
     }
@@ -69,7 +70,7 @@ void Lox::run(std::string source) const {
 
 }
 
-ResultCode Lox::run_file(std::string file_path) const {
+void Lox::run_file(std::string file_path) const {
   std::string line;
   std::ifstream my_file(file_path);
 
@@ -84,15 +85,12 @@ ResultCode Lox::run_file(std::string file_path) const {
 
   run(all);
 
-  if(m_had_error || m_had_runtime_error)
-  {
-    return ResultCode::failed;
-  }else{
-    return ResultCode::success;
+  if(m_had_error || m_had_runtime_error) {
+    std::cout << "Errors found in file." << std::endl;
   }
 }
 
-ResultCode Lox::run_prompt() {
+void Lox::run_prompt() {
   std::string line;
   while(1)
   {
@@ -109,7 +107,6 @@ ResultCode Lox::run_prompt() {
     }
   }
 
-  return ResultCode::success;
 }
 
 void Lox::error(int line, std::string message) {

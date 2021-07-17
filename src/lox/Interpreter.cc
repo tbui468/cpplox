@@ -19,6 +19,9 @@ namespace lox {
         virtual int arity() override {
           return 0;
         }
+        virtual std::string to_string() override {
+          return "clock";
+        }
     };
     m_globals->define("clock", Clock());
   }
@@ -68,14 +71,10 @@ namespace lox {
     std::shared_ptr<Environment> previous = m_environment; //need to save current m_environment state
     m_environment = env; //set m_environment to new state
     
-    //try {
-      for (const std::unique_ptr<Stmt>& stmt: statements) {
-          execute(*stmt);
-      }
-      /*
-    } catch (RuntimeError& error) {
+    for (const std::unique_ptr<Stmt>& stmt: statements) {
+        execute(*stmt);
+    }
 
-    }*/
     m_environment = previous; //throw out environment and reset back to old one
   }
 
@@ -169,6 +168,7 @@ namespace lox {
   }
 
 
+  //This function requires massive rewrite or restructing to avoid raw pointer
   Object Interpreter::visit(Call& expr) {
     std::unique_ptr<Object> callee = std::make_unique<Object>(evaluate(*(expr.callee)));
 
@@ -238,7 +238,8 @@ namespace lox {
   }
 
   void Interpreter::visit(Function& stmt) {
-
+//    LoxFunction func = LoxFunction(stmt);
+ //   m_environment->define(stmt.name.m_lexeme, *func);
   }
 
   bool Interpreter::is_equal(Object a, Object b) {

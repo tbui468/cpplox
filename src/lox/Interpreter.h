@@ -18,7 +18,6 @@ namespace lox {
       std::string stringify(const Object& obj);
       Object evaluate(Expr& expr);
       void execute(Stmt& stmt);
-      void execute_block(const std::vector<std::unique_ptr<Stmt>>& statements, std::shared_ptr<Environment> env);
       Object visit(Assign& expr) override;
       Object visit(Literal& expr) override;
       Object visit(Grouping& expr) override;
@@ -39,7 +38,9 @@ namespace lox {
       void check_number_operand(Token op, Object left, Object right);
     private:
       std::shared_ptr<Environment> m_environment;
+    public:
       std::shared_ptr<Environment> m_globals;
+      void execute_block(const std::vector<std::unique_ptr<Stmt>>& statements, std::shared_ptr<Environment> env);
   };
 
 }

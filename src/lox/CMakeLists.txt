@@ -12,7 +12,6 @@ set(Sources
 
 set(Headers
     Lox.h
-    ResultCode.h
     TokenType.h
     Token.h
     Scanner.h
