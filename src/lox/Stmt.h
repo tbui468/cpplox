@@ -18,7 +18,7 @@ struct Var;
 struct Block;
 struct If;
 struct While;
-//struct Function;
+struct Function;
 
 struct StmtVisitorString {
   virtual std::string visit(Expression& stmt) = 0;
@@ -27,7 +27,7 @@ struct StmtVisitorString {
   virtual std::string visit(Block& stmt) = 0;
   virtual std::string visit(If& stmt) = 0;
   virtual std::string visit(While& stmt) = 0;
-//  virtual std::string visit(Function& stmt) = 0;
+  virtual std::string visit(Function& stmt) = 0;
 };
 
 struct StmtVisitorVoid {
@@ -37,7 +37,7 @@ struct StmtVisitorVoid {
   virtual void visit(Block& stmt) = 0;
   virtual void visit(If& stmt) = 0;
   virtual void visit(While& stmt) = 0;
-//  virtual void visit(Function& stmt) = 0;
+  virtual void visit(Function& stmt) = 0;
 };
 
 struct Expression: public Stmt {
@@ -107,10 +107,19 @@ struct While: public Stmt {
     std::unique_ptr<Stmt> body;
 };
 
-/*
-struct Function: public Stmt {
 
-};*/
+struct Function: public Stmt {
+  public:
+    Function(Token name, std::vector<Token> params, std::vector<std::unique_ptr<Stmt>> body): 
+      name(name), params(params), body(std::move(body)) {}
+    ~Function() {}
+    std::string accept(StmtVisitorString& v) { return v.visit(*this); }
+    void accept(StmtVisitorVoid& v) { return v.visit(*this); }
+  public:
+    Token name;
+    std::vector<Token> params;
+    std::vector<std::unique_ptr<Stmt>> body;
+};
 
 }
 

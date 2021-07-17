@@ -37,6 +37,9 @@ class StmtPrinter: public StmtVisitorString {
     std::string visit(While& stmt) {
       return "While";
     }
+    std::string visit(Function& stmt) {
+      return "Function";
+    }
 
 };
 

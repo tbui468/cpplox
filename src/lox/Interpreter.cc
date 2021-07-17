@@ -7,8 +7,8 @@
 namespace lox {
 
   Interpreter::Interpreter() {
-    m_environment = std::make_shared<Environment>();
-    m_globals = std::make_unique<Environment>();
+    m_environment = std::make_shared<Environment>(); //m_environment references different environments when changing scope
+    m_globals = m_environment; //but m_globals always points to the global environment (the one with m_enclosing = nullptr)
     class Clock: public Callable {
       public:
         Clock(): Callable() {}
@@ -235,6 +235,10 @@ namespace lox {
     while(evaluate(*stmt.condition).is_true()) {
       execute(*(stmt.body));
     }
+  }
+
+  void Interpreter::visit(Function& stmt) {
+
   }
 
   bool Interpreter::is_equal(Object a, Object b) {

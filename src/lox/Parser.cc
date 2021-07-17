@@ -17,6 +17,7 @@ namespace lox {
   //three types: declarations, statements and expressions
   std::unique_ptr<Stmt> Parser::declaration() {
     try {
+      if (match(TokenType::FUN)) return func("function");
       if (match(TokenType::VAR)) return var_declaration();
       return statement();
     } catch (ParseError& error) {
@@ -71,6 +72,26 @@ namespace lox {
     std::unique_ptr<Expr> expr = expression();
     consume(TokenType::SEMICOLON, "Expect ';' after value.");
     return std::make_unique<Expression>(std::move(expr));
+  }
+
+  std::unique_ptr<Stmt> Parser::func(const std::string& kind) {
+    Token name = consume(TokenType::IDENTIFIER, "Expect " + kind + " name.");
+
+    consume(TokenType::LEFT_PAREN, "Expect '(' after " + kind + " name.");
+    std::vector<Token> parameters;
+    if (!check(TokenType::RIGHT_PAREN)) {
+      do {
+        if (parameters.size() >= 255) {
+          error(peek(), "Can't have more than 255 parameters.");
+        }
+        parameters.push_back(consume(TokenType::IDENTIFIER, "Expect parameter name."));
+      } while (match(TokenType::COMMA));
+    }
+    consume(TokenType::RIGHT_PAREN, "Expect ')' after " + kind + " parameters.");
+    //should pull out consume(TokenType::LEFT_BRACE) from block() and put in calling function (ex, here)
+    //for more specific error messages
+    std::vector<std::unique_ptr<Stmt>> body = block();
+    return std::make_unique<Function>(name, parameters, std::move(body));
   }
 
   std::unique_ptr<Stmt> Parser::while_statement() {

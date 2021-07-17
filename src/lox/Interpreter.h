@@ -33,13 +33,13 @@ namespace lox {
       void visit(Block& stmt) override;
       void visit(If& stmt) override;
       void visit(While& stmt) override;
+      void visit(Function& stmt) override;
       bool is_equal(Object a, Object b);
       void check_number_operand(Token op, Object operand);
       void check_number_operand(Token op, Object left, Object right);
     private:
       std::shared_ptr<Environment> m_environment;
-    public:
-      std::unique_ptr<Environment> m_globals;
+      std::shared_ptr<Environment> m_globals;
   };
 
 }

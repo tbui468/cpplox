@@ -8,8 +8,12 @@
 
 //10. Functions
 //  todo:
+//    10.4 Function Objects (functions should work now, except they can't retunr yet)
 //    native function clock() is not implemented yet (since we can't use return values of functions yet)
 //    Function stmt and Function object have clashing names!!!
+//    consume a { outside of block() allows a more specific error message (eg, "Expect '{' before function body")
+//      should do this for better error messages
+//    m_globals in Interpreter should be const since we don't want anyone to change where it points to
 
 int main(int argc, char** argv) {
 
