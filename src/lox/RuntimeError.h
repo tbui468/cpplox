@@ -9,7 +9,7 @@ namespace lox {
 
   class RuntimeError: public std::exception {
     public:
-      RuntimeError(Token token, std::string message): m_message(message), m_token(token) {}
+      RuntimeError(Token token, std::string message): m_token(token), m_message(message) {}
       inline std::string get_message() const {
         return m_message;
       }

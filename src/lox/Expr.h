@@ -23,6 +23,7 @@ struct Literal;
 struct Unary;
 struct Variable;
 struct Logical;
+//struct Call;
 
 struct VisitorString {
   virtual std::string visit(Assign& e) = 0;
@@ -32,6 +33,7 @@ struct VisitorString {
   virtual std::string visit(Unary& e) = 0;
   virtual std::string visit(Variable& e) = 0;
   virtual std::string visit(Logical& e) = 0;
+ // virtual std::string visit(Call& e) = 0;
 };
 
 struct VisitorObject {
@@ -42,6 +44,7 @@ struct VisitorObject {
   virtual Object visit(Unary& e) = 0;
   virtual Object visit(Variable& e) = 0;
   virtual Object visit(Logical& e) = 0;
+  //virtual Object visit(Call& e) = 0;
 };
 
 
@@ -121,6 +124,18 @@ struct Logical: public Expr {
     std::unique_ptr<Expr> left;
     std::unique_ptr<Expr> right;
 };
+
+/*
+struct Call: Expr {
+  public:
+    Call(std::unique_ptr<Expr> callee, Token paren, std::vector<std::unique_ptr<Expr>> arguments):
+      callee(std::move(callee)), paren(paren), arguments(std::move(arguments)) {}
+    ~Call() {}
+  public:
+    std::unique_ptr<Expr> callee; //any expression that evaluates to a function
+    Token paren; //keeping closing token for runtime error reporting
+    std::vector<std::unique_ptr<Expr>> arguments;
+};*/
 
 }
 

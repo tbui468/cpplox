@@ -22,7 +22,7 @@ namespace lox {
         std::cout << m_enclosing << std::endl;
       }
     public:
-      std::unordered_map<std::string, Object> m_values;
+      std::unordered_map<std::string, std::unique_ptr<Object>> m_values;
       std::shared_ptr<Environment> m_enclosing;
   };
 

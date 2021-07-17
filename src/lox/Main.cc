@@ -6,27 +6,16 @@
 #include "AstPrinter.h"
 #include "Interpreter.h"
 
-//9. Control Flow
-//  9.4 For loops
-//  
-//  disabled for_statement for now until bug below is solved
-//  Code below should throw error, but it just skips tempsss variable (which is undefined)
+//10. Functions
+//  todo:
+//    remove Call expr and call() in parser so that it compiles and runs
+//    replace all Object std::unique_ptr<Object> (or std::shared_ptr<Object>???)
+//      or just turn the Object into a pointer before putting it inside the unordered_map
+//    test to see if Lox still runs (scope, loops, conditionals, etc)
 //
-//  Found the problem.  A Runtime exeption is thrown but nothing catches it
-//  so the stack goes back up one scope and continues.
-//
-//  Why isn't the exception thrown in the Environment propagating up to the 
-/*
-var temp = 0;
-
-while (temp < 10) {
-  temp = temp + 1;
-  print tempsss;
-}
-
-print temp;
-
-*/
+//    reimplement Call expr and call() in parser
+//    Implement Callable class (which has Object as base class)
+//    continue the tutorial
 
 int main(int argc, char** argv) {
 

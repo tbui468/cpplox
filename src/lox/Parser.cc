@@ -241,9 +241,41 @@ namespace lox {
       std::unique_ptr<Expr> right = unary();
       return std::make_unique<Unary>(token, std::move(right));
     } else {
+      //return call();
       return primary();
     }
   }
+
+  /*
+  std::unique_ptr<Expr> finish_call(std::unique_ptr<Expr> callee) {
+    std::vector<std::unique_ptr<Expr>> arguments;
+    if (!check(TokenType::RIGHT_PAREN)) {
+      do {
+        if (arguments.size() >= 255) {
+          error(peek(), "Can't have more than 255 arguments.");
+        }
+        arguments.push_back(expression());
+      } while (match(TokenType::COMMA));
+    }
+
+    Token paren = consume(TokenType::RIGHT_PAREN, "Expect ')' after arguments.");
+
+     return std::make_unique<Call>(std::move(callee), paren, std::move(arguments));
+  }
+
+  std::unique_ptr<Expr> Parser::call() {
+    std::unique_ptr<Expr> expr = primary();
+    
+    while (true) {
+      if (match(LEFT_PAREN)) {
+        expr = finish_call(std::move(expr));
+      } else {
+        break;
+      }
+    }
+
+    return expr;
+  }*/
 
   std::unique_ptr<Expr> Parser::primary(){
     if (match(TokenType::FALSE)) return std::make_unique<Literal>(Object(false));

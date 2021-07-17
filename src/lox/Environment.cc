@@ -3,12 +3,12 @@
 
 namespace lox {
   void Environment::define(std::string name, Object value) {
-    m_values[name] = value;
+    m_values[name] = std::make_unique<Object>(value);
   }
 
   void Environment::assign(Token name, Object value) {
     if (m_values.count(name.m_lexeme) > 0) {
-      m_values[name.m_lexeme] = value;
+      m_values[name.m_lexeme] = std::make_unique<Object>(value);
       return;
     }
 
@@ -22,7 +22,7 @@ namespace lox {
 
   Object Environment::get(Token name) {
     if (m_values.count(name.m_lexeme) > 0) {
-      return m_values[name.m_lexeme];
+      return *(m_values[name.m_lexeme]);
     }
 
     if (m_enclosing) {
