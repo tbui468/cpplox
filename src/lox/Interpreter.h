@@ -38,6 +38,8 @@ namespace lox {
       void check_number_operand(Token op, Object left, Object right);
     private:
       std::shared_ptr<Environment> m_environment;
+    public:
+      std::unique_ptr<Environment> m_globals;
   };
 
 }

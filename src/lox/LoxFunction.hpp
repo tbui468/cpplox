@@ -6,10 +6,10 @@
 namespace lox {
 
   //class Function: public Callable, public Object {
-  class Function: public Callable {
+  class LoxFunction: public Callable {
     public:
-      Function(): Callable() {}
-      ~Function() {}
+      LoxFunction(): Callable() {}
+      ~LoxFunction() {}
       virtual Object call(Interpreter& interp, const std::vector<Object>& arguments) override {
         return Object(true); //TEMP
       }

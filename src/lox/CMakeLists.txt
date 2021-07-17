@@ -25,7 +25,7 @@ set(Headers
     RuntimeError.h
     Environment.h
     Callable.hpp
-    Function.hpp
+    LoxFunction.hpp
     )
 
 add_executable(

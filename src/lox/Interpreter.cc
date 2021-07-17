@@ -1,13 +1,26 @@
 #include <iostream>
 #include "Interpreter.h"
 #include "Lox.h"
-#include "Function.hpp"
+#include "LoxFunction.hpp"
 
 
 namespace lox {
 
   Interpreter::Interpreter() {
     m_environment = std::make_shared<Environment>();
+    m_globals = std::make_unique<Environment>();
+    class Clock: public Callable {
+      public:
+        Clock(): Callable() {}
+        ~Clock() {}
+        virtual Object call(Interpreter& interp, const std::vector<Object>& arguments) override {
+          return Object(1.0);
+        }
+        virtual int arity() override {
+          return 0;
+        }
+    };
+    m_globals->define("clock", Clock());
   }
 
   void Interpreter::interpret(const std::vector<std::unique_ptr<Stmt>>& statements) {
@@ -172,7 +185,7 @@ namespace lox {
       throw RuntimeError(expr.paren, "Can only call functions and classes.");
     }
 
-    if (arguments.size() != callable->arity()) {
+    if (static_cast<int>(arguments.size()) != callable->arity()) {
       throw RuntimeError(expr.paren, "Expected " +
           std::to_string(callable->arity()) + " arguments but got " +
           std::to_string(arguments.size()) + ".");

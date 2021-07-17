@@ -18,6 +18,7 @@ struct Var;
 struct Block;
 struct If;
 struct While;
+//struct Function;
 
 struct StmtVisitorString {
   virtual std::string visit(Expression& stmt) = 0;
@@ -26,6 +27,7 @@ struct StmtVisitorString {
   virtual std::string visit(Block& stmt) = 0;
   virtual std::string visit(If& stmt) = 0;
   virtual std::string visit(While& stmt) = 0;
+//  virtual std::string visit(Function& stmt) = 0;
 };
 
 struct StmtVisitorVoid {
@@ -35,6 +37,7 @@ struct StmtVisitorVoid {
   virtual void visit(Block& stmt) = 0;
   virtual void visit(If& stmt) = 0;
   virtual void visit(While& stmt) = 0;
+//  virtual void visit(Function& stmt) = 0;
 };
 
 struct Expression: public Stmt {
@@ -103,6 +106,11 @@ struct While: public Stmt {
     std::unique_ptr<Expr> condition;
     std::unique_ptr<Stmt> body;
 };
+
+/*
+struct Function: public Stmt {
+
+};*/
 
 }
 

@@ -8,9 +8,8 @@
 
 //10. Functions
 //  todo:
-//    reimplement Call expr and call() in parser
-//    Implement Callable class (which has Object as base class)
-//    continue the tutorial
+//    native function clock() is not implemented yet (since we can't use return values of functions yet)
+//    Function stmt and Function object have clashing names!!!
 
 int main(int argc, char** argv) {
 
