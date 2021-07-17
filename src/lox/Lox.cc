@@ -50,7 +50,7 @@ Interpreter Lox::m_interpreter = Interpreter();
 //if an error is thrown by parser,
 //Lox::error is called which sets m_had_error to true
 //and parser returns a nullptr
-void Lox::run(std::string source) const {
+void Lox::run(std::string source) {
   Scanner scanner = Scanner(source);
   std::vector<Token> tokens = scanner.scan_tokens();
 
@@ -70,7 +70,7 @@ void Lox::run(std::string source) const {
 
 }
 
-void Lox::run_file(std::string file_path) const {
+void Lox::run_file(std::string file_path) {
   std::string line;
   std::ifstream my_file(file_path);
 

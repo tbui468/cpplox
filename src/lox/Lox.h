@@ -17,10 +17,9 @@ class Lox
     inline static bool m_had_runtime_error = false;
     static Interpreter m_interpreter;
   public:
-    Lox() {}
-    void run(std::string source) const;
-    void run_file(std::string script) const;
-    void run_prompt();
+    static void run(std::string source);
+    static void run_file(std::string script);
+    static void run_prompt();
     static void error(int line, std::string message);
     static void report(int line, std::string where, std::string message);
     static void error(Token token, std::string message);
