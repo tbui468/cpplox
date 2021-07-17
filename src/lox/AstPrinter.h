@@ -18,6 +18,7 @@ namespace lox
       std::string visit(Assign& expr) override;
       std::string visit(Variable& expr) override;
       std::string visit(Logical& expr) override;
+      std::string visit(Call& expr) override;
     private:
       std::string parenthesize(const std::string& name, const std::string& expr);
       std::string parenthesize(const std::string& name, const std::string& expr1, const std::string& expr2);

@@ -8,11 +8,6 @@
 
 //10. Functions
 //  todo:
-//    remove Call expr and call() in parser so that it compiles and runs
-//    replace all Object std::unique_ptr<Object> (or std::shared_ptr<Object>???)
-//      or just turn the Object into a pointer before putting it inside the unordered_map
-//    test to see if Lox still runs (scope, loops, conditionals, etc)
-//
 //    reimplement Call expr and call() in parser
 //    Implement Callable class (which has Object as base class)
 //    continue the tutorial

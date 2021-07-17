@@ -37,7 +37,9 @@ namespace lox
   std::string AstPrinter::visit(Logical& expr) {
     return "Logical";
   }
-
+  std::string AstPrinter::visit(Call& expr) {
+    return "Call";
+  }
 
   std::string AstPrinter::parenthesize(const std::string& name, const std::string& expr_string) {
     std::string out = "(" + name;

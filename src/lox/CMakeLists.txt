@@ -24,6 +24,8 @@ set(Headers
     Interpreter.h
     RuntimeError.h
     Environment.h
+    Callable.hpp
+    Function.hpp
     )
 
 add_executable(

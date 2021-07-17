@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Interpreter.h"
 #include "Lox.h"
+#include "Function.hpp"
 
 
 namespace lox {
@@ -152,6 +153,36 @@ namespace lox {
     }
 
     return Object(evaluate(*(expr.right)));
+  }
+
+
+  Object Interpreter::visit(Call& expr) {
+    std::unique_ptr<Object> callee = std::make_unique<Object>(evaluate(*(expr.callee)));
+
+    std::vector<Object> arguments;
+    for (const std::unique_ptr<Expr>& argument: expr.arguments) {
+      arguments.push_back(evaluate(*argument));
+    }
+
+    //I think this is a memory leak since this is never released...
+    //so using workaround below and explicity calling delete
+    Callable* callable = dynamic_cast<Callable*>(callee.get());
+
+    if (!callable) {
+      throw RuntimeError(expr.paren, "Can only call functions and classes.");
+    }
+
+    if (arguments.size() != callable->arity()) {
+      throw RuntimeError(expr.paren, "Expected " +
+          std::to_string(callable->arity()) + " arguments but got " +
+          std::to_string(arguments.size()) + ".");
+    }
+
+    //silly workaround for smart pointer problems
+    Object ret = callable->call(*this, arguments);
+    delete callable; 
+
+    return ret;
   }
 
   //statements

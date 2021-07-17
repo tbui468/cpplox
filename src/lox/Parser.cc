@@ -241,13 +241,12 @@ namespace lox {
       std::unique_ptr<Expr> right = unary();
       return std::make_unique<Unary>(token, std::move(right));
     } else {
-      //return call();
-      return primary();
+      return call();
     }
   }
 
-  /*
-  std::unique_ptr<Expr> finish_call(std::unique_ptr<Expr> callee) {
+  
+  std::unique_ptr<Expr> Parser::finish_call(std::unique_ptr<Expr> callee) {
     std::vector<std::unique_ptr<Expr>> arguments;
     if (!check(TokenType::RIGHT_PAREN)) {
       do {
@@ -275,7 +274,7 @@ namespace lox {
     }
 
     return expr;
-  }*/
+  }
 
   std::unique_ptr<Expr> Parser::primary(){
     if (match(TokenType::FALSE)) return std::make_unique<Literal>(Object(false));

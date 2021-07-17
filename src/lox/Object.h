@@ -12,6 +12,7 @@ namespace lox {
       Object(double number);
       Object(bool value);
       Object(); //of type nil
+      virtual ~Object() {}
       
       bool is_bool() const;
       bool is_true() const;
