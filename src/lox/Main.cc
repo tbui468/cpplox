@@ -8,32 +8,19 @@
 //10. Functions
 //  todo:
 //    10.4 Function Objects (functions should work now, except they can't retunr yet)
-//      Problem with LoxFunction object requiring a reference to Function
-//      but we need a pointer since the unique_ptrs needs change ownership to LoxFunction
-//      getting error involving deleted constructor for unique_ptrs
-//      Interpreter is visiting Function stmt, which then instantiates LoxFunction(stmt)
-//      LoxFunction needs to keep a copy of stmt to call later, BUT the unique_ptrs
-//      in stmt can't be copied over since
+//      
+//      problem with function not being callable
+//        'getting only functions and methods can be called' exception in Interpreter
+//        the dynamic cast is not working when an Object is returned
 //
-//      Change Expr and Stmt to shared pointers.  Do the same in Parser/Interpreter.  Remove std::move() where necessary
-//      Environments (m_environment and m_global) in Interpreter might be able to stay as unique ptrs.
-//      Compile to catch errors
-//      Files:
+//      solution:
+//        change all Object return types to std::shared_ptr<Object>
 //        Expr.h
-//        Stmt.h
-//        Parser.h / Parser.cpp
 //        Interpreter.h / Interpreter.cpp
 //
-//
-//      option 1: change ALL unique_ptrs to shared_ptrs: this will take a while but should solve all problems
-//      option 2: could Function body be change to shared_ptr only?  So keep other unique_ptrs
-//            when Function node is created in Parser, the vector of unique_ptr<Stmt> is created by calling block()
-//            Instead of calling block(), could run the same code but have it produce a vector of shared_ptr<Stmt> instead
-//            can this be used to init Function?  Or will the unique_ptrs further down the tree still prevent this?
-//            could try this on Godbolt's compiler explorer to check if unique_ptrs closer to the leaves will 
-//            prevent use of shared_ptrs closer to the root
-//
 //  TODO:
+//    Change file extensions to .hpp and .cpp
+//    fix warning bugs
 //    Clean Up - rule of five, const and const/ref, etc
 //      Lox: done
 //      Scanner: done

@@ -13,8 +13,8 @@ namespace lox {
       public:
         Clock(): Callable() {}
         ~Clock() {}
-        virtual Object call(Interpreter& interp, const std::vector<Object>& arguments) override {
-          return Object(1.0);
+        virtual std::shared_ptr<Object> call(Interpreter& interp, const std::vector<std::shared_ptr<Object>>& arguments) override {
+          return std::make_shared<Object>(1.0);
         }
         virtual int arity() override {
           return 0;
@@ -23,7 +23,7 @@ namespace lox {
           return "clock";
         }
     };
-    m_globals->define("clock", Clock());
+    m_globals->define("clock", std::make_shared<Clock>());
   }
 
   void Interpreter::interpret(const std::vector<std::shared_ptr<Stmt>>& statements) {
@@ -59,7 +59,7 @@ namespace lox {
     return obj.get_string();
   }
 
-  Object Interpreter::evaluate(Expr& expr) {
+  std::shared_ptr<Object> Interpreter::evaluate(Expr& expr) {
     return expr.accept(*this);
   }
 
@@ -79,27 +79,27 @@ namespace lox {
   }
 
 
-  Object Interpreter::visit(Assign& expr) {
-    Object value = evaluate(*(expr.value));
+  std::shared_ptr<Object> Interpreter::visit(Assign& expr) {
+    std::shared_ptr<Object> value = evaluate(*(expr.value));
     m_environment->assign(expr.name, value);
     return value;
   }
 
-  Object Interpreter::visit(Literal& expr) {
+  std::shared_ptr<Object> Interpreter::visit(Literal& expr) {
     return expr.value;
   }
-  Object Interpreter::visit(Grouping& expr) {
+  std::shared_ptr<Object> Interpreter::visit(Grouping& expr) {
     return evaluate(*(expr.expr));
   }
-  Object Interpreter::visit(Unary& expr) {
-    Object right = evaluate(*(expr.right));
+  std::shared_ptr<Object> Interpreter::visit(Unary& expr) {
+    std::shared_ptr<Object> right = evaluate(*(expr.right));
     switch(expr.oprtr.m_type) {
       case TokenType::BANG:
-        if (right.is_true()) return Object(false);
-        else return Object(true);
+        if (right->is_true()) return std::make_shared<Object>(false);
+        else return std::make_shared<Object>(true);
       case TokenType::MINUS:
-        check_number_operand(expr.oprtr, right);
-        right.set_number(-right.get_number());
+        check_number_operand(expr.oprtr, *right);
+        right->set_number(-right->get_number());
         return right;
     }
 
@@ -108,94 +108,90 @@ namespace lox {
 
   }
 
-  Object Interpreter::visit(Binary& expr) {
-    Object left = evaluate(*(expr.left));
-    Object right = evaluate(*(expr.right));
+  std::shared_ptr<Object> Interpreter::visit(Binary& expr) {
+    std::shared_ptr<Object> left = evaluate(*(expr.left));
+    std::shared_ptr<Object> right = evaluate(*(expr.right));
 
     switch(expr.oprtr.m_type) {
       case TokenType::MINUS:
-        check_number_operand(expr.oprtr, left, right);
-        return Object(left.get_number() - right.get_number());
+        check_number_operand(expr.oprtr, *left, *right);
+        return std::make_shared<Object>(left->get_number() - right->get_number());
       case TokenType::STAR:
-        check_number_operand(expr.oprtr, left, right);
-        return Object(left.get_number() * right.get_number());
+        check_number_operand(expr.oprtr, *left, *right);
+        return std::make_shared<Object>(left->get_number() * right->get_number());
       case TokenType::SLASH:
-        check_number_operand(expr.oprtr, left, right);
-        return Object(left.get_number() / right.get_number());
+        check_number_operand(expr.oprtr, *left, *right);
+        return std::make_shared<Object>(left->get_number() / right->get_number());
       case TokenType::PLUS:
-        if (left.is_string() && right.is_string()) {
-          return Object(left.get_string() + right.get_string());
-        }else if(left.is_number() && right.is_number()) {
-          return Object(left.get_number() + right.get_number());
+        if (left->is_string() && right->is_string()) {
+          return std::make_shared<Object>(left->get_string() + right->get_string());
+        }else if(left->is_number() && right->is_number()) {
+          return std::make_shared<Object>(left->get_number() + right->get_number());
         }
         throw RuntimeError(expr.oprtr, "Operands must be two numbers or two strings");
+        break;
       case TokenType::GREATER:
-        check_number_operand(expr.oprtr, left, right);
-        return Object(left.get_number() > right.get_number());
+        check_number_operand(expr.oprtr, *left, *right);
+        return std::make_shared<Object>(left->get_number() > right->get_number());
       case TokenType::GREATER_EQUAL:
-        check_number_operand(expr.oprtr, left, right);
-        return Object(left.get_number() >= right.get_number());
+        check_number_operand(expr.oprtr, *left, *right);
+        return std::make_shared<Object>(left->get_number() >= right->get_number());
       case TokenType::LESS:
-        check_number_operand(expr.oprtr, left, right);
-        return Object(left.get_number() < right.get_number());
+        check_number_operand(expr.oprtr, *left, *right);
+        return std::make_shared<Object>(left->get_number() < right->get_number());
       case TokenType::LESS_EQUAL:
-        check_number_operand(expr.oprtr, left, right);
-        return Object(left.get_number() <= right.get_number());
+        check_number_operand(expr.oprtr, *left, *right);
+        return std::make_shared<Object>(left->get_number() <= right->get_number());
       case TokenType::BANG_EQUAL:
-        return Object(!is_equal(left, right));
+        return std::make_shared<Object>(!is_equal(*left, *right));
       case TokenType::EQUAL_EQUAL:
-        return Object(is_equal(left, right));
+        return std::make_shared<Object>(is_equal(*left, *right));
     }        
 
     //here be dragons
     throw RuntimeError(expr.oprtr, "Error in binary expression.");
   }
 
-  Object Interpreter::visit(Variable& expr) {
+  std::shared_ptr<Object> Interpreter::visit(Variable& expr) {
     return m_environment->get(expr.name);
   }
 
-  Object Interpreter::visit(Logical& expr) {
-    Object left = Object(evaluate(*(expr.left)));
+  std::shared_ptr<Object> Interpreter::visit(Logical& expr) {
+    std::shared_ptr<Object> left = evaluate(*(expr.left));
 
     if (expr.oprtr.m_type == TokenType::OR) {
-      if (left.is_true()) return left;
+      if (left->is_true()) return left;
     } else {
-      if (!left.is_true()) return left;
+      if (!left->is_true()) return left;
     }
 
-    return Object(evaluate(*(expr.right)));
+    return evaluate(*(expr.right));
   }
 
 
   //This function requires massive rewrite or restructing to avoid raw pointer
-  Object Interpreter::visit(Call& expr) {
-    std::shared_ptr<Object> callee = std::make_shared<Object>(evaluate(*(expr.callee)));
+  std::shared_ptr<Object> Interpreter::visit(Call& expr) {
+    std::shared_ptr<Object> callee = evaluate(*(expr.callee));
 
-    std::vector<Object> arguments;
-    for (const std::shared_ptr<Expr>& argument: expr.arguments) {
+    std::vector<std::shared_ptr<Object>> arguments;
+    for (std::shared_ptr<Expr> argument: expr.arguments) {
       arguments.push_back(evaluate(*argument));
     }
 
-    //I think this is a memory leak since this is never released...
-    //so using workaround below and explicity calling delete
-    Callable* callable = dynamic_cast<Callable*>(callee.get());
-
-    if (!callable) {
+    //NOTE: need to also check if class method (since they are also callable)
+    if (!dynamic_cast<LoxFunction*>(callee.get())) {
       throw RuntimeError(expr.paren, "Can only call functions and classes.");
     }
 
-    if (static_cast<int>(arguments.size()) != callable->arity()) {
+    std::shared_ptr<LoxFunction> func = std::static_pointer_cast<LoxFunction>(callee);
+
+    if (static_cast<int>(arguments.size()) != func->arity()) {
       throw RuntimeError(expr.paren, "Expected " +
-          std::to_string(callable->arity()) + " arguments but got " +
+          std::to_string(func->arity()) + " arguments but got " +
           std::to_string(arguments.size()) + ".");
     }
 
-    //silly workaround for smart pointer problems
-    Object ret = callable->call(*this, arguments);
-    delete callable; 
-
-    return ret;
+    return func->call(*this, arguments);
   }
 
   //statements
@@ -204,12 +200,12 @@ namespace lox {
   }
 
   void Interpreter::visit(Print& stmt) {
-    Object value = evaluate(*(stmt.expr)); //<- this line is fucking up when the variable in undefined
-    std::cout << stringify(value) << std::endl;
+    std::shared_ptr<Object> value = evaluate(*(stmt.expr)); //<- this line is fucking up when the variable in undefined
+    std::cout << stringify(*value) << std::endl;
   }
 
   void Interpreter::visit(Var& stmt) {
-    Object value = Object(); //nil
+    std::shared_ptr<Object> value = std::make_shared<Object>(); //nil
     if (stmt.initializer != nullptr) {
       value = evaluate(*(stmt.initializer));
     }
@@ -223,8 +219,8 @@ namespace lox {
   }
 
   void Interpreter::visit(If& stmt) {
-    Object condition = evaluate(*(stmt.condition));
-    if (condition.is_true()) {
+    std::shared_ptr<Object> condition = evaluate(*(stmt.condition));
+    if (condition->is_true()) {
       execute(*(stmt.then_branch));      
     } else if(stmt.else_branch) {
       execute(*(stmt.else_branch));
@@ -232,17 +228,17 @@ namespace lox {
   }
 
   void Interpreter::visit(While& stmt) {
-    while(evaluate(*stmt.condition).is_true()) {
+    while(evaluate(*stmt.condition)->is_true()) {
       execute(*(stmt.body));
     }
   }
 
   void Interpreter::visit(Function& stmt) {
-//    LoxFunction func = LoxFunction(stmt);
- //   m_environment->define(stmt.name.m_lexeme, *func);
+    std::shared_ptr<Object> func = std::make_shared<LoxFunction>(stmt);
+    m_environment->define(stmt.name.m_lexeme, func);
   }
 
-  bool Interpreter::is_equal(Object a, Object b) {
+  bool Interpreter::is_equal(const Object& a, const Object& b) {
     if (a.is_nil() && b.is_nil()) return true;
     if (a.is_nil()) return false;
 
@@ -257,12 +253,12 @@ namespace lox {
     return false;
   }
 
-  void Interpreter::check_number_operand(Token op, Object operand) {
+  void Interpreter::check_number_operand(Token op, const Object& operand) {
     if (operand.is_number()) return;
     throw RuntimeError(op, "Operand must be a number.");
   }
 
-  void Interpreter::check_number_operand(Token op, Object left, Object right) {
+  void Interpreter::check_number_operand(Token op, const Object& left, const Object& right) {
     if (left.is_number() && right.is_number()) return;
     throw RuntimeError(op, "Operands must be numbers."); 
   }

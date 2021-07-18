@@ -2,13 +2,13 @@
 #include "RuntimeError.h"
 
 namespace lox {
-  void Environment::define(std::string name, Object value) {
-    m_values[name] = std::make_unique<Object>(value);
+  void Environment::define(const std::string& name, std::shared_ptr<Object> value) {
+    m_values[name] = value; 
   }
 
-  void Environment::assign(Token name, Object value) {
+  void Environment::assign(Token name, std::shared_ptr<Object> value) {
     if (m_values.count(name.m_lexeme) > 0) {
-      m_values[name.m_lexeme] = std::make_unique<Object>(value);
+      m_values[name.m_lexeme] = value;
       return;
     }
 
@@ -20,9 +20,9 @@ namespace lox {
     throw RuntimeError(name, "Undefined variable '" + name.m_lexeme + "'.");
   }
 
-  Object Environment::get(Token name) {
+  std::shared_ptr<Object> Environment::get(Token name) {
     if (m_values.count(name.m_lexeme) > 0) {
-      return *(m_values[name.m_lexeme]);
+      return m_values[name.m_lexeme];
     }
 
     if (m_enclosing) {

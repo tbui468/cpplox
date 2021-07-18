@@ -142,7 +142,7 @@ namespace lox {
     }
 
     if (!condition) {
-      condition = std::make_shared<Literal>(Object(true));
+      condition = std::make_shared<Literal>(std::make_shared<Object>(true));
     }
     body = std::make_shared<While>(condition, body);
 
@@ -299,18 +299,18 @@ namespace lox {
   }
 
   std::shared_ptr<Expr> Parser::primary(){
-    if (match(TokenType::FALSE)) return std::make_shared<Literal>(Object(false));
-    if (match(TokenType::TRUE)) return std::make_shared<Literal>(Object(true));
-    if (match(TokenType::NIL)) return std::make_shared<Literal>(Object());
+    if (match(TokenType::FALSE)) return std::make_shared<Literal>(std::make_shared<Object>(false));
+    if (match(TokenType::TRUE)) return std::make_shared<Literal>(std::make_shared<Object>(true));
+    if (match(TokenType::NIL)) return std::make_shared<Literal>(std::make_shared<Object>());
 
     if (match(TokenType::STRING)) {
       Token token = previous();
-      return std::make_shared<Literal>(Object(token.m_literal));
+      return std::make_shared<Literal>(std::make_shared<Object>(token.m_literal));
     }
 
     if (match(TokenType::NUMBER)) {
       Token token = previous();
-      return std::make_shared<Literal>(Object(std::stod(token.m_literal)));
+      return std::make_shared<Literal>(std::make_shared<Object>(std::stod(token.m_literal)));
     }
 
     if (match(TokenType::IDENTIFIER)) {

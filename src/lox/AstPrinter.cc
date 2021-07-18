@@ -15,10 +15,10 @@ namespace lox
   }
 
   std::string AstPrinter::visit(Literal& expr) {
-    if (expr.value.is_number()) return std::to_string(expr.value.get_number());
-    if (expr.value.is_string()) return expr.value.get_string();
-    if (expr.value.is_bool()) {
-      if (expr.value.is_true()) return "true";
+    if (expr.value->is_number()) return std::to_string(expr.value->get_number());
+    if (expr.value->is_string()) return expr.value->get_string();
+    if (expr.value->is_bool()) {
+      if (expr.value->is_true()) return "true";
       else return "false";  
     }
     //must be nil

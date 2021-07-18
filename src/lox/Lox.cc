@@ -39,7 +39,21 @@ class StmtPrinter: public StmtVisitorString {
     }
     
     std::string visit(Function& stmt) {
-      return "Function";
+      std::string out = "Function:\n";
+      //name Token, params vector<Token>, body vector<std::shared_ptr<Stmt>>
+      std::string params = "";
+      for (Token token: stmt.params) {
+        params += token.to_string();
+      }
+      std::string body = "";
+      for (const std::shared_ptr<Stmt>& s: stmt.body) {
+        body += StmtPrinter().print(*s);
+      }
+      out += "  name: " + stmt.name.to_string() + "\n";
+      out += "  params: " + params + "\n";
+      out += "  body: " + body + "\n";
+    
+      return out;
     }
 
 };
@@ -57,10 +71,9 @@ void Lox::run(std::string source) {
   Parser parser = Parser(tokens);
   std::vector<std::shared_ptr<Stmt>> statements = parser.parse();
 
-  /*
   for (const std::shared_ptr<Stmt>& stmt: statements) {
     std::cout << StmtPrinter().print(*stmt) << std::endl;
-  }*/
+  }
 
   
 

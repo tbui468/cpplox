@@ -11,7 +11,7 @@ namespace lox {
     public:
       Callable(): Object() {}
       virtual ~Callable() {}
-      virtual Object call(Interpreter& interp, const std::vector<Object>& arguments) = 0;
+      virtual std::shared_ptr<Object> call(Interpreter& interp, const std::vector<std::shared_ptr<Object>>& arguments) = 0;
       virtual int arity() = 0;
       virtual std::string to_string() = 0;
   };
