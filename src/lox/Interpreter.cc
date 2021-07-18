@@ -26,9 +26,9 @@ namespace lox {
     m_globals->define("clock", Clock());
   }
 
-  void Interpreter::interpret(const std::vector<std::unique_ptr<Stmt>>& statements) {
+  void Interpreter::interpret(const std::vector<std::shared_ptr<Stmt>>& statements) {
     try {
-      for (const std::unique_ptr<Stmt>& statement: statements) {
+      for (const std::shared_ptr<Stmt>& statement: statements) {
         execute(*statement);
       }
     } catch (RuntimeError& error) {
@@ -67,11 +67,11 @@ namespace lox {
     stmt.accept(*this);
   }
 
-  void Interpreter::execute_block(const std::vector<std::unique_ptr<Stmt>>& statements, std::shared_ptr<Environment> env) {
+  void Interpreter::execute_block(const std::vector<std::shared_ptr<Stmt>>& statements, std::shared_ptr<Environment> env) {
     std::shared_ptr<Environment> previous = m_environment; //need to save current m_environment state
     m_environment = env; //set m_environment to new state
     
-    for (const std::unique_ptr<Stmt>& stmt: statements) {
+    for (const std::shared_ptr<Stmt>& stmt: statements) {
         execute(*stmt);
     }
 
@@ -170,10 +170,10 @@ namespace lox {
 
   //This function requires massive rewrite or restructing to avoid raw pointer
   Object Interpreter::visit(Call& expr) {
-    std::unique_ptr<Object> callee = std::make_unique<Object>(evaluate(*(expr.callee)));
+    std::shared_ptr<Object> callee = std::make_shared<Object>(evaluate(*(expr.callee)));
 
     std::vector<Object> arguments;
-    for (const std::unique_ptr<Expr>& argument: expr.arguments) {
+    for (const std::shared_ptr<Expr>& argument: expr.arguments) {
       arguments.push_back(evaluate(*argument));
     }
 

@@ -42,82 +42,82 @@ struct StmtVisitorVoid {
 
 struct Expression: public Stmt {
   public:
-    Expression(std::unique_ptr<Expr> expr): expr(std::move(expr)) {}
+    Expression(std::shared_ptr<Expr> expr): expr(expr) {}
     ~Expression() {}
     std::string accept(StmtVisitorString& v) { return v.visit(*this); }
     void accept(StmtVisitorVoid& v) { return v.visit(*this); }
   public:
-    std::unique_ptr<Expr> expr;
+    std::shared_ptr<Expr> expr;
 };
 
 struct Print: public Stmt {
   public:
-    Print(std::unique_ptr<Expr> expr): expr(std::move(expr)) {}
+    Print(std::shared_ptr<Expr> expr): expr(expr) {}
     ~Print() {}
     std::string accept(StmtVisitorString& v) { return v.visit(*this); }
     void accept(StmtVisitorVoid& v) { return v.visit(*this); }
   public:
-    std::unique_ptr<Expr> expr;
+    std::shared_ptr<Expr> expr;
 };
 
 struct Var: public Stmt {
   public:
-    Var(Token token, std::unique_ptr<Expr> expr): name(token), initializer(std::move(expr)) {}
+    Var(Token token, std::shared_ptr<Expr> expr): name(token), initializer(expr) {}
     ~Var() {}
     std::string accept(StmtVisitorString& v) { return v.visit(*this); }
     void accept(StmtVisitorVoid& v) { return v.visit(*this); }
   public:
     Token name;
-    std::unique_ptr<Expr> initializer;
+    std::shared_ptr<Expr> initializer;
 };
 
 
 struct Block: public Stmt {
   public:
-    Block(std::vector<std::unique_ptr<Stmt>> statements): statements(std::move(statements)) {}
+    Block(std::vector<std::shared_ptr<Stmt>> statements): statements(statements) {}
     ~Block() {}
     std::string accept(StmtVisitorString& v) { return v.visit(*this); }
     void accept(StmtVisitorVoid& v) { return v.visit(*this); }
   public:
-    std::vector<std::unique_ptr<Stmt>> statements;
+    std::vector<std::shared_ptr<Stmt>> statements;
 };
 
 struct If: public Stmt {
    public:
-     If(std::unique_ptr<Expr> condition, std::unique_ptr<Stmt> then_branch, std::unique_ptr<Stmt> else_branch):
-       condition(std::move(condition)), then_branch(std::move(then_branch)), else_branch(std::move(else_branch)) {}
+     If(std::shared_ptr<Expr> condition, std::shared_ptr<Stmt> then_branch, std::shared_ptr<Stmt> else_branch):
+       condition(condition), then_branch(then_branch), else_branch(else_branch) {}
      ~If() {}
      std::string accept(StmtVisitorString& visitor) { return visitor.visit(*this); }
      void accept(StmtVisitorVoid& visitor) { return visitor.visit(*this); }
    public:
-     std::unique_ptr<Expr> condition;
-     std::unique_ptr<Stmt> then_branch;
-     std::unique_ptr<Stmt> else_branch;
+     std::shared_ptr<Expr> condition;
+     std::shared_ptr<Stmt> then_branch;
+     std::shared_ptr<Stmt> else_branch;
 };
 
 struct While: public Stmt {
   public:
-    While(std::unique_ptr<Expr> condition, std::unique_ptr<Stmt> body):
-      condition(std::move(condition)), body(std::move(body)) {}
+    While(std::shared_ptr<Expr> condition, std::shared_ptr<Stmt> body):
+      condition(condition), body(body) {}
     ~While() {}
     std::string accept(StmtVisitorString& visitor) { return visitor.visit(*this); }
     void accept(StmtVisitorVoid& visitor) { visitor.visit(*this); }
   public:
-    std::unique_ptr<Expr> condition;
-    std::unique_ptr<Stmt> body;
+    std::shared_ptr<Expr> condition;
+    std::shared_ptr<Stmt> body;
 };
 
 struct Function: public Stmt {
   public:
-    Function(Token name, std::vector<Token> params, std::vector<std::unique_ptr<Stmt>> body): 
-      name(name), params(params), body(std::move(body)) {}
+    Function(Token name, std::vector<Token> params, std::vector<std::shared_ptr<Stmt>> body): 
+      name(name), params(params), body(body) {}
     ~Function() {}
     std::string accept(StmtVisitorString& v) { return v.visit(*this); }
     void accept(StmtVisitorVoid& v) { return v.visit(*this); }
   public:
     Token name;
     std::vector<Token> params;
-    std::vector<std::unique_ptr<Stmt>> body;
+    std::vector<std::shared_ptr<Stmt>> body;
 };
 
 

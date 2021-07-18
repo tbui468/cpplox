@@ -50,36 +50,36 @@ struct VisitorObject {
 
 struct Assign: public Expr {
   public:
-    Assign(Token name, std::unique_ptr<Expr> value): name(name), value(std::move(value)) {}
+    Assign(Token name, std::shared_ptr<Expr> value): name(name), value(value) {}
     ~Assign() {}
     std::string accept(VisitorString& v) { return v.visit(*this); }
     Object accept(VisitorObject& v) { return v.visit(*this); }
   public:
     Token name;
-    std::unique_ptr<Expr> value;
+    std::shared_ptr<Expr> value;
 };
 
 struct Binary: public Expr {
   public:
-    Binary(Token oprtr, std::unique_ptr<Expr> left, std::unique_ptr<Expr> right): oprtr(oprtr), left(std::move(left)), right(std::move(right)) {}
+    Binary(Token oprtr, std::shared_ptr<Expr> left, std::shared_ptr<Expr> right): oprtr(oprtr), left(left), right(right) {}
     ~Binary() {}
     std::string accept(VisitorString& v) { return v.visit(*this); }
     Object accept(VisitorObject& v) { return v.visit(*this); }
   public:
     Token oprtr;
-    std::unique_ptr<Expr> left;
-    std::unique_ptr<Expr> right;
+    std::shared_ptr<Expr> left;
+    std::shared_ptr<Expr> right;
 };
 
 //this is really just the base Expr
 struct Grouping: public Expr {
   public:
-    Grouping(std::unique_ptr<Expr> expr): expr(std::move(expr)) {}
+    Grouping(std::shared_ptr<Expr> expr): expr(expr) {}
     ~Grouping() {}
     std::string accept(VisitorString& v) { return v.visit(*this); }
     Object accept(VisitorObject& v) { return v.visit(*this); }
   public:
-    std::unique_ptr<Expr> expr;
+    std::shared_ptr<Expr> expr;
 };
 
 struct Literal: public Expr {
@@ -93,13 +93,13 @@ struct Literal: public Expr {
 
 struct Unary: public Expr {
   public:
-    Unary(Token oprtr, std::unique_ptr<Expr> right): oprtr(oprtr), right(std::move(right)) {}
+    Unary(Token oprtr, std::shared_ptr<Expr> right): oprtr(oprtr), right(right) {}
     ~Unary() {}
     std::string accept(VisitorString& v) { return v.visit(*this); }
     Object accept(VisitorObject& v) { return v.visit(*this); }
   public:
     Token oprtr;
-    std::unique_ptr<Expr> right;
+    std::shared_ptr<Expr> right;
 };
 
 struct Variable: public Expr {
@@ -114,28 +114,28 @@ struct Variable: public Expr {
 
 struct Logical: public Expr {
   public:
-    Logical(Token oprtr, std::unique_ptr<Expr> left, std::unique_ptr<Expr> right):
-      oprtr(oprtr), left(std::move(left)), right(std::move(right)) {}
+    Logical(Token oprtr, std::shared_ptr<Expr> left, std::shared_ptr<Expr> right):
+      oprtr(oprtr), left(left), right(right) {}
     ~Logical() {}
     std::string accept(VisitorString& visitor) { return visitor.visit(*this); }
     Object accept(VisitorObject& visitor) { return visitor.visit(*this); }
   public:
     Token oprtr;
-    std::unique_ptr<Expr> left;
-    std::unique_ptr<Expr> right;
+    std::shared_ptr<Expr> left;
+    std::shared_ptr<Expr> right;
 };
 
 struct Call: Expr {
   public:
-    Call(std::unique_ptr<Expr> callee, Token paren, std::vector<std::unique_ptr<Expr>> arguments):
-      callee(std::move(callee)), paren(paren), arguments(std::move(arguments)) {}
+    Call(std::shared_ptr<Expr> callee, Token paren, std::vector<std::shared_ptr<Expr>> arguments):
+      callee(callee), paren(paren), arguments(arguments) {}
     ~Call() {}
     std::string accept(VisitorString& visitor) { return visitor.visit(*this); }
     Object accept(VisitorObject& visitor) { return visitor.visit(*this); }
   public:
-    std::unique_ptr<Expr> callee; //any expression that evaluates to a function
+    std::shared_ptr<Expr> callee; //any expression that evaluates to a function
     Token paren; //keeping closing token for runtime error reporting
-    std::vector<std::unique_ptr<Expr>> arguments;
+    std::vector<std::shared_ptr<Expr>> arguments;
 };
 
 }

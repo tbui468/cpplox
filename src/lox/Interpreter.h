@@ -13,7 +13,7 @@ namespace lox {
   class Interpreter: public VisitorObject, public StmtVisitorVoid {
     public:
       Interpreter();
-      void interpret(const std::vector<std::unique_ptr<Stmt>>& statements);
+      void interpret(const std::vector<std::shared_ptr<Stmt>>& statements);
     private:
       std::string stringify(const Object& obj);
       Object evaluate(Expr& expr);
@@ -40,7 +40,7 @@ namespace lox {
       std::shared_ptr<Environment> m_environment;
     public:
       std::shared_ptr<Environment> m_globals;
-      void execute_block(const std::vector<std::unique_ptr<Stmt>>& statements, std::shared_ptr<Environment> env);
+      void execute_block(const std::vector<std::shared_ptr<Stmt>>& statements, std::shared_ptr<Environment> env);
   };
 
 }

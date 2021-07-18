@@ -15,6 +15,16 @@
 //      LoxFunction needs to keep a copy of stmt to call later, BUT the unique_ptrs
 //      in stmt can't be copied over since
 //
+//      Change Expr and Stmt to shared pointers.  Do the same in Parser/Interpreter.  Remove std::move() where necessary
+//      Environments (m_environment and m_global) in Interpreter might be able to stay as unique ptrs.
+//      Compile to catch errors
+//      Files:
+//        Expr.h
+//        Stmt.h
+//        Parser.h / Parser.cpp
+//        Interpreter.h / Interpreter.cpp
+//
+//
 //      option 1: change ALL unique_ptrs to shared_ptrs: this will take a while but should solve all problems
 //      option 2: could Function body be change to shared_ptr only?  So keep other unique_ptrs
 //            when Function node is created in Parser, the vector of unique_ptr<Stmt> is created by calling block()

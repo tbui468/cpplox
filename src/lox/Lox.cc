@@ -26,7 +26,7 @@ class StmtPrinter: public StmtVisitorString {
     }
     std::string visit(Block& stmt) {
       std::string out = ""; 
-      for (const std::unique_ptr<Stmt>& stmt: stmt.statements) {
+      for (const std::shared_ptr<Stmt>& stmt: stmt.statements) {
         out += StmtPrinter().print(*stmt) + "\n";
       }
       return out;
@@ -55,10 +55,10 @@ void Lox::run(std::string source) {
   std::vector<Token> tokens = scanner.scan_tokens();
 
   Parser parser = Parser(tokens);
-  std::vector<std::unique_ptr<Stmt>> statements = parser.parse();
+  std::vector<std::shared_ptr<Stmt>> statements = parser.parse();
 
   /*
-  for (const std::unique_ptr<Stmt>& stmt: statements) {
+  for (const std::shared_ptr<Stmt>& stmt: statements) {
     std::cout << StmtPrinter().print(*stmt) << std::endl;
   }*/
 
