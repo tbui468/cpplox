@@ -6,6 +6,10 @@ namespace lox
     return expr.accept(*this);
   }
 
+  std::string AstPrinter::print(Stmt& stmt) {
+    return stmt.accept(*this);
+  }
+
   std::string AstPrinter::visit(Binary& expr) {
     return parenthesize(expr.oprtr.m_lexeme, expr.left->accept(*this), expr.right->accept(*this));
   }
@@ -39,6 +43,51 @@ namespace lox
   }
   std::string AstPrinter::visit(Call& expr) {
     return "Call";
+  }
+
+  std::string AstPrinter::visit(Expression& stmt) {
+    return "Expression";
+  }
+  std::string AstPrinter::visit(Print& stmt) {
+    return "Print: " + print(*(stmt.expr));
+  }
+  std::string AstPrinter::visit(Var& stmt) {
+    return "Var";
+  }
+  std::string AstPrinter::visit(Block& stmt) {
+    std::string out = ""; 
+    for (const std::shared_ptr<Stmt>& stmt: stmt.statements) {
+      out += print(*stmt) + "\n";
+    }
+    return out;
+  }
+  std::string AstPrinter::visit(If& stmt) {
+    return "If";
+  }
+  std::string AstPrinter::visit(While& stmt) {
+    return "While";
+  }
+  
+  std::string AstPrinter::visit(Function& stmt) {
+    std::string out = "Function:\n";
+    //name Token, params vector<Token>, body vector<std::shared_ptr<Stmt>>
+    std::string params = "";
+    for (Token token: stmt.params) {
+      params += token.to_string();
+    }
+    std::string body = "";
+    for (const std::shared_ptr<Stmt>& s: stmt.body) {
+      body += print(*s);
+    }
+    out += "  name: " + stmt.name.to_string() + "\n";
+    out += "  params: " + params + "\n";
+    out += "  body: " + body + "\n";
+  
+    return out;
+  }
+
+  std::string AstPrinter::visit(Return& stmt) {
+    return "Return";
   }
 
   std::string AstPrinter::parenthesize(const std::string& name, const std::string& expr_string) {

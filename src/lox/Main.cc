@@ -10,8 +10,8 @@
 
 //
 //  TODO:
+//    Split LoxFunction into header and implementation files
 //    Combine and fix AstPrinter() so that it works on both Expr and Stmt
-//    Change file extensions to .hpp and .cpp
 //    fix warning bugs
 //    Clean Up - rule of five, const and const/ref, etc
 //      Lox: done
@@ -22,6 +22,8 @@
 //    consume a { outside of block() allows a more specific error message (eg, "Expect '{' before function body")
 //      should do this for better error messages
 //    m_globals in Interpreter should be const since we don't want anyone to change where it points to
+//    Change file extensions to .hpp and .cpp
+//    Finish filling out AstPrinter functions (many are currently stubs)
 
 int main(int argc, char** argv) {
 
