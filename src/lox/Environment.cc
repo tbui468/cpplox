@@ -22,7 +22,7 @@ namespace lox {
     throw RuntimeError(name, "Undefined variable '" + name.m_lexeme + "'.");
   }
 
-  std::shared_ptr<Object> Environment::get(Token name) {
+  std::shared_ptr<Object> Environment::get(const Token& name) {
     if (m_values.count(name.m_lexeme) > 0) {
       return m_values[name.m_lexeme];
     }
@@ -33,5 +33,11 @@ namespace lox {
 
 
     throw RuntimeError(name, "Undefined variable '" + name.m_lexeme + "'.");
+  }
+
+
+  void Environment::print_data() const {
+        std::cout << m_values.size() << std::endl;
+        std::cout << m_enclosing << std::endl;
   }
 }

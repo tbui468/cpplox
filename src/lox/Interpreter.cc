@@ -37,28 +37,6 @@ namespace lox {
     }
   }
 
-  //if first digit after decimal is 0, treat the return string as an integer
-  //eg, chop off the decimal point and all digits after that
-  std::string Interpreter::stringify(const Object& obj) {
-    if (obj.is_nil()) return "nil";
-
-    if (obj.is_number()) {
-      std::string num = std::to_string(obj.get_number());
-      size_t pos = num.find(".");
-      if (pos != std::string::npos && num.at(pos + 1) == '0') {
-        return num.substr(0, pos);
-      }
-      return num;
-    }
-
-    if (obj.is_bool()) {
-      if (obj.is_true()) return "true";
-      else return "false";
-    }
-
-    //otherwise it's a string
-    return obj.get_string();
-  }
 
   std::shared_ptr<Object> Interpreter::evaluate(Expr& expr) {
     return expr.accept(*this);
@@ -256,7 +234,7 @@ namespace lox {
     throw LoxReturn(std::make_shared<Object>());  //return a nil object
   }
 
-  bool Interpreter::is_equal(const Object& a, const Object& b) {
+  bool Interpreter::is_equal(const Object& a, const Object& b) const {
     if (a.is_nil() && b.is_nil()) return true;
     if (a.is_nil()) return false;
 
@@ -271,14 +249,36 @@ namespace lox {
     return false;
   }
 
-  void Interpreter::check_number_operand(Token op, const Object& operand) {
+  void Interpreter::check_number_operand(const Token& op, const Object& operand) const {
     if (operand.is_number()) return;
     throw RuntimeError(op, "Operand must be a number.");
   }
 
-  void Interpreter::check_number_operand(Token op, const Object& left, const Object& right) {
+  void Interpreter::check_number_operand(const Token& op, const Object& left, const Object& right) const {
     if (left.is_number() && right.is_number()) return;
     throw RuntimeError(op, "Operands must be numbers."); 
+  }
+
+
+  std::string Interpreter::stringify(const Object& obj) const {
+    if (obj.is_nil()) return "nil";
+
+    if (obj.is_number()) {
+      std::string num = std::to_string(obj.get_number());
+      size_t pos = num.find(".");
+      if (pos != std::string::npos && num.at(pos + 1) == '0') {
+        return num.substr(0, pos);
+      }
+      return num;
+    }
+
+    if (obj.is_bool()) {
+      if (obj.is_true()) return "true";
+      else return "false";
+    }
+
+    //otherwise it's a string
+    return obj.get_string();
   }
 
 }

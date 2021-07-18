@@ -13,8 +13,6 @@ namespace lox {
     return statements;
   }
 
-  //I don't like how statements and declarations are split up (is it necessary)
-  //three types: declarations, statements and expressions
   std::shared_ptr<Stmt> Parser::declaration() {
     try {
       if (match(TokenType::FUN)) return func("function");
@@ -352,13 +350,13 @@ namespace lox {
     }
   }
 
-  Token Parser::consume(TokenType type, std::string message) {
+  Token Parser::consume(TokenType type, const std::string& message) {
     if(check(type)) return advance();
 
     throw error(peek(), message);
   }
 
-  Parser::ParseError Parser::error(Token token, std::string message) {
+  Parser::ParseError Parser::error(Token token, const std::string& message) {
     Lox::error(token, message);
     return Parser::ParseError();
   }

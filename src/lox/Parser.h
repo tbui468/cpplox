@@ -13,7 +13,6 @@ namespace lox {
   class Parser {
     private:
       class ParseError: public std::exception {};
-    private:
       std::vector<Token> m_tokens;
       int m_current = 0;
     public:
@@ -31,7 +30,6 @@ namespace lox {
       std::shared_ptr<Stmt> func(const std::string& kind);
       std::shared_ptr<Stmt> return_statement();
       std::vector<std::shared_ptr<Stmt>> block();
-      ParseError error(Token token, std::string message);
       std::shared_ptr<Expr> expression();
       std::shared_ptr<Expr> assignment();
       std::shared_ptr<Expr> logic_or();
@@ -44,13 +42,14 @@ namespace lox {
       std::shared_ptr<Expr> finish_call(std::shared_ptr<Expr> callee);
       std::shared_ptr<Expr> call();
       std::shared_ptr<Expr> primary();
-      bool match(TokenType type);
+      ParseError error(Token token, const std::string& message);
       Token previous() const;
-      bool check(TokenType type);
       Token peek() const;
-      bool is_at_end() const;
       Token advance();
-      Token consume(TokenType type, std::string messsage);
+      Token consume(TokenType type, const std::string& messsage);
+      bool match(TokenType type);
+      bool check(TokenType type);
+      bool is_at_end() const;
       void synchronize();
   };
 

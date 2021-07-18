@@ -16,7 +16,7 @@
 //    Clean Up - rule of five, const and const/ref, etc
 //      Lox: done
 //      Scanner: done
-//      Parser: 
+//      Parser: done
 //      Interpreter:
 //    native function clock() is not implemented yet (since we can't use return values of functions yet)
 //    consume a { outside of block() allows a more specific error message (eg, "Expect '{' before function body")
