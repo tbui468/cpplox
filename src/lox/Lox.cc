@@ -75,9 +75,10 @@ void Lox::run(std::string source) {
   Parser parser = Parser(tokens);
   std::vector<std::shared_ptr<Stmt>> statements = parser.parse();
 
+  /*
   for (const std::shared_ptr<Stmt>& stmt: statements) {
     std::cout << StmtPrinter().print(*stmt) << std::endl;
-  }
+  }*/
 
   
 

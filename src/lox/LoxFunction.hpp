@@ -11,11 +11,10 @@ namespace lox {
   //class Function: public Callable, public Object {
   class LoxFunction: public Callable {
     public:
-      LoxFunction(Function declaration): Callable(), m_declaration(declaration) {}
+      LoxFunction(Function& declaration): Callable(), m_declaration(declaration) {}
       ~LoxFunction() {}
 
       virtual std::shared_ptr<Object> call(Interpreter& interp, const std::vector<std::shared_ptr<Object>>& arguments) override {
-        
         std::shared_ptr<Environment> env = std::make_shared<Environment>(interp.m_globals);
         for (int i = 0; i < m_declaration.params.size(); i++) {
           env->define(m_declaration.params.at(i).m_lexeme, arguments.at(i));

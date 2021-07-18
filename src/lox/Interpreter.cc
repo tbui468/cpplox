@@ -71,12 +71,18 @@ namespace lox {
   void Interpreter::execute_block(const std::vector<std::shared_ptr<Stmt>>& statements, std::shared_ptr<Environment> env) {
     std::shared_ptr<Environment> previous = m_environment; //need to save current m_environment state
     m_environment = env; //set m_environment to new state
-    
-    for (const std::shared_ptr<Stmt>& stmt: statements) {
-        execute(*stmt);
+
+    try {    
+      for (const std::shared_ptr<Stmt>& stmt: statements) {
+          execute(*stmt);
+      }
+    } catch(LoxReturn& ret) {
+      m_environment = previous; //throw out environment and reset back to old one
+      throw ret;
     }
 
     m_environment = previous; //throw out environment and reset back to old one
+
   }
 
 
@@ -171,6 +177,7 @@ namespace lox {
 
 
   //This function requires massive rewrite or restructing to avoid raw pointer
+  //are we computing the the arguments using 
   std::shared_ptr<Object> Interpreter::visit(Call& expr) {
     std::shared_ptr<Object> callee = evaluate(*(expr.callee));
 

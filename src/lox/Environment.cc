@@ -3,7 +3,9 @@
 
 namespace lox {
   void Environment::define(const std::string& name, std::shared_ptr<Object> value) {
-    m_values[name] = value; 
+    if (m_values.count(name) == 0) {
+      m_values[name] = value; 
+    }
   }
 
   void Environment::assign(Token name, std::shared_ptr<Object> value) {
