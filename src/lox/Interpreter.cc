@@ -242,7 +242,8 @@ namespace lox {
   }
 
   void Interpreter::visit(Function& stmt) {
-    std::shared_ptr<Object> func = std::make_shared<LoxFunction>(stmt);
+    //instantiating LoxFunction with environment where the function is declared
+    std::shared_ptr<Object> func = std::make_shared<LoxFunction>(stmt, m_environment);
     m_environment->define(stmt.name.m_lexeme, func);
   }
 
