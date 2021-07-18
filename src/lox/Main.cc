@@ -5,23 +5,14 @@
 #include "AstPrinter.h"
 #include "Interpreter.h"
 
-//10. Functions
-//  todo:
-
+//11. Resolution and Binding
 //
 //  TODO:
-//    Split LoxFunction into header and implementation files
-//    Combine and fix AstPrinter() so that it works on both Expr and Stmt
+//    implement native function clock()
+//      call it in code like this: var time = clock(); //returns a number
 //    fix warning bugs
-//    Clean Up - rule of five, const and const/ref, etc
-//      Lox: done
-//      Scanner: done
-//      Parser: done
-//      Interpreter:
-//    native function clock() is not implemented yet (since we can't use return values of functions yet)
 //    consume a { outside of block() allows a more specific error message (eg, "Expect '{' before function body")
 //      should do this for better error messages
-//    m_globals in Interpreter should be const since we don't want anyone to change where it points to
 //    Change file extensions to .hpp and .cpp
 //    Finish filling out AstPrinter functions (many are currently stubs)
 

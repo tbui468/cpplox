@@ -1,4 +1,5 @@
 #include <iostream>
+#include <chrono>
 #include "Interpreter.h"
 #include "Lox.h"
 #include "LoxFunction.hpp"
@@ -15,7 +16,9 @@ namespace lox {
         Clock(): Callable() {}
         ~Clock() {}
         virtual std::shared_ptr<Object> call(Interpreter& interp, const std::vector<std::shared_ptr<Object>>& arguments) override {
-          return std::make_shared<Object>(1.0);
+          std::chrono::high_resolution_clock::time_point time = std::chrono::high_resolution_clock::now();
+          double seconds = std::chrono::duration<double>(time.time_since_epoch()).count();
+          return std::make_shared<Object>(seconds);
         }
         virtual int arity() const override {
           return 0;
@@ -154,8 +157,6 @@ namespace lox {
   }
 
 
-  //This function requires massive rewrite or restructing to avoid raw pointer
-  //are we computing the the arguments using 
   std::shared_ptr<Object> Interpreter::visit(Call& expr) {
     std::shared_ptr<Object> callee = evaluate(*(expr.callee));
 
@@ -165,7 +166,7 @@ namespace lox {
     }
 
     //NOTE: need to also check if class method (since they are also callable)
-    if (!dynamic_cast<LoxFunction*>(callee.get())) {
+    if (!dynamic_cast<Callable*>(callee.get())) {
       throw RuntimeError(expr.paren, "Can only call functions and classes.");
     }
 

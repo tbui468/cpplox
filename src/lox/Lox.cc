@@ -18,10 +18,10 @@ void Lox::run(std::string source) {
   Parser parser = Parser(tokens);
   std::vector<std::shared_ptr<Stmt>> statements = parser.parse();
 
-  
+/*  
   for (const std::shared_ptr<Stmt>& stmt: statements) {
     std::cout << AstPrinter().print(*stmt) << std::endl;
-  }
+  }*/
 
   if (m_had_error) return;
 
@@ -51,16 +51,12 @@ void Lox::run_file(std::string file_path) {
 
 void Lox::run_prompt() {
   std::string line;
-  while(1)
-  {
+  while(1) {
     std::cout << "> ";
     getline(std::cin, line);
-    if(line == "quit()")
-    {
+    if(line == "quit()") {
       break;
-    }
-    else
-    {
+    } else {
       run(line);
       m_had_error = false;
     }
