@@ -19,6 +19,7 @@ struct Block;
 struct If;
 struct While;
 struct Function;
+struct Return;
 
 struct StmtVisitorString {
   virtual std::string visit(Expression& stmt) = 0;
@@ -28,6 +29,7 @@ struct StmtVisitorString {
   virtual std::string visit(If& stmt) = 0;
   virtual std::string visit(While& stmt) = 0;
   virtual std::string visit(Function& stmt) = 0;
+  virtual std::string visit(Return& stmt) = 0;
 };
 
 struct StmtVisitorVoid {
@@ -38,6 +40,7 @@ struct StmtVisitorVoid {
   virtual void visit(If& stmt) = 0;
   virtual void visit(While& stmt) = 0;
   virtual void visit(Function& stmt) = 0;
+  virtual void visit(Return& stmt) = 0;
 };
 
 struct Expression: public Stmt {
@@ -118,6 +121,17 @@ struct Function: public Stmt {
     Token name;
     std::vector<Token> params;
     std::vector<std::shared_ptr<Stmt>> body;
+};
+
+struct Return: public Stmt {
+  public:
+    Return(Token keyword, std::shared_ptr<Expr> value): keyword(keyword), value(value) {}
+    ~Return() {}
+    std::string accept(StmtVisitorString& visitor) { return visitor.visit(*this); }
+    void accept(StmtVisitorVoid& visitor) { return visitor.visit(*this); }
+  public:
+    Token keyword;
+    std::shared_ptr<Expr> value;
 };
 
 

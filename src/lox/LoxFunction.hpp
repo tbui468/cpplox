@@ -4,6 +4,7 @@
 #include "Callable.hpp"
 #include "Stmt.h"
 #include "Environment.h"
+#include "LoxReturn.hpp"
 
 namespace lox {
 
@@ -20,8 +21,14 @@ namespace lox {
           env->define(m_declaration.params.at(i).m_lexeme, arguments.at(i));
         } 
 
-        interp.execute_block(m_declaration.body, env);
-        return std::make_shared<Object>(); //note: 0 arguments is a null Object; will change later when function returns are added
+        try {
+          interp.execute_block(m_declaration.body, env);
+        } catch(LoxReturn& ret) {
+          return ret.value;
+        }
+
+        //if there is no return statement in function block
+        return std::make_shared<Object>();
       }
 
       virtual int arity() override {

@@ -29,6 +29,7 @@ namespace lox {
       std::shared_ptr<Stmt> while_statement();
       std::shared_ptr<Stmt> for_statement();
       std::shared_ptr<Stmt> func(const std::string& kind);
+      std::shared_ptr<Stmt> return_statement();
       std::vector<std::shared_ptr<Stmt>> block();
       ParseError error(Token token, std::string message);
       std::shared_ptr<Expr> expression();

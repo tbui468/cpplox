@@ -44,6 +44,7 @@ namespace lox {
     if (match(TokenType::PRINT)) return print_statement();
     if (match(TokenType::WHILE)) return while_statement();
     if (match(TokenType::FOR)) return for_statement();
+    if (match(TokenType::RETURN)) return return_statement();
     if (check(TokenType::LEFT_BRACE)) return std::make_shared<Block>(block()); //doing left and right paren check inside block()
     return expression_statement();
   }
@@ -154,6 +155,20 @@ namespace lox {
     }
 
     return body;
+  }
+
+
+  std::shared_ptr<Stmt> Parser::return_statement() {
+    Token keyword = previous(); //the 'return' keyword
+
+    //note: expression may be empty, eg just 'return;' to exit function
+    std::shared_ptr<Expr> return_value = nullptr;
+    if(!check(TokenType::SEMICOLON)) {
+      return_value = expression();
+    }
+    consume(TokenType::SEMICOLON, "Expect ';' after return value.");
+
+    return std::make_shared<Return>(keyword, return_value);
   }
   
   std::vector<std::shared_ptr<Stmt>> Parser::block() {

@@ -2,6 +2,7 @@
 #include "Interpreter.h"
 #include "Lox.h"
 #include "LoxFunction.hpp"
+#include "LoxReturn.hpp"
 
 
 namespace lox {
@@ -236,6 +237,15 @@ namespace lox {
   void Interpreter::visit(Function& stmt) {
     std::shared_ptr<Object> func = std::make_shared<LoxFunction>(stmt);
     m_environment->define(stmt.name.m_lexeme, func);
+  }
+
+  void Interpreter::visit(Return& stmt) {
+    if (stmt.value != nullptr) {
+      std::shared_ptr<Object> value = evaluate(*stmt.value);
+      throw LoxReturn(value);
+    }
+      
+    throw LoxReturn(std::make_shared<Object>());  //return a nil object
   }
 
   bool Interpreter::is_equal(const Object& a, const Object& b) {

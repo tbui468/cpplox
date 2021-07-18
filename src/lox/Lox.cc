@@ -56,6 +56,10 @@ class StmtPrinter: public StmtVisitorString {
       return out;
     }
 
+    std::string visit(Return& stmt) {
+      return "Return";
+    }
+
 };
 
 

@@ -8,17 +8,26 @@
 //10. Functions
 //  todo:
 //    10.4 Function Objects (functions should work now, except they can't retunr yet)
-//      
-//      problem with function not being callable
-//        'getting only functions and methods can be called' exception in Interpreter
-//        the dynamic cast is not working when an Object is returned
-//
-//      solution:
-//        change all Object return types to std::shared_ptr<Object>
-//        Expr.h
-//        Interpreter.h / Interpreter.cpp
+//      major leak in scope.  The following prints out 4, but it should print 6.
+//      the first call to ret(5-3) changes the value of n, and the second call becomes ret(3-2) 
+//      BUT it should be ret(5-3) and ret(5-3) for both.  The environments scopes aren't set up
+//      correctly
+/
+/*
+  fun ret(n) {
+    return n;
+  }
+
+  fun test(n) {
+    print ret(n-2) + ret(n-2);
+  }
+
+  test(5);
+
+*/
 //
 //  TODO:
+//    Combine and fix AstPrinter() so that it works on both Expr and Stmt
 //    Change file extensions to .hpp and .cpp
 //    fix warning bugs
 //    Clean Up - rule of five, const and const/ref, etc

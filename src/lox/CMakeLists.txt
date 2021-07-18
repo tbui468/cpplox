@@ -25,6 +25,7 @@ set(Headers
     Environment.h
     Callable.hpp
     LoxFunction.hpp
+    LoxReturn.hpp
     )
 
 add_executable(
