@@ -1,0 +1,93 @@
+var comment = "using string since comments aren't implemented yet";
+var tests = "var declaration, var assignment, expressions, scope, if/else, while, for";
+
+var a;
+if(a == nil){
+  print "Variable Declaration: Passed";
+}else{
+  print "Variable Declaration: Failed";
+}
+
+var b = 10;
+if(b == 10){
+  print "Variable Number Assignment: Passed";
+}else{
+  print "Variable Number Assignment: Failed";
+}
+
+var c = "cat d";
+if(c == "cat d"){
+  print "Variable String Assignment: Passed";
+}else{
+  print "Variable String Assignment: Failed";
+}
+
+var d = 1;
+var e = 11;
+{
+  var d = 2;
+  e = 22;
+  if(d == 2 and e == 22){
+    print "Override Outer Scope: Passed";
+  }else{
+    print "Override Outer Scope: Failed";
+  }
+}
+
+if(d == 1 and e == 22){
+  print "Return to Outer Scope: Passed";
+}else{
+  print "Return to Outer Scope: Failed";
+}
+
+var f = 0;
+while (f < 10) {
+  f = f + 1;
+}
+
+if(f == 10){
+  print "While Loop: Passed";
+}else{
+  print "While Loop: Failed";
+}
+
+var h = "";
+for (var g = 3; g > 0; g = g - 1) {
+  h = h + "a";
+}
+
+if(h == "aaa"){
+  print "For Loop: Passed";
+}else{
+  print "For Loop: Failed";
+}
+
+fun fib(i) {
+  if (i <= 1) {
+    return i;
+  }
+  return fib(i-2) + fib(i-1);
+}
+
+if(fib(2) == 1 and fib(3) == 2) {
+  print "Function: Passed";
+} else {
+  print "Function: Failed";
+}
+
+fun make_counter() {
+  var j = 0;
+  fun count() {
+    j = j +1;
+    return j;
+  }
+
+  return count;
+}
+
+var counter = make_counter();
+if(counter() == 1 and counter() == 2) {
+  print "Nested Function: Passed";
+} else {
+  print "Nested Function: Failed";
+}
