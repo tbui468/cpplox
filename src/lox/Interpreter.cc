@@ -17,10 +17,10 @@ namespace lox {
         virtual std::shared_ptr<Object> call(Interpreter& interp, const std::vector<std::shared_ptr<Object>>& arguments) override {
           return std::make_shared<Object>(1.0);
         }
-        virtual int arity() override {
+        virtual int arity() const override {
           return 0;
         }
-        virtual std::string to_string() override {
+        virtual std::string to_string() const override {
           return "clock";
         }
     };

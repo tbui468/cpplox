@@ -8,6 +8,7 @@ set(Sources
     Object.cc
     Interpreter.cc
     Environment.cc
+    LoxFunction.cpp
     )
 
 set(Headers

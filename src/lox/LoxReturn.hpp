@@ -7,6 +7,7 @@ namespace lox {
   class LoxReturn: public std::exception {
     public:
       LoxReturn(std::shared_ptr<Object> value): value(value) {}
+    public:
       std::shared_ptr<Object> value;
   };
 }
