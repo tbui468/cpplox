@@ -67,14 +67,14 @@ namespace lox {
   }
 
 
-  std::shared_ptr<Object> Interpreter::visit(Assign& expr) {
-    std::shared_ptr<Object> value = evaluate(*(expr.value));
-    m_environment->assign(expr.name, value);
+  std::shared_ptr<Object> Interpreter::visit(std::shared_ptr<Assign> expr) {
+    std::shared_ptr<Object> value = evaluate(*(expr->value));
+    m_environment->assign(expr->name, value);
     return value;
   }
 
-  std::shared_ptr<Object> Interpreter::visit(Literal& expr) {
-    return expr.value;
+  std::shared_ptr<Object> Interpreter::visit(std::shared_ptr<Literal> expr) {
+    return expr->value;
   }
   std::shared_ptr<Object> Interpreter::visit(Grouping& expr) {
     return evaluate(*(expr.expr));
@@ -140,8 +140,8 @@ namespace lox {
     throw RuntimeError(expr.oprtr, "Error in binary expression.");
   }
 
-  std::shared_ptr<Object> Interpreter::visit(Variable& expr) {
-    return m_environment->get(expr.name);
+  std::shared_ptr<Object> Interpreter::visit(std::shared_ptr<Variable> expr) {
+    return m_environment->get(expr->name);
   }
 
   std::shared_ptr<Object> Interpreter::visit(Logical& expr) {

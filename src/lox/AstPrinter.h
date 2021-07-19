@@ -16,10 +16,10 @@ namespace lox
     private:
       std::string visit(Binary& expr)     override;
       std::string visit(Grouping& expr)   override;
-      std::string visit(Literal& expr)    override;
+      std::string visit(std::shared_ptr<Literal> expr)    override;
       std::string visit(Unary& expr)      override;
-      std::string visit(Assign& expr)     override;
-      std::string visit(Variable& expr)   override;
+      std::string visit(std::shared_ptr<Assign> expr)     override;
+      std::string visit(std::shared_ptr<Variable> expr)   override;
       std::string visit(Logical& expr)    override;
       std::string visit(Call& expr)       override;
     private:

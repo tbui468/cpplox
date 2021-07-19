@@ -18,12 +18,12 @@ namespace lox {
 //      void resolve(const Expr expr, int depth);
     private:
       std::shared_ptr<Object> evaluate(Expr& expr);
-      std::shared_ptr<Object> visit(Assign& expr)   override;
-      std::shared_ptr<Object> visit(Literal& expr)  override;
+      std::shared_ptr<Object> visit(std::shared_ptr<Assign> expr)   override;
+      std::shared_ptr<Object> visit(std::shared_ptr<Literal> expr)  override;
       std::shared_ptr<Object> visit(Grouping& expr) override;
       std::shared_ptr<Object> visit(Unary& expr)    override;
       std::shared_ptr<Object> visit(Binary& expr)   override;
-      std::shared_ptr<Object> visit(Variable& expr) override;
+      std::shared_ptr<Object> visit(std::shared_ptr<Variable> expr) override;
       std::shared_ptr<Object> visit(Logical& expr)  override;
       std::shared_ptr<Object> visit(Call& expr)     override;
       void execute(Stmt& stmt);

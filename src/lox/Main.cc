@@ -16,10 +16,9 @@
 //    we need to save reference to expression nodes, but that can't be done with maps,
 //    BUT it can be done with pointers (smart or otherwise)
 //    REDO VISITOR PATTERN
-  //    Comment out/remove from CMake Resolver and any supporting code in Expr.h and Stmt.h
-  //    Run tests and make sure all (except the last) pass
-  //    Commit with message: "commented out resolver to redo visitor pattern"
   //    Replace the arguments in visitor.visit(*this) with visitor.visit(shared_from_this())
+  //      do for Assign and Variable since those are the only ones we need for now
+  //      try resolver
   //    have Expr and Stmt inherit from std::enable_shared_from_this<Expr>, std::enable_shared_from_this<Stmt>
   //    Run tests and make sure all tests (exept for last) pass
   //    Commit with message: "Redid visitor pattern with shared_ptrs so that AST data can be saved to Interpreter"
