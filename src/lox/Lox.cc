@@ -19,6 +19,7 @@ void Lox::run(std::string source) {
   Parser parser = Parser(tokens);
   std::vector<std::shared_ptr<Stmt>> statements = parser.parse();
 
+  if (m_had_error) return;
 
   Resolver resolver(Lox::m_interpreter);
   resolver.resolve(statements); 

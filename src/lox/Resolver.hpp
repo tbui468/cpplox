@@ -19,6 +19,10 @@ namespace lox {
       ~Resolver() {}
       void resolve(const std::vector<std::shared_ptr<Stmt>>& stmts);
     private:
+      enum FunctionType {
+        NONE,
+        FUNCTION
+      };
       //expressions
       void visit(std::shared_ptr<Assign> expr)   override;
       void visit(std::shared_ptr<Literal> expr)  override;
@@ -45,10 +49,11 @@ namespace lox {
       void resolve(std::shared_ptr<Stmt> stmt);
       void resolve(std::shared_ptr<Expr> expr);
       void resolve_local(std::shared_ptr<Expr> expr, const Token& name);
-      void resolve_function(const Function& func);
+      void resolve_function(const Function& func, FunctionType type);
     private:
-      std::shared_ptr<Interpreter> m_interpreter;
+      std::shared_ptr<Interpreter> m_interpreter {nullptr};
       std::vector<std::unordered_map<std::string, bool>> m_scopes;
+      FunctionType m_current_function {FunctionType::NONE};
   };
 
 }

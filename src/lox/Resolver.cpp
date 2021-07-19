@@ -77,7 +77,7 @@ namespace lox {
     declare(stmt.name);
     define(stmt.name);
 
-    resolve_function(stmt);
+    resolve_function(stmt, FunctionType::FUNCTION);
   }
 
   void Resolver::visit(Block& stmt) {
@@ -115,6 +115,9 @@ namespace lox {
   }
 
   void Resolver::visit(Return& stmt) {
+    if (m_current_function == FunctionType::NONE) {
+      Lox::error(stmt.keyword, "Can't return from top-level code.");
+    }
     if(stmt.value) {
       resolve(stmt.value);
     }
@@ -139,7 +142,9 @@ namespace lox {
     }
   }
 
-  void Resolver::resolve_function(const Function& func) {
+  void Resolver::resolve_function(const Function& func, FunctionType type) {
+    FunctionType enclosing_function = m_current_function;
+    m_current_function = type;
     begin_scope();
     for (const Token& param: func.params) {
       declare(param);
@@ -147,11 +152,14 @@ namespace lox {
     }
     resolve(func.body);
     end_scope();
+    m_current_function = enclosing_function;
   }
 
   void Resolver::declare(const Token& name) {
     if (m_scopes.empty()) return;
-
+    if (m_scopes.back().count(name.m_lexeme) > 0) {
+      Lox::error(name, "Already a variable with this name declared in this scope.");
+    }
     m_scopes.back()[name.m_lexeme] = false;
   }
 

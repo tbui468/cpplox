@@ -12,18 +12,13 @@
 //cmake --build . --config Release cl /O2 ...
 
 //11. Resolution and Binding
-//  problem with m_locals in Interpreter.
-//    we need to save reference to expression nodes, but that can't be done with maps,
-//    BUT it can be done with pointers (smart or otherwise)
-//    REDO VISITOR PATTERN
-  //    Replace the arguments in visitor.visit(*this) with visitor.visit(shared_from_this())
-  //      do for Assign and Variable since those are the only ones we need for now
-  //      try resolver
-  //    have Expr and Stmt inherit from std::enable_shared_from_this<Expr>, std::enable_shared_from_this<Stmt>
-  //    Run tests and make sure all tests (exept for last) pass
-  //    Commit with message: "Redid visitor pattern with shared_ptrs so that AST data can be saved to Interpreter"
+//  
 //
 //  TODO:
+//    The book allows declaring variables with same name in global scope, but this
+//      really shouldn't be possible - to many potential bugs.  Don't allow it.
+//    Optional: Change remaining Expr and Stmt visitor pattern to use shared_from_this() instead of *this
+//      this will make everything more consistent
 //    Change name of Expr visitor interfaces from VisitorObject -> ExprVisitorObject, and VisitorString -> ExprVisitorString
 //      this will keep it consistent with Stmt visitor interfaces naming, and make the different interfaces between
 //      Expr and Stmt more clear
