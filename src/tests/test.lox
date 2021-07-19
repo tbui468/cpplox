@@ -91,3 +91,19 @@ if(counter() == 1 and counter() == 2) {
 } else {
   print "Nested Function: Failed";
 }
+
+var k = "global";
+{
+  fun show_k() {
+    return k;
+  }
+
+  var l = show_k();
+  var k = "block";
+  var m = show_k();
+  if ( l == "global" and m == "global") {
+    print "Function Declaration Closures: Passed";
+  } else {
+    print "Function Declaration Closures: Failed";
+  }  
+}
