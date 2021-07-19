@@ -22,6 +22,11 @@ namespace lox {
     throw RuntimeError(name, "Undefined variable '" + name.m_lexeme + "'.");
   }
 
+
+  void Environment::assign_at(int dis, const Token& name, std::shared_ptr<Object> value) {
+    ancestor(dis)->m_values[name.m_lexeme] = value;
+  }
+
   std::shared_ptr<Object> Environment::get(const Token& name) {
     if (m_values.count(name.m_lexeme) > 0) {
       return m_values[name.m_lexeme];
@@ -31,8 +36,21 @@ namespace lox {
       return m_enclosing->get(name);
     }
 
-
     throw RuntimeError(name, "Undefined variable '" + name.m_lexeme + "'.");
+  }
+
+
+  std::shared_ptr<Object> Environment::get_at(int dis, const std::string& name) {
+    return ancestor(dis)->m_values[name];
+  }
+
+  std::shared_ptr<Environment> Environment::ancestor(int dis) {
+    std::shared_ptr<Environment> env = shared_from_this();
+    for (int i = 0; i < dis; i++) {
+      env = env->m_enclosing;
+    }
+
+    return env;
   }
 
 

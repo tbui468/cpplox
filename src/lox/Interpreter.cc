@@ -30,6 +30,10 @@ namespace lox {
     m_globals->define("clock", std::make_shared<Clock>());
   }
 
+  void Interpreter::resolve(std::shared_ptr<Expr> expr, int depth) {
+    m_locals[expr] = depth;
+  }
+
   void Interpreter::interpret(const std::vector<std::shared_ptr<Stmt>>& statements) {
     try {
       for (const std::shared_ptr<Stmt>& statement: statements) {
@@ -69,7 +73,13 @@ namespace lox {
 
   std::shared_ptr<Object> Interpreter::visit(std::shared_ptr<Assign> expr) {
     std::shared_ptr<Object> value = evaluate(*(expr->value));
-    m_environment->assign(expr->name, value);
+
+    if (m_locals.count(expr) > 0) {
+      int dis = m_locals[expr];
+      m_environment->assign_at(dis, expr->name, value);
+    } else {
+      m_globals->assign(expr->name, value);
+    }
     return value;
   }
 
@@ -140,8 +150,17 @@ namespace lox {
     throw RuntimeError(expr.oprtr, "Error in binary expression.");
   }
 
+  std::shared_ptr<Object> Interpreter::look_up_variable(const Token& name, std::shared_ptr<Variable> expr) {
+    if (m_locals.count(expr) > 0) {
+      int dis = m_locals[expr];
+      return m_environment->get_at(dis, name.m_lexeme);
+    } else {
+      return m_globals->get(name);
+    }
+  }
+
   std::shared_ptr<Object> Interpreter::visit(std::shared_ptr<Variable> expr) {
-    return m_environment->get(expr->name);
+    return look_up_variable(expr->name, expr);
   }
 
   std::shared_ptr<Object> Interpreter::visit(Logical& expr) {

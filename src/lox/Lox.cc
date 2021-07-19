@@ -5,11 +5,12 @@
 #include "Scanner.h"
 #include "Parser.h"
 #include "AstPrinter.h"
+#include "Resolver.hpp"
 
 namespace lox {
 
 
-Interpreter Lox::m_interpreter = Interpreter();
+std::shared_ptr<Interpreter> Lox::m_interpreter = std::make_shared<Interpreter>();
 
 void Lox::run(std::string source) {
   Scanner scanner = Scanner(source);
@@ -18,7 +19,10 @@ void Lox::run(std::string source) {
   Parser parser = Parser(tokens);
   std::vector<std::shared_ptr<Stmt>> statements = parser.parse();
 
-  //instantiate and run resolver here (with Lox::m_interpreter as input to constructor)
+
+  Resolver resolver(Lox::m_interpreter);
+  resolver.resolve(statements); 
+
 
 /*  
   for (const std::shared_ptr<Stmt>& stmt: statements) {
@@ -27,7 +31,8 @@ void Lox::run(std::string source) {
 
   if (m_had_error) return;
 
-  Lox::m_interpreter.interpret(statements);
+
+  Lox::m_interpreter->interpret(statements);
 
 }
 

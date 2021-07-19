@@ -1,5 +1,5 @@
 #ifndef RESOLVER_H
-#define RESOLVE_H
+#define RESOLVER_H
 
 
 #include <memory>
@@ -20,12 +20,12 @@ namespace lox {
       void resolve(const std::vector<std::shared_ptr<Stmt>>& stmts);
     private:
       //expressions
-      void visit(Assign& expr)   override;
-      void visit(Literal& expr)  override;
+      void visit(std::shared_ptr<Assign> expr)   override;
+      void visit(std::shared_ptr<Literal> expr)  override;
       void visit(Grouping& expr) override;
       void visit(Unary& expr)    override;
       void visit(Binary& expr)   override;
-      void visit(Variable& expr) override;
+      void visit(std::shared_ptr<Variable> expr) override;
       void visit(Logical& expr)  override;
       void visit(Call& expr)     override;
       //statments
@@ -44,7 +44,7 @@ namespace lox {
       void end_scope();
       void resolve(std::shared_ptr<Stmt> stmt);
       void resolve(std::shared_ptr<Expr> expr);
-      void resolve_local(const Expr& expr, const Token& name);
+      void resolve_local(std::shared_ptr<Expr> expr, const Token& name);
       void resolve_function(const Function& func);
     private:
       std::shared_ptr<Interpreter> m_interpreter;

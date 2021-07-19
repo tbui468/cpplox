@@ -2,7 +2,7 @@
 #define LOX H
 
 #include <string>
-
+#include <memory>
 #include "Token.h"
 #include "RuntimeError.h"
 #include "Interpreter.h"
@@ -15,7 +15,7 @@ class Lox
   private:
     inline static bool m_had_error = false;
     inline static bool m_had_runtime_error = false;
-    static Interpreter m_interpreter;
+    static std::shared_ptr<Interpreter> m_interpreter;
   public:
     static void run(std::string source);
     static void run_file(std::string script);

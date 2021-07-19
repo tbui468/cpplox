@@ -1,4 +1,5 @@
 #include "Resolver.hpp"
+#include "Lox.h"
 
 
 namespace lox {
@@ -14,16 +15,20 @@ namespace lox {
    * Expression overrides
    */
 
-  void Resolver::visit(Variable& expr) {
-    if (!m_scopes.empty() && m_scopes.back()[expr.name.m_lexeme] == false) {
-      Lox::error(expr.name, "Can't read local variable in its own initializer.");
+  //this is getting called on valid inputs
+  void Resolver::visit(std::shared_ptr<Variable> expr) {
+    if (!m_scopes.empty() && 
+        m_scopes.back().count(expr->name.m_lexeme) > 0 &&
+        m_scopes.back()[expr->name.m_lexeme] == false
+        ) {
+      Lox::error(expr->name, "Can't read local variable in its own initializer.");
     }
-    resolve_local(expr, expr.name);
+    resolve_local(expr, expr->name);
   }
 
-  void Resolver::visit(Assign& expr) {
-    resolve(expr.value);
-    resolve_local(expr, expr.name);
+  void Resolver::visit(std::shared_ptr<Assign> expr) {
+    resolve(expr->value);
+    resolve_local(expr, expr->name);
   }
 
 
@@ -35,7 +40,7 @@ namespace lox {
   void Resolver::visit(Call& expr) {
     resolve(expr.callee);
     for (std::shared_ptr<Expr> a: expr.arguments) {
-      resolve(expr);
+      resolve(a);
     }
   }
 
@@ -43,7 +48,7 @@ namespace lox {
     resolve(expr.expr);
   }
 
-  void Resolver::visit(Literal& expr) {
+  void Resolver::visit(std::shared_ptr<Literal> expr) {
     //resolver doesn't need to care about experssions
     //without subexpressions or variables
     return;
@@ -86,7 +91,7 @@ namespace lox {
   //see visit(Variable& expr)
   void Resolver::visit(Var& stmt) {
     declare(stmt.name);
-    if (!stmt.initializer) {
+    if (stmt.initializer) {
       resolve(stmt.initializer);
     }
     define(stmt.name);
@@ -99,7 +104,7 @@ namespace lox {
   void Resolver::visit(If& stmt) {
     resolve(stmt.condition);
     resolve(stmt.then_branch);
-    if(!stmt.else_branch) {
+    if(stmt.else_branch) {
       resolve(stmt.else_branch);
     }
   }
@@ -124,9 +129,9 @@ namespace lox {
    * Override helper functions
    */
 
-  void resolve_local(const Expr& expr, const Token& name) {
+  void Resolver::resolve_local(std::shared_ptr<Expr> expr, const Token& name) {
     if (m_scopes.empty()) return;
-    for (int depth = 0; depth < m_scopes.size(); depth++) {
+    for (int depth = 0; depth < static_cast<int>(m_scopes.size()); depth++) {
       if(m_scopes.at(m_scopes.size() - depth - 1).count(name.m_lexeme) > 0) {
         m_interpreter->resolve(expr, depth);
         return;
@@ -137,8 +142,8 @@ namespace lox {
   void Resolver::resolve_function(const Function& func) {
     begin_scope();
     for (const Token& param: func.params) {
-      declare(token);
-      define(token);
+      declare(param);
+      define(param);
     }
     resolve(func.body);
     end_scope();
@@ -157,11 +162,11 @@ namespace lox {
   }
 
   void Resolver::begin_scope() {
-    m_scopes.emplace(std::unordered_map<std::string, bool>);
+    m_scopes.emplace_back(std::unordered_map<std::string, bool>());
   }
 
   void Resolver::end_scope() {
-    m_scopes.pop();
+    m_scopes.pop_back();
   }
 
 
