@@ -9,11 +9,13 @@ namespace lox {
 
 struct VisitorString;
 struct VisitorObject;
+struct ExprVisitorVoid;
 
 struct Expr {
   virtual ~Expr(){}
   virtual std::string accept(VisitorString& v) = 0;
   virtual std::shared_ptr<Object> accept(VisitorObject& v) = 0;
+  virtual void accept(ExprVisitorVoid& v) = 0;
 };
 
 struct Assign;
@@ -24,6 +26,17 @@ struct Unary;
 struct Variable;
 struct Logical;
 struct Call;
+
+struct ExprVisitorVoid {
+  virtual void visit(Assign& e) = 0;
+  virtual void visit(Binary& e) = 0;
+  virtual void visit(Grouping& e) = 0;
+  virtual void visit(Literal& e) = 0;
+  virtual void visit(Unary& e) = 0;
+  virtual void visit(Variable& e) = 0;
+  virtual void visit(Logical& e) = 0;
+  virtual void visit(Call& e) = 0;
+};
 
 struct VisitorString {
   virtual std::string visit(Assign& e) = 0;
@@ -54,6 +67,7 @@ struct Assign: public Expr {
     ~Assign() {}
     std::string accept(VisitorString& v) { return v.visit(*this); }
     std::shared_ptr<Object> accept(VisitorObject& v) { return v.visit(*this); }
+    void accept(ExprVisitorVoid& visitor) { return visitor.visit(*this); }
   public:
     Token name;
     std::shared_ptr<Expr> value;
@@ -65,6 +79,7 @@ struct Binary: public Expr {
     ~Binary() {}
     std::string accept(VisitorString& v) { return v.visit(*this); }
     std::shared_ptr<Object> accept(VisitorObject& v) { return v.visit(*this); }
+    void accept(ExprVisitorVoid& visitor) { return visitor.visit(*this); }
   public:
     Token oprtr;
     std::shared_ptr<Expr> left;
@@ -78,6 +93,7 @@ struct Grouping: public Expr {
     ~Grouping() {}
     std::string accept(VisitorString& v) { return v.visit(*this); }
     std::shared_ptr<Object> accept(VisitorObject& v) { return v.visit(*this); }
+    void accept(ExprVisitorVoid& visitor) { return visitor.visit(*this); }
   public:
     std::shared_ptr<Expr> expr;
 };
@@ -87,6 +103,7 @@ struct Literal: public Expr {
     Literal(std::shared_ptr<Object> value): value(value) {}
     std::string accept(VisitorString& v) { return v.visit(*this); }
     std::shared_ptr<Object> accept(VisitorObject& v) { return v.visit(*this); }
+    void accept(ExprVisitorVoid& visitor) { return visitor.visit(*this); }
   public:
     std::shared_ptr<Object> value;
 };
@@ -97,6 +114,7 @@ struct Unary: public Expr {
     ~Unary() {}
     std::string accept(VisitorString& v) { return v.visit(*this); }
     std::shared_ptr<Object> accept(VisitorObject& v) { return v.visit(*this); }
+    void accept(ExprVisitorVoid& visitor) { return visitor.visit(*this); }
   public:
     Token oprtr;
     std::shared_ptr<Expr> right;
@@ -108,6 +126,7 @@ struct Variable: public Expr {
     ~Variable() {}
     std::string accept(VisitorString& v) { return v.visit(*this); }
     std::shared_ptr<Object> accept(VisitorObject& v) { return v.visit(*this); }
+    void accept(ExprVisitorVoid& visitor) { return visitor.visit(*this); }
   public:
     Token name;
 };
@@ -119,6 +138,7 @@ struct Logical: public Expr {
     ~Logical() {}
     std::string accept(VisitorString& visitor) { return visitor.visit(*this); }
     std::shared_ptr<Object> accept(VisitorObject& visitor) { return visitor.visit(*this); }
+    void accept(ExprVisitorVoid& visitor) { return visitor.visit(*this); }
   public:
     Token oprtr;
     std::shared_ptr<Expr> left;
@@ -132,6 +152,7 @@ struct Call: Expr {
     ~Call() {}
     std::string accept(VisitorString& visitor) { return visitor.visit(*this); }
     std::shared_ptr<Object> accept(VisitorObject& visitor) { return visitor.visit(*this); }
+    void accept(ExprVisitorVoid& visitor) { return visitor.visit(*this); }
   public:
     std::shared_ptr<Expr> callee; //any expression that evaluates to a function
     Token paren; //keeping closing token for runtime error reporting

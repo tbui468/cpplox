@@ -15,6 +15,7 @@ namespace lox {
       Interpreter();
       void interpret(const std::vector<std::shared_ptr<Stmt>>& statements);
       void execute_block(const std::vector<std::shared_ptr<Stmt>>& statements, std::shared_ptr<Environment> env);
+//      void resolve(const Expr expr, int depth);
     private:
       std::shared_ptr<Object> evaluate(Expr& expr);
       std::shared_ptr<Object> visit(Assign& expr)   override;
@@ -40,6 +41,7 @@ namespace lox {
       std::string stringify(const Object& obj) const;
     private:
       std::shared_ptr<Environment> m_environment;
+//      std::unordered_map<Expr, int> m_locals;
     public:
       std::shared_ptr<Environment> m_globals;
   };

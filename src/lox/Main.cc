@@ -5,11 +5,32 @@
 #include "AstPrinter.h"
 #include "Interpreter.h"
 
+//Note on building:
+//cd release
+//cmake -G "Visual Studio 16 2019" -T ClangCL -A x64
+//#visual studio ignores -DCMAKE_BUILD_TYPE=<Release | Debug> when generating build system, so build with following:
+//cmake --build . --config Release cl /O2 ...
+
 //11. Resolution and Binding
+//  problem with m_locals in Interpreter.
+//    we need to save reference to expression nodes, but that can't be done with maps,
+//    BUT it can be done with pointers (smart or otherwise)
+//    REDO VISITOR PATTERN
+  //    Comment out/remove from CMake Resolver and any supporting code in Expr.h and Stmt.h
+  //    Run tests and make sure all (except the last) pass
+  //    Commit with message: "commented out resolver to redo visitor pattern"
+  //    Replace the arguments in visitor.visit(*this) with visitor.visit(shared_from_this())
+  //    have Expr and Stmt inherit from std::enable_shared_from_this<Expr>, std::enable_shared_from_this<Stmt>
+  //    Run tests and make sure all tests (exept for last) pass
+  //    Commit with message: "Redid visitor pattern with shared_ptrs so that AST data can be saved to Interpreter"
 //
 //  TODO:
-//    implement native function clock()
-//      call it in code like this: var time = clock(); //returns a number
+//    Change name of Expr visitor interfaces from VisitorObject -> ExprVisitorObject, and VisitorString -> ExprVisitorString
+//      this will keep it consistent with Stmt visitor interfaces naming, and make the different interfaces between
+//      Expr and Stmt more clear
+//    When using vectors, use emplace_back() to construct in place (inside the vector memory space)
+//    Move Clock implementation out of Interpreter class
+//      make new file called NativeFunctions.h and import them into Interpreter.h
 //    fix warning bugs
 //    consume a { outside of block() allows a more specific error message (eg, "Expect '{' before function body")
 //      should do this for better error messages

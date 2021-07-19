@@ -18,6 +18,8 @@ void Lox::run(std::string source) {
   Parser parser = Parser(tokens);
   std::vector<std::shared_ptr<Stmt>> statements = parser.parse();
 
+  //instantiate and run resolver here (with Lox::m_interpreter as input to constructor)
+
 /*  
   for (const std::shared_ptr<Stmt>& stmt: statements) {
     std::cout << AstPrinter().print(*stmt) << std::endl;
