@@ -10,6 +10,10 @@ namespace lox
     return stmt.accept(*this);
   }
 
+  /*
+   * Expressions
+   */
+
   std::string AstPrinter::visit(Binary& expr) {
     return parenthesize(expr.oprtr.m_lexeme, expr.left->accept(*this), expr.right->accept(*this));
   }
@@ -44,6 +48,18 @@ namespace lox
   std::string AstPrinter::visit(Call& expr) {
     return "Call";
   }
+
+  std::string AstPrinter::visit(std::shared_ptr<Get> expr) {
+    return "Get";
+  }
+
+  std::string AstPrinter::visit(std::shared_ptr<Set> expr) {
+    return "Set";
+  }
+
+  /*
+   * Statements
+   */
 
   std::string AstPrinter::visit(Expression& stmt) {
     return "Expression";

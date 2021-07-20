@@ -13,6 +13,10 @@ namespace lox {
     return statements;
   }
 
+
+  /*
+   * Statements
+   */
   std::shared_ptr<Stmt> Parser::declaration() {
     try {
       if (match(TokenType::CLASS)) return class_declaration();
@@ -214,6 +218,9 @@ namespace lox {
       if (dynamic_cast<Variable*>(expr.get())) {
         Token name = dynamic_cast<Variable*>(expr.get())->name;
         return std::make_shared<Assign>(name, value);  
+      } else if (dynamic_cast<Get*>(expr.get())) {
+        std::shared_ptr<Get> get_expr = std::dynamic_pointer_cast<Get>(expr);
+        return std::make_shared<Set>(get_expr->object, get_expr->name, value);
       }
 
       error(equals, "Invalid assignment target.");
@@ -297,17 +304,20 @@ namespace lox {
   }
 
   std::shared_ptr<Expr> Parser::call() {
-    std::shared_ptr<Expr> callee = primary();
+    std::shared_ptr<Expr> expr = primary();
     
     while (true) {
-      if (match(LEFT_PAREN)) {
-        callee = finish_call(callee);
+      if (match(TokenType::LEFT_PAREN)) { //this allows calling functions on a return, eg my_function(arg1)(arg2);
+        expr = finish_call(expr);
+      } else if (match(TokenType::DOT)) {
+        Token name = consume(TokenType::IDENTIFIER, "Expect property name after '.'.");
+        expr = std::make_shared<Get>(expr, name);
       } else {
         break;
       }
     }
 
-    return callee;
+    return expr;
   }
   
   std::shared_ptr<Expr> Parser::finish_call(std::shared_ptr<Expr> callee) {
@@ -342,6 +352,7 @@ namespace lox {
       return std::make_shared<Literal>(std::make_shared<Object>(std::stod(token.m_literal)));
     }
 
+    //identifiers can be function names, class names, or variable names
     if (match(TokenType::IDENTIFIER)) {
       return std::make_shared<Variable>(previous());
     }

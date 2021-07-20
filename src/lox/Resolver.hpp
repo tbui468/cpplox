@@ -21,7 +21,8 @@ namespace lox {
     private:
       enum FunctionType {
         NONE,
-        FUNCTION
+        FUNCTION,
+        METHOD
       };
       //expressions
       void visit(std::shared_ptr<Assign> expr)   override;
@@ -32,6 +33,8 @@ namespace lox {
       void visit(std::shared_ptr<Variable> expr) override;
       void visit(Logical& expr)  override;
       void visit(Call& expr)     override;
+      void visit(std::shared_ptr<Get> expr) override;
+      void visit(std::shared_ptr<Set> expr) override;
       //statments
       void visit(Expression& stmt)  override;
       void visit(Print& stmt)       override;

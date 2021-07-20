@@ -22,6 +22,8 @@ namespace lox
       std::string visit(std::shared_ptr<Variable> expr)   override;
       std::string visit(Logical& expr)    override;
       std::string visit(Call& expr)       override;
+      std::string visit(std::shared_ptr<Get> expr)   override;
+      std::string visit(std::shared_ptr<Set> expr)   override;
     private:
       std::string visit(Expression& stmt) override;
       std::string visit(Print& stmt)      override;

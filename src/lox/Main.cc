@@ -5,15 +5,18 @@
 #include "AstPrinter.h"
 #include "Interpreter.h"
 
-//Note on building:
-//cd release
-//cmake -G "Visual Studio 16 2019" -T ClangCL -A x64
-//#visual studio ignores -DCMAKE_BUILD_TYPE=<Release | Debug> when generating build system, so build with following:
-//cmake --build . --config Release cl /O2 ...
+//Notes on building:
+  //cd build
+  //cmake .. -G "Visual Studio 16 2019" -T ClangCL -A x64 #generate build using clang through visual studio
+//#visual studio ignores cmake -DCMAKE_BUILD_TYPE=<Release | Debug> when generating build system, so build with following:
+  //cmake --build . --config Release cl /O2 ...
 
-//12. Class Instances
+//12.4 Methods on Classes
 //
 //  TODO:
+//    Draw out recursive descent for expressions in Parser.  How are statments related?  Is is just logic (doesn't seem to be any recursion)
+//    How is dynamic_cast, std::dynamic_pointer_cast, and std::static_pointer_cast being used in Parser and Interpreter?
+//      Test this and write the results down somewhere.
 //    Object::get_string() should work for functions and classes
 //      so when user types in print dog; (where dog is a class or function), it should print <function dog> and parameters
 //      the to_string() function in LoxFunction and Callable? don't workin c++ - they're overrides in Java

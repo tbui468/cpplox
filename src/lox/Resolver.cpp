@@ -52,6 +52,15 @@ namespace lox {
     }
   }
 
+  void Resolver::visit(std::shared_ptr<Get> expr) {
+    resolve(expr->object);
+  }
+
+  void Resolver::visit(std::shared_ptr<Set> expr) {
+    resolve(expr->value);
+    resolve(expr->object);
+  }
+
   void Resolver::visit(Grouping& expr) {
     resolve(expr.expr);
   }
@@ -136,10 +145,15 @@ namespace lox {
     resolve(stmt.body);
   }
 
-  //not resolving class methods yet
   void Resolver::visit(std::shared_ptr<Class> stmt) {
     declare(stmt->name);
     define(stmt->name);
+
+    for (std::shared_ptr<Stmt> s: stmt->methods) {
+      FunctionType declaration = FunctionType::METHOD;
+      Function* f = dynamic_cast<Function*>(s.get());
+      resolve_function(*f, declaration);
+    }
   }
 
 

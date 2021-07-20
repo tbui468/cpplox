@@ -1,10 +1,12 @@
 #include <iostream>
 #include <chrono>
+#include <unordered_map>
 #include "Interpreter.h"
 #include "Lox.h"
 #include "LoxFunction.hpp"
 #include "LoxReturn.hpp"
 #include "LoxClass.hpp"
+#include "LoxInstance.hpp"
 
 
 namespace lox {
@@ -197,7 +199,7 @@ namespace lox {
     //cast to appropriate type - TODO: integrate methods calls along with functions
     //could attempt a dynamic cast on callee to LoxFunction or LoxClass and then
     //call 'call()' on the one that doesn't fail
-    std::shared_ptr<LoxFunction> func = std::static_pointer_cast<LoxFunction>(callee);
+    std::shared_ptr<LoxFunction> func = std::static_pointer_cast<LoxFunction>(callee); //<-- shouldn't this be dynamic pointer cast???
 
     if (static_cast<int>(arguments.size()) != func->arity()) {
       throw RuntimeError(expr.paren, "Expected " +
@@ -209,7 +211,34 @@ namespace lox {
     return func->call(*this, arguments);
   }
 
-  //statements
+  //note: accessing a field looks like this: (expr->object).(expr->name)
+  std::shared_ptr<Object> Interpreter::visit(std::shared_ptr<Get> expr) {
+    std::shared_ptr<Object> obj = evaluate(*(expr->object));
+
+    if (dynamic_cast<LoxInstance*>(obj.get())) {
+      std::shared_ptr<LoxInstance> inst = std::dynamic_pointer_cast<LoxInstance>(obj);
+      return inst->get(expr->name);
+    }
+
+    throw RuntimeError(expr->name, "Only instances have properties.");
+  }
+
+  std::shared_ptr<Object> Interpreter::visit(std::shared_ptr<Set> expr) {
+    std::shared_ptr<Object> object = evaluate(*(expr->object));
+
+    if(!dynamic_cast<LoxInstance*>(object.get())) {
+      throw RuntimeError(expr->name, "Only instances have fields.");
+    }
+
+    std::shared_ptr<Object> value = evaluate(*(expr->value));
+    std::dynamic_pointer_cast<LoxInstance>(object)->set(expr->name, value);
+    return value;
+  }
+
+  /*
+   * Statements
+   */
+
   void Interpreter::visit(Expression& stmt) {
     evaluate(*(stmt.expr)); //toss out result
   }
@@ -270,7 +299,16 @@ namespace lox {
   //the class itself (which is useful for methods)
   void Interpreter::visit(std::shared_ptr<Class> stmt) {
     m_environment->define(stmt->name.m_lexeme, nullptr);
-    std::shared_ptr<Object> klass = std::make_shared<LoxClass>(stmt->name.m_lexeme);
+
+    //turn each class method into a LoxFunction object
+    std::unordered_map<std::string, std::shared_ptr<LoxFunction>> methods;
+    for (std::shared_ptr<Stmt> m: stmt->methods) {
+      Function* f = dynamic_cast<Function*>(m.get());
+      std::shared_ptr<LoxFunction> func = std::make_shared<LoxFunction>(*f, m_environment);
+      methods[f->name.m_lexeme] = func;
+    }
+
+    std::shared_ptr<Object> klass = std::make_shared<LoxClass>(stmt->name.m_lexeme, methods);
     m_environment->assign(stmt->name, klass);
   }
 

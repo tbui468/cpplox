@@ -26,6 +26,8 @@ struct Unary;
 struct Variable;
 struct Logical;
 struct Call;
+struct Get;
+struct Set;
 
 struct ExprVisitorVoid {
   virtual void visit(std::shared_ptr<Assign> e) = 0;
@@ -36,6 +38,8 @@ struct ExprVisitorVoid {
   virtual void visit(std::shared_ptr<Variable> e) = 0;
   virtual void visit(Logical& e) = 0;
   virtual void visit(Call& e) = 0;
+  virtual void visit(std::shared_ptr<Get> e) = 0;
+  virtual void visit(std::shared_ptr<Set> e) = 0;
 };
 
 struct VisitorString {
@@ -47,6 +51,8 @@ struct VisitorString {
   virtual std::string visit(std::shared_ptr<Variable> e) = 0;
   virtual std::string visit(Logical& e) = 0;
   virtual std::string visit(Call& e) = 0;
+  virtual std::string visit(std::shared_ptr<Get> e) = 0;
+  virtual std::string visit(std::shared_ptr<Set> e) = 0;
 };
 
 struct VisitorObject {
@@ -58,6 +64,8 @@ struct VisitorObject {
   virtual std::shared_ptr<Object> visit(std::shared_ptr<Variable> e) = 0;
   virtual std::shared_ptr<Object> visit(Logical& e) = 0;
   virtual std::shared_ptr<Object> visit(Call& e) = 0;
+  virtual std::shared_ptr<Object> visit(std::shared_ptr<Get> e) = 0;
+  virtual std::shared_ptr<Object> visit(std::shared_ptr<Set> e) = 0;
 };
 
 
@@ -157,6 +165,32 @@ struct Call: public Expr {
     std::shared_ptr<Expr> callee; //any expression that evaluates to a function
     Token paren; //keeping closing token for runtime error reporting
     std::vector<std::shared_ptr<Expr>> arguments;
+};
+
+struct Get: public Expr, std::enable_shared_from_this<Get> {
+  public:
+    Get(std::shared_ptr<Expr> object, Token name): object(object), name(name) {}
+    ~Get() {}
+    std::string accept(VisitorString& v) { return v.visit(shared_from_this()); }
+    std::shared_ptr<Object> accept(VisitorObject& v) { return v.visit(shared_from_this()); }
+    void accept(ExprVisitorVoid& visitor) { return visitor.visit(shared_from_this()); }
+  public:
+    std::shared_ptr<Expr> object;
+    Token name;
+};
+
+struct Set: public Expr, std::enable_shared_from_this<Set> {
+  public:
+    Set(std::shared_ptr<Expr> object, Token name, std::shared_ptr<Expr> value): 
+      object(object), name(name), value(value) {}
+    ~Set() {}
+    std::string accept(VisitorString& v) { return v.visit(shared_from_this()); }
+    std::shared_ptr<Object> accept(VisitorObject& v) { return v.visit(shared_from_this()); }
+    void accept(ExprVisitorVoid& visitor) { return visitor.visit(shared_from_this()); }
+  public:
+    std::shared_ptr<Expr> object;
+    Token name;
+    std::shared_ptr<Expr> value;
 };
 
 }
