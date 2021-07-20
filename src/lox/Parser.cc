@@ -20,7 +20,7 @@ namespace lox {
   std::shared_ptr<Stmt> Parser::declaration() {
     try {
       if (match(TokenType::CLASS)) return class_declaration();
-      if (match(TokenType::FUN)) return func("function");
+      if (match(TokenType::FUN)) return function_declaration("function");
       if (match(TokenType::VAR)) return var_declaration();
       return statement();
     } catch (ParseError& error) {
@@ -48,7 +48,7 @@ namespace lox {
     std::vector<std::shared_ptr<Stmt>> methods;
     
     while (!check(TokenType::RIGHT_BRACE) && !is_at_end()) {
-      methods.emplace_back(func("method")); 
+      methods.emplace_back(function_declaration("method")); 
     }
 
     consume(TokenType::RIGHT_BRACE, "Expect '}' after class body.");
@@ -93,7 +93,7 @@ namespace lox {
     return std::make_shared<Expression>(expr);
   }
 
-  std::shared_ptr<Stmt> Parser::func(const std::string& kind) {
+  std::shared_ptr<Stmt> Parser::function_declaration(const std::string& kind) {
     
     Token name = consume(TokenType::IDENTIFIER, "Expect " + kind + " name.");
 
@@ -333,7 +333,7 @@ namespace lox {
 
     Token paren = consume(TokenType::RIGHT_PAREN, "Expect ')' after arguments.");
 
-     return std::make_shared<Call>(callee, paren, arguments);
+    return std::make_shared<Call>(callee, paren, arguments);
   }
 
 

@@ -14,6 +14,10 @@
 //12.4 Methods on Classes
 //
 //  TODO:
+//    Rename to Zebra
+//    design how the syntax should look: static typing (checked after parsing and before interpreting)
+//    Class Stmt node currently stores methods as a vector of Stmt pointers.  It really should be Function since
+//      they're being cast to Function types everywhere in the Parser and Interprester anyway
 //    Draw out recursive descent for expressions in Parser.  How are statments related?  Is is just logic (doesn't seem to be any recursion)
 //    How is dynamic_cast, std::dynamic_pointer_cast, and std::static_pointer_cast being used in Parser and Interpreter?
 //      Test this and write the results down somewhere.

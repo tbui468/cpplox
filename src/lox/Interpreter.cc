@@ -196,9 +196,7 @@ namespace lox {
       arguments.push_back(evaluate(*argument));
     }
 
-    //cast to appropriate type - TODO: integrate methods calls along with functions
-    //could attempt a dynamic cast on callee to LoxFunction or LoxClass and then
-    //call 'call()' on the one that doesn't fail
+    //LoxFunction is a function or class method
     std::shared_ptr<LoxFunction> func = std::static_pointer_cast<LoxFunction>(callee); //<-- shouldn't this be dynamic pointer cast???
 
     if (static_cast<int>(arguments.size()) != func->arity()) {
@@ -295,8 +293,7 @@ namespace lox {
   }
 
   //Note: two stage variable binding process 
-  //allows references to the class inside
-  //the class itself (which is useful for methods)
+  //allows references to the class from the methods inside
   void Interpreter::visit(std::shared_ptr<Class> stmt) {
     m_environment->define(stmt->name.m_lexeme, nullptr);
 
