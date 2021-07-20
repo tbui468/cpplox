@@ -37,6 +37,7 @@ namespace lox {
       void visit(While& stmt)       override;
       void visit(Function& stmt)    override;
       void visit(Return& stmt)      override;
+      void visit(std::shared_ptr<Class> stmt) override;
       bool is_equal(const Object& a, const Object& b) const;
       void check_number_operand(const Token& op, const Object& operand) const;
       void check_number_operand(const Token& op, const Object& left, const Object& right) const;

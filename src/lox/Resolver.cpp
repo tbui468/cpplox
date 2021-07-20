@@ -11,6 +11,14 @@ namespace lox {
     }
   }
 
+  void Resolver::resolve(std::shared_ptr<Stmt> stmt) {
+    stmt->accept(*this);
+  }
+
+  void Resolver::resolve(std::shared_ptr<Expr> expr) {
+    expr->accept(*this);
+  }
+
   /*
    * Expression overrides
    */
@@ -18,8 +26,8 @@ namespace lox {
   //this is getting called on valid inputs
   void Resolver::visit(std::shared_ptr<Variable> expr) {
     if (!m_scopes.empty() && 
-        m_scopes.back().count(expr->name.m_lexeme) > 0 &&
-        m_scopes.back()[expr->name.m_lexeme] == false
+        m_scopes.back().count(expr->name.m_lexeme) > 0 && //is this necessary?  Check with compiler explorer
+        m_scopes.back()[expr->name.m_lexeme] == false //if the variable being access was declared but not defined in current scope
         ) {
       Lox::error(expr->name, "Can't read local variable in its own initializer.");
     }
@@ -128,10 +136,20 @@ namespace lox {
     resolve(stmt.body);
   }
 
+  //not resolving class methods yet
+  void Resolver::visit(std::shared_ptr<Class> stmt) {
+    declare(stmt->name);
+    define(stmt->name);
+  }
+
+
   /*
    * Override helper functions
    */
 
+  //resolve_local is the only function to add key/values to the interperter locals table
+  //calling resolve on the interpreter adds a pointer to the expression + scope depth
+  //where a depth of 0 means current scope.
   void Resolver::resolve_local(std::shared_ptr<Expr> expr, const Token& name) {
     if (m_scopes.empty()) return;
     for (int depth = 0; depth < static_cast<int>(m_scopes.size()); depth++) {
@@ -143,7 +161,7 @@ namespace lox {
   }
 
   void Resolver::resolve_function(const Function& func, FunctionType type) {
-    FunctionType enclosing_function = m_current_function;
+    FunctionType enclosing_function = m_current_function; //FunctionType logic is for preventing 'return' statements in global scope
     m_current_function = type;
     begin_scope();
     for (const Token& param: func.params) {
@@ -178,13 +196,6 @@ namespace lox {
   }
 
 
-  void Resolver::resolve(std::shared_ptr<Stmt> stmt) {
-    stmt->accept(*this);
-  }
-
-  void Resolver::resolve(std::shared_ptr<Expr> expr) {
-    expr->accept(*this);
-  }
 
 }
 

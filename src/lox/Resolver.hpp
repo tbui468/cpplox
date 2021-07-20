@@ -41,6 +41,7 @@ namespace lox {
       void visit(While& stmt)       override;
       void visit(Function& stmt)    override;
       void visit(Return& stmt)      override;
+      void visit(std::shared_ptr<Class> stmt) override;
     private:
       void declare(const Token& name);
       void define(const Token& name);

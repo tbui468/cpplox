@@ -21,6 +21,7 @@ namespace lox {
     private:
       std::shared_ptr<Stmt> declaration();
       std::shared_ptr<Stmt> var_declaration();
+      std::shared_ptr<Stmt> class_declaration();
       std::shared_ptr<Stmt> statement();
       std::shared_ptr<Stmt> if_statement();
       std::shared_ptr<Stmt> print_statement();

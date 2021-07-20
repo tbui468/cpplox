@@ -11,8 +11,10 @@
 //#visual studio ignores -DCMAKE_BUILD_TYPE=<Release | Debug> when generating build system, so build with following:
 //cmake --build . --config Release cl /O2 ...
 
-//11. Resolution and Binding
-//  
+//12. Class Declarations
+//    Interpreter::visit(std::shared_ptr<Class> stmt) {
+//      //what goes here?  Where is the line between class (and function) declaration/definition vs actually using them (instantiating/calling)
+//    }  
 //
 //  TODO:
 //    The book allows declaring variables with same name in global scope, but this

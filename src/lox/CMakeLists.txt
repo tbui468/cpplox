@@ -10,6 +10,7 @@ set(Sources
     Environment.cc
     LoxFunction.cpp
     Resolver.cpp
+    LoxClass.cpp
     )
 
 set(Headers
@@ -29,6 +30,7 @@ set(Headers
     LoxFunction.hpp
     LoxReturn.hpp
     Resolver.hpp
+    LoxClass.hpp
     )
 
 add_executable(

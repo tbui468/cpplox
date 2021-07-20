@@ -20,6 +20,7 @@ struct If;
 struct While;
 struct Function;
 struct Return;
+struct Class;
 
 struct StmtVisitorString {
   virtual std::string visit(Expression& stmt) = 0;
@@ -30,6 +31,7 @@ struct StmtVisitorString {
   virtual std::string visit(While& stmt) = 0;
   virtual std::string visit(Function& stmt) = 0;
   virtual std::string visit(Return& stmt) = 0;
+  virtual std::string visit(std::shared_ptr<Class> stmt) = 0;
 };
 
 struct StmtVisitorVoid {
@@ -41,6 +43,7 @@ struct StmtVisitorVoid {
   virtual void visit(While& stmt) = 0;
   virtual void visit(Function& stmt) = 0;
   virtual void visit(Return& stmt) = 0;
+  virtual void visit(std::shared_ptr<Class> stmt) = 0;
 };
 
 struct Expression: public Stmt {
@@ -132,6 +135,17 @@ struct Return: public Stmt {
   public:
     Token keyword;
     std::shared_ptr<Expr> value;
+};
+
+struct Class: public Stmt, public std::enable_shared_from_this<Class> {
+  public:
+    Class(Token name, std::vector<std::shared_ptr<Stmt>> methods): name(name), methods(methods) {}
+    ~Class() {}
+    std::string accept(StmtVisitorString& visitor) { return visitor.visit(shared_from_this()); }
+    void accept(StmtVisitorVoid& visitor) { return visitor.visit(shared_from_this()); }
+  public:
+    Token name;
+    std::vector<std::shared_ptr<Stmt>> methods;
 };
 
 

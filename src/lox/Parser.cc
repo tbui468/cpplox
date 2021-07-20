@@ -15,6 +15,7 @@ namespace lox {
 
   std::shared_ptr<Stmt> Parser::declaration() {
     try {
+      if (match(TokenType::CLASS)) return class_declaration();
       if (match(TokenType::FUN)) return func("function");
       if (match(TokenType::VAR)) return var_declaration();
       return statement();
@@ -34,6 +35,21 @@ namespace lox {
       
     consume(TokenType::SEMICOLON, "Expect ';' after variable declaration");
     return std::make_shared<Var>(identifier, expr);
+  }
+
+  std::shared_ptr<Stmt> Parser::class_declaration() {
+    Token identifier = consume(TokenType::IDENTIFIER, "Expect a class name.");
+    consume(TokenType::LEFT_BRACE, "Expect '{' before class body.");
+
+    std::vector<std::shared_ptr<Stmt>> methods;
+    
+    while (!check(TokenType::RIGHT_BRACE) && !is_at_end()) {
+      methods.emplace_back(func("method")); 
+    }
+
+    consume(TokenType::RIGHT_BRACE, "Expect '}' after class body.");
+
+    return std::make_shared<Class>(identifier, methods);
   }
 
   //recursive descent for statements
@@ -88,9 +104,9 @@ namespace lox {
       } while (match(TokenType::COMMA));
     }
     consume(TokenType::RIGHT_PAREN, "Expect ')' after " + kind + " parameters.");
-    //should pull out consume(TokenType::LEFT_BRACE) from block() and put in calling function (ex, here)
-    //for more specific error messages
+
     std::vector<std::shared_ptr<Stmt>> body = block();
+
     return std::make_shared<Function>(name, parameters, body);
   }
 
@@ -280,6 +296,19 @@ namespace lox {
     }
   }
 
+  std::shared_ptr<Expr> Parser::call() {
+    std::shared_ptr<Expr> callee = primary();
+    
+    while (true) {
+      if (match(LEFT_PAREN)) {
+        callee = finish_call(callee);
+      } else {
+        break;
+      }
+    }
+
+    return callee;
+  }
   
   std::shared_ptr<Expr> Parser::finish_call(std::shared_ptr<Expr> callee) {
     std::vector<std::shared_ptr<Expr>> arguments;
@@ -297,19 +326,6 @@ namespace lox {
      return std::make_shared<Call>(callee, paren, arguments);
   }
 
-  std::shared_ptr<Expr> Parser::call() {
-    std::shared_ptr<Expr> expr = primary();
-    
-    while (true) {
-      if (match(LEFT_PAREN)) {
-        expr = finish_call(expr);
-      } else {
-        break;
-      }
-    }
-
-    return expr;
-  }
 
   std::shared_ptr<Expr> Parser::primary(){
     if (match(TokenType::FALSE)) return std::make_shared<Literal>(std::make_shared<Object>(false));

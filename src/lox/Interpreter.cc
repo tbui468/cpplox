@@ -4,6 +4,7 @@
 #include "Lox.h"
 #include "LoxFunction.hpp"
 #include "LoxReturn.hpp"
+#include "LoxClass.hpp"
 
 
 namespace lox {
@@ -86,9 +87,11 @@ namespace lox {
   std::shared_ptr<Object> Interpreter::visit(std::shared_ptr<Literal> expr) {
     return expr->value;
   }
+
   std::shared_ptr<Object> Interpreter::visit(Grouping& expr) {
     return evaluate(*(expr.expr));
   }
+
   std::shared_ptr<Object> Interpreter::visit(Unary& expr) {
     std::shared_ptr<Object> right = evaluate(*(expr.right));
     switch(expr.oprtr.m_type) {
@@ -177,18 +180,23 @@ namespace lox {
 
 
   std::shared_ptr<Object> Interpreter::visit(Call& expr) {
+    //evaluate name of callee (normally just variable - function name)
     std::shared_ptr<Object> callee = evaluate(*(expr.callee));
 
+    //Making sure callee is a function or class method
+    if (!dynamic_cast<Callable*>(callee.get())) {
+      throw RuntimeError(expr.paren, "Can only call functions and classes.");
+    }
+
+    //evaluate arguments
     std::vector<std::shared_ptr<Object>> arguments;
     for (std::shared_ptr<Expr> argument: expr.arguments) {
       arguments.push_back(evaluate(*argument));
     }
 
-    //NOTE: need to also check if class method (since they are also callable)
-    if (!dynamic_cast<Callable*>(callee.get())) {
-      throw RuntimeError(expr.paren, "Can only call functions and classes.");
-    }
-
+    //cast to appropriate type - TODO: integrate methods calls along with functions
+    //could attempt a dynamic cast on callee to LoxFunction or LoxClass and then
+    //call 'call()' on the one that doesn't fail
     std::shared_ptr<LoxFunction> func = std::static_pointer_cast<LoxFunction>(callee);
 
     if (static_cast<int>(arguments.size()) != func->arity()) {
@@ -196,6 +204,7 @@ namespace lox {
           std::to_string(func->arity()) + " arguments but got " +
           std::to_string(arguments.size()) + ".");
     }
+
 
     return func->call(*this, arguments);
   }
@@ -239,8 +248,10 @@ namespace lox {
     }
   }
 
+  //instantiating LoxFunction with environment where the function is declared
+  //Question: why can't two-stage variable binding be used here (like in Class)?
+  //since functions should have a reference to itself from inside for recursion
   void Interpreter::visit(Function& stmt) {
-    //instantiating LoxFunction with environment where the function is declared
     std::shared_ptr<Object> func = std::make_shared<LoxFunction>(stmt, m_environment);
     m_environment->define(stmt.name.m_lexeme, func);
   }
@@ -252,6 +263,15 @@ namespace lox {
     }
       
     throw LoxReturn(std::make_shared<Object>());  //return a nil object
+  }
+
+  //Note: two stage variable binding process 
+  //allows references to the class inside
+  //the class itself (which is useful for methods)
+  void Interpreter::visit(std::shared_ptr<Class> stmt) {
+    m_environment->define(stmt->name.m_lexeme, nullptr);
+    std::shared_ptr<Object> klass = std::make_shared<LoxClass>(stmt->name.m_lexeme);
+    m_environment->assign(stmt->name, klass);
   }
 
   bool Interpreter::is_equal(const Object& a, const Object& b) const {

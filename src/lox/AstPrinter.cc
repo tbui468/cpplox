@@ -90,6 +90,10 @@ namespace lox
     return "Return";
   }
 
+  std::string AstPrinter::visit(std::shared_ptr<Class> stmt) {
+    return "Class";
+  }
+
   std::string AstPrinter::parenthesize(const std::string& name, const std::string& expr_string) {
     std::string out = "(" + name;
     out += " " + expr_string;
