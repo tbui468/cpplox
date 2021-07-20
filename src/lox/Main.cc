@@ -11,12 +11,12 @@
 //#visual studio ignores -DCMAKE_BUILD_TYPE=<Release | Debug> when generating build system, so build with following:
 //cmake --build . --config Release cl /O2 ...
 
-//12. Class Declarations
-//    Interpreter::visit(std::shared_ptr<Class> stmt) {
-//      //what goes here?  Where is the line between class (and function) declaration/definition vs actually using them (instantiating/calling)
-//    }  
+//12. Class Instances
 //
 //  TODO:
+//    Object::get_string() should work for functions and classes
+//      so when user types in print dog; (where dog is a class or function), it should print <function dog> and parameters
+//      the to_string() function in LoxFunction and Callable? don't workin c++ - they're overrides in Java
 //    The book allows declaring variables with same name in global scope, but this
 //      really shouldn't be possible - to many potential bugs.  Don't allow it.
 //    Optional: Change remaining Expr and Stmt visitor pattern to use shared_from_this() instead of *this
