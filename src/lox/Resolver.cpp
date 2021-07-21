@@ -81,6 +81,9 @@ namespace lox {
   }
 
   void Resolver::visit(std::shared_ptr<This> expr) {
+    if (m_current_class == ClassType::NONE) {
+      Lox::error(expr->keyword, "Can't use 'this' outside of a class.");
+    }
     resolve_local(expr,expr->keyword);
   }
 
@@ -150,6 +153,9 @@ namespace lox {
   }
 
   void Resolver::visit(std::shared_ptr<Class> stmt) {
+    ClassType enclosing_class = m_current_class;
+    m_current_class = ClassType::CLASS;
+
     declare(stmt->name);
     define(stmt->name);
     begin_scope();
@@ -162,6 +168,8 @@ namespace lox {
     }
 
     end_scope();
+
+    m_current_class = enclosing_class;
   }
 
 

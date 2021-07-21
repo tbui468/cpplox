@@ -19,10 +19,14 @@ namespace lox {
       ~Resolver() {}
       void resolve(const std::vector<std::shared_ptr<Stmt>>& stmts);
     private:
-      enum FunctionType {
+      enum class FunctionType {
         NONE,
         FUNCTION,
         METHOD
+      };
+      enum class ClassType {
+        NONE,
+        CLASS
       };
       //expressions
       void visit(std::shared_ptr<Assign> expr)   override;
@@ -59,6 +63,7 @@ namespace lox {
       std::shared_ptr<Interpreter> m_interpreter {nullptr};
       std::vector<std::unordered_map<std::string, bool>> m_scopes;
       FunctionType m_current_function {FunctionType::NONE};
+      ClassType m_current_class {ClassType::NONE};
   };
 
 }
