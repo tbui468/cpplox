@@ -360,6 +360,13 @@ namespace lox {
       return std::make_shared<Literal>(std::make_shared<Object>(std::stod(token.m_literal)));
     }
 
+    if (match(TokenType::SUPER)) {
+      Token keyword = previous();
+      consume(TokenType::DOT, "Expect '.' after super keyword.");
+      Token method = consume(TokenType::IDENTIFIER, "Expect identifier after '.'");
+      return std::make_shared<Super>(keyword, method);
+    }
+
     if (match(TokenType::THIS)) {
       return std::make_shared<This>(previous());
     }

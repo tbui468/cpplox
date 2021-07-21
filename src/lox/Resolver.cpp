@@ -87,6 +87,16 @@ namespace lox {
     resolve_local(expr,expr->keyword);
   }
 
+  void Resolver::visit(std::shared_ptr<Super> expr) {
+    if (m_current_class == ClassType::NONE) {
+      Lox::error(expr->keyword, "Can't use 'super' outside of a class.");
+    } else if (m_current_class != ClassType::SUBCLASS) {
+      Lox::error(expr->keyword, "Can't use 'super' in a class with no superclass.");
+    }
+
+    resolve_local(expr, expr->keyword);
+  }
+
 
   /*
    * Statement overrides
@@ -167,7 +177,13 @@ namespace lox {
     }
 
     if (stmt->superclass) {
+      m_current_class = ClassType::SUBCLASS;
       resolve(stmt->superclass);
+    }
+
+    if (stmt->superclass) {
+      begin_scope();
+      m_scopes.back()["super"] = true;
     }
 
     begin_scope();
@@ -183,6 +199,10 @@ namespace lox {
     }
 
     end_scope();
+
+    if (stmt->superclass) {
+      end_scope();
+    }
 
     m_current_class = enclosing_class;
   }

@@ -13,7 +13,8 @@
 //#visual studio ignores cmake -DCMAKE_BUILD_TYPE=<Release | Debug> when generating build system, so build with following:
   //cmake --build . --config Release cl /O2 ...
 
-//13.1 Inheritance
+//13.3 Calling Superclass Methods
+//  use super.cook() (in method only?) to call cook() method of superclass
 //  can m_locals in Interpreter be raw pointers?
 //  what can I change to raw pointers???
 //  Test slow fibonacci on Release build

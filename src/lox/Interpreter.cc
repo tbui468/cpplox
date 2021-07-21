@@ -237,6 +237,23 @@ namespace lox {
     return look_up_variable(expr->keyword, expr);
   }
 
+  std::shared_ptr<Object> Interpreter::visit(std::shared_ptr<Super> expr) {
+    //get the super class declare/defined in given scope in m_locals
+    int dis = m_locals[expr];
+    std::shared_ptr<LoxClass> superclass = std::dynamic_pointer_cast<LoxClass>(m_environment->get_at(dis, "super"));
+
+    //get the instance of the super class
+    std::shared_ptr<LoxInstance> object = std::dynamic_pointer_cast<LoxInstance>(m_environment->get_at(dis - 1, "this"));
+
+    std::shared_ptr<LoxFunction> method = superclass->find_method(expr->method.m_lexeme);
+
+    if (!method) {
+      throw RuntimeError(expr->method, "Undefined property '" + expr->method.m_lexeme + "'.");
+    }
+
+    return method->bind(object);
+  }
+
   /*
    * Statements
    */
@@ -309,6 +326,12 @@ namespace lox {
 
     m_environment->define(stmt->name.m_lexeme, nullptr);
 
+    //the closure of the methods contains "super", the superclass
+    if (stmt->superclass) {
+      m_environment = std::make_shared<Environment>(m_environment);
+      m_environment->define("super", superclass);
+    }
+
     //turn each class method into a LoxFunction object
     std::unordered_map<std::string, std::shared_ptr<LoxFunction>> methods;
     for (std::shared_ptr<Stmt> s: stmt->methods) {
@@ -322,6 +345,11 @@ namespace lox {
                                       stmt->name.m_lexeme, 
                                       std::dynamic_pointer_cast<LoxClass>(superclass),
                                       methods);
+
+    if (superclass) {
+      m_environment = m_environment->m_enclosing;
+    }
+
     m_environment->assign(stmt->name, klass);
   }
 

@@ -61,6 +61,10 @@ namespace lox
     return "This";
   }
 
+  std::string AstPrinter::visit(std::shared_ptr<Super> expr) {
+    return "Super";
+  }
+
   /*
    * Statements
    */

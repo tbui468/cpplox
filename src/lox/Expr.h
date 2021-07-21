@@ -29,6 +29,7 @@ struct Call;
 struct Get;
 struct Set;
 struct This;
+struct Super;
 
 struct ExprVisitorVoid {
   virtual void visit(std::shared_ptr<Assign> e) = 0;
@@ -42,6 +43,7 @@ struct ExprVisitorVoid {
   virtual void visit(std::shared_ptr<Get> e) = 0;
   virtual void visit(std::shared_ptr<Set> e) = 0;
   virtual void visit(std::shared_ptr<This> e) = 0;
+  virtual void visit(std::shared_ptr<Super> e) = 0;
 };
 
 struct VisitorString {
@@ -56,6 +58,7 @@ struct VisitorString {
   virtual std::string visit(std::shared_ptr<Get> e) = 0;
   virtual std::string visit(std::shared_ptr<Set> e) = 0;
   virtual std::string visit(std::shared_ptr<This> e) = 0;
+  virtual std::string visit(std::shared_ptr<Super> e) = 0;
 };
 
 struct VisitorObject {
@@ -70,6 +73,7 @@ struct VisitorObject {
   virtual std::shared_ptr<Object> visit(std::shared_ptr<Get> e) = 0;
   virtual std::shared_ptr<Object> visit(std::shared_ptr<Set> e) = 0;
   virtual std::shared_ptr<Object> visit(std::shared_ptr<This> e) = 0;
+  virtual std::shared_ptr<Object> visit(std::shared_ptr<Super> e) = 0;
 };
 
 
@@ -206,6 +210,18 @@ struct This: public Expr, public std::enable_shared_from_this<This> {
     void accept(ExprVisitorVoid& visitor) { return visitor.visit(shared_from_this()); }
   public:
     Token keyword;
+};
+
+struct Super: public Expr, public std::enable_shared_from_this<Super> {
+  public:
+    Super(Token keyword, Token method): keyword(keyword), method(method) {}
+    ~Super() {}
+    std::string accept(VisitorString& v) { return v.visit(shared_from_this()); }
+    std::shared_ptr<Object> accept(VisitorObject& v) { return v.visit(shared_from_this()); }
+    void accept(ExprVisitorVoid& visitor) { return visitor.visit(shared_from_this()); }
+  public:
+    Token keyword;
+    Token method;
 };
 
 }
