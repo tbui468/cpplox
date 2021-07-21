@@ -6,24 +6,6 @@
 #include "Interpreter.h"
 
 
-/* This test
-{
-  class Cake {
-    taste() {
-      var fruit = " bananas";
-      return this.flavor + fruit;
-    }
-  }
-
-  var cake = Cake();
-  cake.flavor = "sweet";
-  if(cake.taste() == "sweet bananas") {
-    print "'this' Keyword: Passed";
-  } else {
-    print "'this' Keyword: Failed";
-  }
-}*/
-
 
 //Notes on building:
   //cd build
@@ -31,9 +13,8 @@
 //#visual studio ignores cmake -DCMAKE_BUILD_TYPE=<Release | Debug> when generating build system, so build with following:
   //cmake --build . --config Release cl /O2 ...
 
-//12.6 This
-//    Adding this breaks bacon test (class methods)
-//    What change?
+//13.1 Inheritance
+//  can m_locals in Interpreter be raw pointers?
 //
 //  TODO:
 //    Ownership of pointers should belong to the AST statements (in Lox.cc).  All others can be

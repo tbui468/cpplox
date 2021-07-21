@@ -107,3 +107,80 @@ var k = "global";
     print "Function Declaration Closures: Failed";
   }  
 }
+
+fun get_func(m) {
+  fun scale(n) {
+    return n*m;
+  }
+  return scale;
+}
+
+if (get_func(4)(2) == 8) {
+  print "Chaining Function Calls: Passed";
+} else {
+  print "Chaining Function Calls: Failed";
+}
+
+{
+  class Dog {}
+  var dog = Dog();
+  dog.name = "Mittens";
+
+  if(dog.name == "Mittens") {
+    print "Class Getter and Setters: Passed";
+  } else {
+    print "Class Getter and Setters: Failed";
+  }
+}
+
+{
+  class Bacon {
+    eat() {
+      return "Crunchy";
+    }
+
+  }
+
+  if(Bacon().eat() == "Crunchy") {
+    print "Class methods: Passed";
+  } else {
+    print "Class methods: Failed";
+  }
+}
+
+
+{
+  class Cake {
+    taste() {
+      var fruit = " bananas";
+      return this.flavor + fruit;
+    }
+  }
+
+  var cake = Cake();
+  cake.flavor = "sweet";
+  if(cake.taste() == "sweet bananas") {
+    print "'this' Keyword: Passed";
+  } else {
+    print "'this' Keyword: Failed";
+  }
+}
+
+{
+
+  class Dog {
+    init(name) {
+      this.name = name;
+    }
+  }
+
+  var dog = Dog("Mittens");
+
+  if (dog.name == "Mittens") {
+    print "Class Initializers: Passed";
+  } else {
+    print "Class Initializers: Failed";
+  }
+
+}
+
