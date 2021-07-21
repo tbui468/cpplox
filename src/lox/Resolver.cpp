@@ -161,6 +161,15 @@ namespace lox {
 
     declare(stmt->name);
     define(stmt->name);
+
+    if (stmt->superclass && stmt->name.m_lexeme == stmt->superclass->name.m_lexeme) {
+      Lox::error(stmt->superclass->name, "A class can't inherit from itself.");
+    }
+
+    if (stmt->superclass) {
+      resolve(stmt->superclass);
+    }
+
     begin_scope();
     m_scopes.back()["this"] = true;
 

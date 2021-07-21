@@ -299,6 +299,14 @@ namespace lox {
   //Note: two stage variable binding process 
   //allows references to the class from the methods inside
   void Interpreter::visit(std::shared_ptr<Class> stmt) {
+    std::shared_ptr<Object> superclass = nullptr;
+    if (stmt->superclass) {
+      superclass = evaluate(*(stmt->superclass));
+      if(!dynamic_cast<LoxClass*>(superclass.get())) {
+        throw RuntimeError(stmt->superclass->name, "Superclass must be a class.");
+      }
+    }
+
     m_environment->define(stmt->name.m_lexeme, nullptr);
 
     //turn each class method into a LoxFunction object
@@ -310,7 +318,10 @@ namespace lox {
       methods[m->name.m_lexeme] = func;
     }
 
-    std::shared_ptr<Object> klass = std::make_shared<LoxClass>(stmt->name.m_lexeme, methods);
+    std::shared_ptr<Object> klass = std::make_shared<LoxClass>(
+                                      stmt->name.m_lexeme, 
+                                      std::dynamic_pointer_cast<LoxClass>(superclass),
+                                      methods);
     m_environment->assign(stmt->name, klass);
   }
 

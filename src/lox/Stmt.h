@@ -139,12 +139,14 @@ struct Return: public Stmt {
 
 struct Class: public Stmt, public std::enable_shared_from_this<Class> {
   public:
-    Class(Token name, std::vector<std::shared_ptr<Stmt>> methods): name(name), methods(methods) {}
+    Class(Token name, std::shared_ptr<Variable> superclass, std::vector<std::shared_ptr<Stmt>> methods): 
+      name(name), superclass(superclass), methods(methods) {}
     ~Class() {}
     std::string accept(StmtVisitorString& visitor) { return visitor.visit(shared_from_this()); }
     void accept(StmtVisitorVoid& visitor) { return visitor.visit(shared_from_this()); }
   public:
     Token name;
+    std::shared_ptr<Variable> superclass;
     std::vector<std::shared_ptr<Stmt>> methods;
 };
 

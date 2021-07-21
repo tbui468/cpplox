@@ -43,6 +43,13 @@ namespace lox {
 
   std::shared_ptr<Stmt> Parser::class_declaration() {
     Token identifier = consume(TokenType::IDENTIFIER, "Expect a class name.");
+   
+    std::shared_ptr<Variable> superclass = nullptr; 
+    if (match(TokenType::LESS)) {
+      consume(TokenType::IDENTIFIER, "Expect superclass name.");
+      superclass = std::make_shared<Variable>(previous()); 
+    }
+
     consume(TokenType::LEFT_BRACE, "Expect '{' before class body.");
 
     std::vector<std::shared_ptr<Stmt>> methods;
@@ -53,7 +60,7 @@ namespace lox {
 
     consume(TokenType::RIGHT_BRACE, "Expect '}' after class body.");
 
-    return std::make_shared<Class>(identifier, methods);
+    return std::make_shared<Class>(identifier, superclass, methods);
   }
 
   //recursive descent for statements

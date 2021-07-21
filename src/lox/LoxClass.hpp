@@ -12,7 +12,9 @@ namespace lox {
 
   class LoxClass: public Callable, public std::enable_shared_from_this<LoxClass> {
     public:
-      LoxClass(const std::string& name, std::unordered_map<std::string, std::shared_ptr<LoxFunction>> methods);
+      LoxClass(const std::string& name, 
+               std::shared_ptr<LoxClass> superclass,
+               std::unordered_map<std::string, std::shared_ptr<LoxFunction>> methods);
       ~LoxClass() {}
       virtual std::shared_ptr<Object> call(Interpreter& interp, const std::vector<std::shared_ptr<Object>>& arguments) override;
       virtual int arity() override;
@@ -20,6 +22,7 @@ namespace lox {
       std::shared_ptr<LoxFunction> find_method(const std::string& name);
     private:
       std::string m_name;
+      std::shared_ptr<LoxClass> m_superclass;
       std::unordered_map<std::string, std::shared_ptr<LoxFunction>> m_methods;
   };
 

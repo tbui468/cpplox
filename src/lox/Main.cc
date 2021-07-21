@@ -15,8 +15,12 @@
 
 //13.1 Inheritance
 //  can m_locals in Interpreter be raw pointers?
+//  what can I change to raw pointers???
+//  Test slow fibonacci on Release build
+//  Change some shared_ptrs (at highest level for now) to raw pointers and try again
 //
 //  TODO:
+//    More tests for edge cases presented in book - how to test error messages?
 //    Ownership of pointers should belong to the AST statements (in Lox.cc).  All others can be
 //     raw (to avoid the overhead/complexity of std::shared_ptr) - check how casting pointers works with inheritance first
 //     the hope is that cast to an invalid subclass creates a nullptr.
