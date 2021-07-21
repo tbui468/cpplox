@@ -143,6 +143,9 @@ namespace lox {
       Lox::error(stmt.keyword, "Can't return from top-level code.");
     }
     if(stmt.value) {
+      if (m_current_function == FunctionType::INITIALIZER) {
+        Lox::error(stmt.keyword, "Can't return a value from initializer.");
+      }
       resolve(stmt.value);
     }
   }
@@ -162,9 +165,12 @@ namespace lox {
     m_scopes.back()["this"] = true;
 
     for (std::shared_ptr<Stmt> s: stmt->methods) {
+      Function* method = dynamic_cast<Function*>(s.get());
       FunctionType declaration = FunctionType::METHOD;
-      Function* f = dynamic_cast<Function*>(s.get());
-      resolve_function(*f, declaration);
+      if (method->name.m_lexeme == "init") {
+        declaration = FunctionType::INITIALIZER;
+      }
+      resolve_function(*method, declaration);
     }
 
     end_scope();

@@ -7,10 +7,20 @@ namespace lox {
     Callable(), m_name(name), m_methods(methods) {}
 
   std::shared_ptr<Object> LoxClass::call(Interpreter& interp, const std::vector<std::shared_ptr<Object>>& arguments) {
-    return std::make_shared<LoxInstance>(shared_from_this());  
+    std::shared_ptr<LoxInstance> instance = std::make_shared<LoxInstance>(shared_from_this());  
+    std::shared_ptr<LoxFunction> initializer = find_method("init");
+    if(initializer) {
+      initializer->bind(instance)->call(interp, arguments);
+    }
+    return instance;
   }
 
-  int LoxClass::arity() const {
+  int LoxClass::arity() {
+    std::shared_ptr<LoxFunction> initializer = find_method("init");
+    if (initializer) {
+      return initializer->arity();
+    }
+
     return 0;
   }
 

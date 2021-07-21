@@ -2,8 +2,8 @@
 
 namespace lox {
 
-  LoxFunction::LoxFunction(Function& declaration, std::shared_ptr<Environment> closure): 
-    Callable(), m_declaration(declaration), m_closure(closure) {}
+  LoxFunction::LoxFunction(Function& declaration, std::shared_ptr<Environment> closure, bool is_initializer): 
+    Callable(), m_declaration(declaration), m_closure(closure), m_is_initializer(is_initializer) {}
 
   std::shared_ptr<Object> LoxFunction::call(Interpreter& interp, const std::vector<std::shared_ptr<Object>>& arguments) {
     std::shared_ptr<Environment> env = std::make_shared<Environment>(m_closure);
@@ -14,21 +14,28 @@ namespace lox {
     try {
       interp.execute_block(m_declaration.body, env);
     } catch(LoxReturn& ret) {
+      if (m_is_initializer) {
+        return m_closure->get_at(0, "this");
+      }
       return ret.value;
     }
 
-    //if there is no return statement in function block
+    if (m_is_initializer) {
+      return m_closure->get_at(0, "this");
+    }
+
+    //if there is no return statement in function block, return lox::null
     return std::make_shared<Object>();
   }
 
-  int LoxFunction::arity() const {
+  int LoxFunction::arity() {
     return m_declaration.params.size();
   }
 
   std::shared_ptr<LoxFunction> LoxFunction::bind(std::shared_ptr<Object> instance) {
     std::shared_ptr<Environment> env = std::make_shared<Environment>(m_closure);
     env->define("this", instance);
-    return std::make_shared<LoxFunction>(m_declaration, env);
+    return std::make_shared<LoxFunction>(m_declaration, env, m_is_initializer);
   }
 
   std::string LoxFunction::to_string() const {

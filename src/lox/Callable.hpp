@@ -12,7 +12,7 @@ namespace lox {
       Callable(): Object() {}
       virtual ~Callable() {}
       virtual std::shared_ptr<Object> call(Interpreter& interp, const std::vector<std::shared_ptr<Object>>& arguments) = 0;
-      virtual int arity() const = 0;
+      virtual int arity() = 0;
       virtual std::string to_string() const = 0;
   };
 

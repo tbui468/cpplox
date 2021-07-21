@@ -23,7 +23,7 @@ namespace lox {
           double seconds = std::chrono::duration<double>(time.time_since_epoch()).count();
           return std::make_shared<Object>(seconds);
         }
-        virtual int arity() const override {
+        virtual int arity() override {
           return 0;
         }
         virtual std::string to_string() const override {
@@ -283,7 +283,7 @@ namespace lox {
   //Question: why can't two-stage variable binding be used here (like in Class)?
   //since functions should have a reference to itself from inside for recursion
   void Interpreter::visit(Function& stmt) {
-    std::shared_ptr<Object> func = std::make_shared<LoxFunction>(stmt, m_environment);
+    std::shared_ptr<Object> func = std::make_shared<LoxFunction>(stmt, m_environment, false);
     m_environment->define(stmt.name.m_lexeme, func);
   }
 
@@ -303,10 +303,11 @@ namespace lox {
 
     //turn each class method into a LoxFunction object
     std::unordered_map<std::string, std::shared_ptr<LoxFunction>> methods;
-    for (std::shared_ptr<Stmt> m: stmt->methods) {
-      Function* f = dynamic_cast<Function*>(m.get());
-      std::shared_ptr<LoxFunction> func = std::make_shared<LoxFunction>(*f, m_environment);
-      methods[f->name.m_lexeme] = func;
+    for (std::shared_ptr<Stmt> s: stmt->methods) {
+      Function* m = dynamic_cast<Function*>(s.get());
+      bool is_init = m->name.m_lexeme == "init";
+      std::shared_ptr<LoxFunction> func = std::make_shared<LoxFunction>(*m, m_environment, is_init);
+      methods[m->name.m_lexeme] = func;
     }
 
     std::shared_ptr<Object> klass = std::make_shared<LoxClass>(stmt->name.m_lexeme, methods);

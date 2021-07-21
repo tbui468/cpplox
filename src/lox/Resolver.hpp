@@ -22,6 +22,7 @@ namespace lox {
       enum class FunctionType {
         NONE,
         FUNCTION,
+        INITIALIZER,
         METHOD
       };
       enum class ClassType {

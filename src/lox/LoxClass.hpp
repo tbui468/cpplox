@@ -15,7 +15,7 @@ namespace lox {
       LoxClass(const std::string& name, std::unordered_map<std::string, std::shared_ptr<LoxFunction>> methods);
       ~LoxClass() {}
       virtual std::shared_ptr<Object> call(Interpreter& interp, const std::vector<std::shared_ptr<Object>>& arguments) override;
-      virtual int arity() const override;
+      virtual int arity() override;
       std::string to_string() const override;
       std::shared_ptr<LoxFunction> find_method(const std::string& name);
     private:
