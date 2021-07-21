@@ -13,6 +13,9 @@ namespace lox {
 std::shared_ptr<Interpreter> Lox::m_interpreter = std::make_shared<Interpreter>();
 
 void Lox::run(std::string source) {
+  /*
+   * Front-end
+   */
   Scanner scanner = Scanner(source);
   std::vector<Token> tokens = scanner.scan_tokens();
 
@@ -21,6 +24,9 @@ void Lox::run(std::string source) {
 
   if (m_had_error) return;
 
+  /*
+   * Middle-end??
+   */
   Resolver resolver(Lox::m_interpreter);
   resolver.resolve(statements); 
 
@@ -32,7 +38,9 @@ void Lox::run(std::string source) {
 
   if (m_had_error) return;
 
-
+  /*
+   * Back-end
+   */
   Lox::m_interpreter->interpret(statements);
 
 }

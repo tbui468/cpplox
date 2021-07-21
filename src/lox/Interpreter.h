@@ -29,7 +29,8 @@ namespace lox {
       std::shared_ptr<Object> visit(Call& expr)     override;
       std::shared_ptr<Object> visit(std::shared_ptr<Get> expr)     override;
       std::shared_ptr<Object> visit(std::shared_ptr<Set> expr)     override;
-      std::shared_ptr<Object> look_up_variable(const Token& name, std::shared_ptr<Variable>);
+      std::shared_ptr<Object> visit(std::shared_ptr<This> expr)     override;
+      std::shared_ptr<Object> look_up_variable(const Token& name, std::shared_ptr<Expr>);
       void execute(Stmt& stmt);
       void visit(Expression& stmt)  override;
       void visit(Print& stmt)       override;

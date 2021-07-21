@@ -5,16 +5,43 @@
 #include "AstPrinter.h"
 #include "Interpreter.h"
 
+
+/* This test
+{
+  class Cake {
+    taste() {
+      var fruit = " bananas";
+      return this.flavor + fruit;
+    }
+  }
+
+  var cake = Cake();
+  cake.flavor = "sweet";
+  if(cake.taste() == "sweet bananas") {
+    print "'this' Keyword: Passed";
+  } else {
+    print "'this' Keyword: Failed";
+  }
+}*/
+
+
 //Notes on building:
   //cd build
   //cmake .. -G "Visual Studio 16 2019" -T ClangCL -A x64 #generate build using clang through visual studio
 //#visual studio ignores cmake -DCMAKE_BUILD_TYPE=<Release | Debug> when generating build system, so build with following:
   //cmake --build . --config Release cl /O2 ...
 
-//12.4 Methods on Classes
+//12.6 This
+//    Adding this breaks bacon test (class methods)
+//    What change?
 //
 //  TODO:
-//    Rename to Zebra
+//    Ownership of pointers should belong to the AST statements (in Lox.cc).  All others can be
+//     raw (to avoid the overhead/complexity of std::shared_ptr) - check how casting pointers works with inheritance first
+//     the hope is that cast to an invalid subclass creates a nullptr.
+//    consume a { outside of block() allows a more specific error message (eg, "Expect '{' before function body")
+//      should do this for better error messages
+//    Rename to Zebra.  Rename Scanner to lexer (since the term lexeme is used in the Token class too)
 //    design how the syntax should look: static typing (checked after parsing and before interpreting)
 //    Class Stmt node currently stores methods as a vector of Stmt pointers.  It really should be Function since
 //      they're being cast to Function types everywhere in the Parser and Interprester anyway
@@ -35,8 +62,6 @@
 //    Move Clock implementation out of Interpreter class
 //      make new file called NativeFunctions.h and import them into Interpreter.h
 //    fix warning bugs
-//    consume a { outside of block() allows a more specific error message (eg, "Expect '{' before function body")
-//      should do this for better error messages
 //    Change file extensions to .hpp and .cpp
 //    Finish filling out AstPrinter functions (many are currently stubs)
 

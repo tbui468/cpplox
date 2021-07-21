@@ -80,6 +80,10 @@ namespace lox {
     resolve(expr.right);
   }
 
+  void Resolver::visit(std::shared_ptr<This> expr) {
+    resolve_local(expr,expr->keyword);
+  }
+
 
   /*
    * Statement overrides
@@ -148,12 +152,16 @@ namespace lox {
   void Resolver::visit(std::shared_ptr<Class> stmt) {
     declare(stmt->name);
     define(stmt->name);
+    begin_scope();
+    m_scopes.back()["this"] = true;
 
     for (std::shared_ptr<Stmt> s: stmt->methods) {
       FunctionType declaration = FunctionType::METHOD;
       Function* f = dynamic_cast<Function*>(s.get());
       resolve_function(*f, declaration);
     }
+
+    end_scope();
   }
 
 

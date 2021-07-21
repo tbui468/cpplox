@@ -10,7 +10,7 @@ namespace lox {
 
     std::shared_ptr<LoxFunction> method = m_class->find_method(name.m_lexeme);
     if(method) {
-      return method;
+      return method->bind(shared_from_this());
     }
 
     throw RuntimeError(name, "Undefined property '" + name.m_lexeme + "'.");

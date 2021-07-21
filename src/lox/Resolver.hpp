@@ -35,6 +35,7 @@ namespace lox {
       void visit(Call& expr)     override;
       void visit(std::shared_ptr<Get> expr) override;
       void visit(std::shared_ptr<Set> expr) override;
+      void visit(std::shared_ptr<This> expr) override;
       //statments
       void visit(Expression& stmt)  override;
       void visit(Print& stmt)       override;

@@ -57,6 +57,10 @@ namespace lox
     return "Set";
   }
 
+  std::string AstPrinter::visit(std::shared_ptr<This> expr) {
+    return "This";
+  }
+
   /*
    * Statements
    */

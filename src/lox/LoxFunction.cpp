@@ -25,7 +25,14 @@ namespace lox {
     return m_declaration.params.size();
   }
 
+  std::shared_ptr<LoxFunction> LoxFunction::bind(std::shared_ptr<Object> instance) {
+    std::shared_ptr<Environment> env = std::make_shared<Environment>(m_closure);
+    env->define("this", instance);
+    return std::make_shared<LoxFunction>(m_declaration, env);
+  }
+
   std::string LoxFunction::to_string() const {
     return "<fn " + m_declaration.name.m_lexeme + ">";
   }
+
 }

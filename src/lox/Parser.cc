@@ -175,7 +175,6 @@ namespace lox {
     return body;
   }
 
-
   std::shared_ptr<Stmt> Parser::return_statement() {
     Token keyword = previous(); //the 'return' keyword
 
@@ -303,6 +302,7 @@ namespace lox {
     }
   }
 
+  //call functions and methods
   std::shared_ptr<Expr> Parser::call() {
     std::shared_ptr<Expr> expr = primary();
     
@@ -319,7 +319,8 @@ namespace lox {
 
     return expr;
   }
-  
+ 
+  //consumes parentheses and arguments of function/method calls 
   std::shared_ptr<Expr> Parser::finish_call(std::shared_ptr<Expr> callee) {
     std::vector<std::shared_ptr<Expr>> arguments;
     if (!check(TokenType::RIGHT_PAREN)) {
@@ -350,6 +351,10 @@ namespace lox {
     if (match(TokenType::NUMBER)) {
       Token token = previous();
       return std::make_shared<Literal>(std::make_shared<Object>(std::stod(token.m_literal)));
+    }
+
+    if (match(TokenType::THIS)) {
+      return std::make_shared<This>(previous());
     }
 
     //identifiers can be function names, class names, or variable names

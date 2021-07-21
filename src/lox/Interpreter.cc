@@ -155,7 +155,7 @@ namespace lox {
     throw RuntimeError(expr.oprtr, "Error in binary expression.");
   }
 
-  std::shared_ptr<Object> Interpreter::look_up_variable(const Token& name, std::shared_ptr<Variable> expr) {
+  std::shared_ptr<Object> Interpreter::look_up_variable(const Token& name, std::shared_ptr<Expr> expr) {
     if (m_locals.count(expr) > 0) {
       int dis = m_locals[expr];
       return m_environment->get_at(dis, name.m_lexeme);
@@ -231,6 +231,10 @@ namespace lox {
     std::shared_ptr<Object> value = evaluate(*(expr->value));
     std::dynamic_pointer_cast<LoxInstance>(object)->set(expr->name, value);
     return value;
+  }
+
+  std::shared_ptr<Object> Interpreter::visit(std::shared_ptr<This> expr) {
+    return look_up_variable(expr->keyword, expr);
   }
 
   /*
